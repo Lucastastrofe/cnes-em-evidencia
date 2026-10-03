@@ -7,6 +7,8 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
+from cnes_audit.presentation import describe_controls, interpret_materiality, split_checks
+
 DATA_DIRECTORY = Path(__file__).parent / "data" / "published"
 
 
@@ -38,36 +40,46 @@ def state_table(states: list[dict]) -> pd.DataFrame:
     return frame[["UF", "Registros", "Ocorrências", "Taxa de ocorrências"]]
 
 
-def check_table(checks: list[dict]) -> pd.DataFrame:
-    frame = pd.DataFrame(checks).rename(
-        columns={
-            "label": "Regra",
-            "dimension": "Dimensão",
-            "status": "Resultado",
-            "failures": "Ocorrências",
-            "failure_rate": "Taxa",
-        }
-    )
-    return frame[["Regra", "Dimensão", "Resultado", "Ocorrências", "Taxa"]]
-
-
 def render() -> None:
     st.set_page_config(
         page_title="CNES em Evidência",
-        page_icon="U0001f3e5",
+        page_icon="🏥",
         layout="wide",
         initial_sidebar_state="collapsed",
     )
     st.markdown(
         """
         <style>
-        .block-container {max-width: 1180px; padding-top: 2.2rem; padding-bottom: 4rem;}
-        h1, h2, h3 {letter-spacing: -0.025em;}
-        [data-testid="stMetric"] {border-top: 1px solid #9da8a3; padding-top: 0.8rem;}
-        [data-testid="stMetricValue"] {font-size: 2rem;}
-        .finding {border-left: 4px solid #a94c16; padding: 0.2rem 0 0.2rem 1rem; margin: 1rem 0 2rem;}
-        .finding strong {font-size: 1.45rem; font-weight: 700;}
-        .source {color: #5a6561; font-size: 0.88rem;}
+        :root {
+            --ink: #17211d;
+            --muted: #56645e;
+            --line: #d9e0dc;
+            --green: #176b52;
+            --green-soft: #edf6f1;
+            --amber: #9a4f16;
+            --amber-soft: #fff4e8;
+        }
+        .block-container {max-width: 1120px; padding-top: 2.5rem; padding-bottom: 4rem;}
+        h1, h2, h3 {color: var(--ink); letter-spacing: -0.025em;}
+        h1 {font-size: clamp(2.25rem, 5vw, 3.8rem); line-height: 1.02; margin-bottom: 0.65rem;}
+        .eyebrow {color: var(--green); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;}
+        .deck {color: var(--muted); font-size: 1.08rem; max-width: 760px; margin: 0.5rem 0 0.25rem;}
+        .source {color: var(--muted); font-size: 0.85rem; margin-bottom: 1.75rem;}
+        [data-testid="stMetric"] {border-top: 2px solid var(--ink); padding-top: 0.75rem;}
+        [data-testid="stMetricLabel"] {color: var(--muted);}
+        [data-testid="stMetricValue"] {color: var(--ink); font-size: 2rem;}
+        .verdict {background: var(--green-soft); border-left: 4px solid var(--green); padding: 1rem 1.15rem; margin: 1.5rem 0;}
+        .verdict strong {display: block; color: var(--ink); font-size: 1.2rem; margin: 0.2rem 0;}
+        .finding {border: 1px solid #e8c9aa; background: var(--amber-soft); padding: 1.25rem; margin: 1rem 0 1.25rem;}
+        .finding-grid {display: grid; grid-template-columns: minmax(110px, 0.35fr) 1fr; gap: 1.25rem; align-items: start;}
+        .finding-rate {color: var(--amber); font-size: 2.5rem; font-weight: 750; line-height: 1;}
+        .finding-title {color: var(--ink); font-size: 1.15rem; font-weight: 700; margin-bottom: 0.35rem;}
+        .finding-copy {color: #4f4035; margin: 0.25rem 0;}
+        .scope-note {border-top: 1px solid var(--line); color: var(--muted); font-size: 0.9rem; margin-top: 1rem; padding-top: 0.75rem;}
+        @media (max-width: 640px) {
+            .block-container {padding-top: 1.5rem;}
+            .finding-grid {grid-template-columns: 1fr; gap: 0.65rem;}
+        }
         </style>
         """,
         unsafe_allow_html=True,
@@ -83,27 +95,49 @@ def render() -> None:
     summary = dashboard["summary"]
     checks = dashboard["checks"]
     missing_location = next(item for item in checks if item["id"] == "coordinates_missing")
+    approved_checks, _ = split_checks(checks)
+    materiality = interpret_materiality(
+        missing_location["id"], missing_location["failure_rate"]
+    )
 
+    st.markdown('<p class="eyebrow">Auditoria antes da análise</p>', unsafe_allow_html=True)
     st.title("CNES em Evidência")
-    st.write("Qualidade cadastral dos estabelecimentos de saúde na base aberta do CNES.")
+    st.markdown(
+        '<p class="deck">Uma leitura da qualidade cadastral antes de reutilizar a base '
+        "em mapas, indicadores e estudos sobre a rede de saúde.</p>",
+        unsafe_allow_html=True,
+    )
     st.markdown(
         f'<p class="source">Fotografia processada em {format_timestamp(dashboard["metadata"]["generated_at"])}.</p>',
         unsafe_allow_html=True,
     )
 
-    first, second, third, fourth = st.columns(4)
-    first.metric("Registros", format_integer(summary["total_records"]))
+    first, second, third = st.columns(3)
+    first.metric("Registros verificados", format_integer(summary["total_records"]))
     second.metric("UFs presentes", summary["states_with_records"])
-    third.metric("Controles", summary["checks_run"])
-    fourth.metric("Com achados", summary["checks_with_findings"])
+    third.metric(f"Controles aprovados (de {summary['checks_run']})", len(approved_checks))
 
     st.markdown(
         (
-            '<div class="finding"><strong>'
-            f'{format_percent(missing_location["failure_rate"])} sem o par completo de coordenadas'
-            "</strong><br>"
-            f'{format_integer(missing_location["failures"])} de '
-            f'{format_integer(missing_location["evaluated"])} registros.</div>'
+            '<div class="verdict"><span class="eyebrow">Leitura executiva</span>'
+            f"<strong>{len(approved_checks)} de {summary['checks_run']} controles não encontraram ocorrências.</strong>"
+            "A base passou pelas verificações definidas antes de ser usada nos próximos estudos. "
+            "O único achado precisa ser considerado quando a análise depender de localização exata.</div>"
+        ),
+        unsafe_allow_html=True,
+    )
+
+    st.subheader("Achado que muda a forma de usar a base")
+    st.markdown(
+        (
+            '<div class="finding"><div class="finding-grid">'
+            f'<div><div class="finding-rate">{format_percent(missing_location["failure_rate"])}</div>'
+            f'<div>{format_integer(missing_location["failures"])} registros</div></div>'
+            f'<div><div class="finding-title">{materiality["classification"]}</div>'
+            f'<p class="finding-copy">{materiality["affected_use"]}</p>'
+            f'<p class="finding-copy">{materiality["unaffected_use"]}</p>'
+            f'<p class="scope-note">{materiality["criterion"]}</p></div>'
+            "</div></div>"
         ),
         unsafe_allow_html=True,
     )
@@ -139,15 +173,26 @@ def render() -> None:
         )
 
     st.subheader("Controles de qualidade")
+    st.write(
+        "Oito regras verificam completude, unicidade e validade. O resultado informa o que "
+        "foi aprovado e identifica diretamente a regra que exige atenção."
+    )
     st.dataframe(
-        check_table(checks),
+        pd.DataFrame(describe_controls(checks)),
         width="stretch",
         hide_index=True,
         column_config={
-            "Ocorrências": st.column_config.NumberColumn(format="localized"),
-            "Taxa": st.column_config.NumberColumn(format="percent"),
+            "Controle": st.column_config.TextColumn(width="medium"),
+            "O que verifica": st.column_config.TextColumn(width="large"),
+            "Resultado": st.column_config.TextColumn(width="medium"),
         },
     )
+    with st.expander("Como interpretar os controles aprovados"):
+        st.write(
+            f"{len(approved_checks)} controles não encontraram ocorrência nesta fotografia. "
+            "Isso é evidência de verificação para essas regras, não uma garantia de qualidade "
+            "total da base. Novos usos podem exigir controles adicionais."
+        )
 
     st.subheader("Tipo de gestão")
     management = pd.DataFrame(dashboard["by_management"]).set_index("label")
@@ -172,4 +217,3 @@ def render() -> None:
 
 if __name__ == "__main__":
     render()
-

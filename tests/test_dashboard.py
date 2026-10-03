@@ -3,6 +3,8 @@ import json
 import unittest
 from pathlib import Path
 
+from cnes_audit.presentation import describe_controls, interpret_materiality, split_checks
+
 
 class DashboardContractTest(unittest.TestCase):
     @classmethod
@@ -39,6 +41,53 @@ class DashboardContractTest(unittest.TestCase):
 
     def test_static_site_was_removed(self):
         self.assertFalse((self.root / "site" / "index.html").exists())
+
+    def test_approved_controls_are_separated_from_findings(self):
+        checks = [
+            {
+                "label": "Identificador preenchido",
+                "dimension": "completude",
+                "status": "aprovado",
+                "failures": 0,
+                "failure_rate": 0.0,
+            },
+            {
+                "label": "Coordenadas preenchidas",
+                "dimension": "completude",
+                "status": "observação",
+                "failures": 12,
+                "failure_rate": 0.12,
+            },
+        ]
+
+        approved, findings = split_checks(checks)
+
+        self.assertEqual(approved, [
+            {"Regra": "Identificador preenchido", "Dimensão": "Completude", "Resultado": "Aprovado"}
+        ])
+        self.assertEqual(findings[0]["Ocorrências"], 12)
+        self.assertEqual(findings[0]["Taxa"], 0.12)
+
+    def test_coordinate_gap_is_interpreted_by_analytical_use(self):
+        interpretation = interpret_materiality("coordinates_missing", 0.092765)
+
+        self.assertEqual(interpretation["classification"], "Atenção para uso geográfico")
+        self.assertIn("mapas", interpretation["affected_use"])
+        self.assertIn("UF", interpretation["unaffected_use"])
+
+    def test_controls_are_explained_and_the_finding_is_named(self):
+        checks = json.loads(
+            (self.root / "data" / "published" / "dashboard.json").read_text(encoding="utf-8")
+        )["checks"]
+
+        descriptions = describe_controls(checks)
+
+        self.assertEqual(len(descriptions), 8)
+        coordinate_check = next(
+            item for item in descriptions if item["Controle"] == "Coordenadas preenchidas"
+        )
+        self.assertEqual(coordinate_check["Resultado"], "Atenção: 59.184 registros (9,3%)")
+        self.assertIn("latitude e longitude", coordinate_check["O que verifica"])
 
     def test_published_data_excludes_source_columns_outside_the_contract(self):
         for prohibited in (
