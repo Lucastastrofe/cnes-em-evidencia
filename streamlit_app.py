@@ -7,7 +7,12 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
-from cnes_audit.presentation import describe_controls, interpret_materiality, split_checks
+from cnes_audit.presentation import (
+    describe_controls,
+    interpret_materiality,
+    management_without_information,
+    split_checks,
+)
 
 DATA_DIRECTORY = Path(__file__).parent / "data" / "published"
 
@@ -25,6 +30,10 @@ def format_integer(value: int) -> str:
 
 def format_percent(value: float) -> str:
     return f"{value * 100:.1f}%".replace(".", ",")
+
+
+def format_small_percent(value: float) -> str:
+    return f"{value * 100:.3f}%".replace(".", ",")
 
 
 def format_timestamp(value: str) -> str:
@@ -195,8 +204,22 @@ def render() -> None:
         )
 
     st.subheader("Tipo de gestão")
-    management = pd.DataFrame(dashboard["by_management"]).set_index("label")
-    st.bar_chart(management["records"], horizontal=True, color="#2B716F")
+    management_rows = dashboard["by_management"]
+    management = pd.DataFrame(management_rows).set_index("label")
+    management_chart, management_note = st.columns([3, 1])
+    with management_chart:
+        st.bar_chart(management["records"], horizontal=True, color="#2B716F")
+    with management_note:
+        unknown_management = management_without_information(
+            management_rows, summary["total_records"]
+        )
+        st.metric("Gestão sem informação", format_integer(unknown_management["records"]))
+        st.write(f'{format_small_percent(unknown_management["rate"])} da base.')
+        st.caption(
+            "O código S está separado para não desaparecer na escala do gráfico. "
+            "Ele indica limitação analítica; não foi classificado como erro sem uma regra "
+            "oficial de domínio que sustente essa conclusão."
+        )
 
     with st.expander("Rastreabilidade da execução"):
         trace_first, trace_second = st.columns(2)

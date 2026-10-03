@@ -37,6 +37,19 @@ CONTROL_DESCRIPTIONS = {
 }
 
 
+def management_without_information(
+    management_rows: list[dict], total_records: int
+) -> dict[str, float | int]:
+    records = next(
+        (int(item["records"]) for item in management_rows if item["code"] == "S"),
+        0,
+    )
+    return {
+        "records": records,
+        "rate": records / total_records if total_records else 0.0,
+    }
+
+
 def describe_controls(checks: list[dict]) -> list[dict[str, str]]:
     descriptions: list[dict[str, str]] = []
     for check in checks:

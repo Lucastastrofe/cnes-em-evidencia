@@ -3,7 +3,12 @@ import json
 import unittest
 from pathlib import Path
 
-from cnes_audit.presentation import describe_controls, interpret_materiality, split_checks
+from cnes_audit.presentation import (
+    describe_controls,
+    interpret_materiality,
+    management_without_information,
+    split_checks,
+)
 
 
 class DashboardContractTest(unittest.TestCase):
@@ -88,6 +93,18 @@ class DashboardContractTest(unittest.TestCase):
         )
         self.assertEqual(coordinate_check["Resultado"], "Atenção: 59.184 registros (9,3%)")
         self.assertIn("latitude e longitude", coordinate_check["O que verifica"])
+
+    def test_management_without_information_is_visible_even_when_rate_is_small(self):
+        summary = management_without_information(
+            [
+                {"code": "M", "records": 900},
+                {"code": "S", "records": 1},
+            ],
+            total_records=1000,
+        )
+
+        self.assertEqual(summary["records"], 1)
+        self.assertEqual(summary["rate"], 0.001)
 
     def test_published_data_excludes_source_columns_outside_the_contract(self):
         for prohibited in (
