@@ -19,7 +19,7 @@ def make_parser() -> argparse.ArgumentParser:
     parser.add_argument("--source-url", default=DEFAULT_SOURCE_URL)
     parser.add_argument("--input", type=Path, help="usa um ZIP local e não faz download")
     parser.add_argument("--work-directory", type=Path, default=Path("data/work"))
-    parser.add_argument("--output", type=Path, default=Path("site/data"))
+    parser.add_argument("--output", type=Path, default=Path("data/published"))
     parser.add_argument("--code-version", default=os.getenv("GITHUB_SHA", "working-tree"))
     return parser
 
@@ -51,4 +51,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

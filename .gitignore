@@ -9,5 +9,4 @@ data/raw/*
 data/work/*
 !data/work/.gitkeep
 
-site/data/*.tmp
-
+data/published/*.tmp

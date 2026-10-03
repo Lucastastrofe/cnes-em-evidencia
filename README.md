@@ -1,6 +1,6 @@
 # CNES em Evidência
 
-Dashboard e pipeline de auditoria da base aberta de estabelecimentos de saúde do CNES. O projeto mostra os indicadores e, junto deles, a origem, o hash do arquivo, as regras executadas, os achados e a reconciliação da execução.
+Painel Streamlit e pipeline de qualidade da base aberta de estabelecimentos de saúde do CNES. O painel concentra indicadores, filtros e controles; a explicação completa do projeto fica no portfólio.
 
 ## Resultado atual
 
@@ -13,8 +13,8 @@ Esses resultados descrevem o arquivo processado. Eles não medem qualidade assis
 - processamento de um CSV de 231 MB diretamente do ZIP, sem carregar a base inteira na memória;
 - controles reproduzíveis de completude, unicidade e validade;
 - reconciliação entre registros lidos e agregados;
-- dashboard estático, responsivo e sem backend;
-- atualização diária e publicação no GitHub Pages;
+- painel interativo em Streamlit;
+- atualização diária dos agregados pelo GitHub Actions;
 - minimização de dados e contrato automatizado de privacidade.
 
 ## Fluxo
@@ -28,12 +28,12 @@ controles e agregações por UF
         ↓
 reconciliação + relatório de auditoria
         ↓
-site estático publicado no GitHub Pages
+painel Streamlit atualizado a partir do repositório
 ```
 
 ## Privacidade
 
-O arquivo de origem contém campos que não são necessários ao dashboard. Nomes, contatos, endereços, identificação fiscal, coordenadas e registros individuais não entram nos artefatos públicos. O site recebe somente contagens agregadas e o relatório da execução.
+O arquivo de origem contém campos que não são necessários ao dashboard. Nomes, contatos, endereços, identificação fiscal, coordenadas e registros individuais não entram nos dados publicados. O painel recebe somente contagens agregadas e o relatório da execução.
 
 Essa minimização reduz exposição desnecessária, mas não transforma o projeto em parecer jurídico sobre a LGPD.
 
@@ -52,18 +52,19 @@ O projeto requer Python 3.11 ou mais recente e não possui dependências de prod
 $env:PYTHONPATH = "src"
 python -m unittest discover -s tests -v
 python -m cnes_audit.cli
-python -m http.server 8000 --directory site
+streamlit run streamlit_app.py
 ```
 
-Abra `http://localhost:8000`. Instruções de publicação, diagnóstico e rollback estão em [`RUNBOOK.md`](RUNBOOK.md).
+Abra a URL local exibida pelo Streamlit. Instruções de publicação, diagnóstico e rollback estão em [`RUNBOOK.md`](RUNBOOK.md).
 
 ## Organização
 
 ```text
 src/cnes_audit/   download, leitura, controles e geração
-site/             interface e artefatos agregados
+streamlit_app.py  painel interativo
+data/published/   agregados e rastreabilidade da execução
 tests/            regras, fonte, privacidade e contrato da página
-.github/workflows verificação, atualização e publicação
+.github/workflows verificação e atualização dos dados
 ```
 
 O escopo e os critérios de aceite estão em [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md). A classificação e as limitações dos dados estão em [`DATA_CONTEXT.md`](DATA_CONTEXT.md).
@@ -78,4 +79,3 @@ O escopo e os critérios de aceite estão em [`PROJECT_CONTEXT.md`](PROJECT_CONT
 ## Licença
 
 O código deste repositório é distribuído sob a licença MIT. Os dados permanecem sujeitos aos termos informados pelo publicador original.
-

@@ -30,7 +30,7 @@ Quais problemas de completude, unicidade e validade aparecem no cadastro naciona
 2. O total de registros lidos reconcilia com a soma por UF, incluindo a categoria de UF inválida.
 3. Cada controle informa regra, dimensão, severidade, registros avaliados, falhas e resultado.
 4. Nenhum campo de contato, endereço, CNPJ, nome ou coordenada aparece nos artefatos públicos.
-5. O site funciona sem backend, possui filtro por UF, estados de carregamento e erro, e leitura adequada em tela estreita.
+5. O painel Streamlit possui filtro por UF, estado de erro e leitura adequada em tela estreita.
 6. Testes automatizados cobrem normalização, controles, reconciliação e contrato de privacidade.
 7. O fluxo agendado baixa novamente a fonte, testa, gera e publica o mesmo artefato validado.
 
@@ -39,17 +39,16 @@ Quais problemas de completude, unicidade e validade aparecem no cadastro naciona
 - A base é autodeclarada e enviada por gestores locais; uma falha cadastral não prova problema assistencial.
 - A fonte pode alterar schema, nome interno do ZIP ou disponibilidade. Mudança incompatível deve interromper a publicação.
 - O portal informa atualização diária, mas a automação deve comparar o hash e aceitar execuções sem mudança.
-- GitHub Pages é público. Somente agregados aprovados pelo contrato de privacidade podem entrar em `site/data`.
+- O aplicativo Streamlit é público. Somente agregados aprovados pelo contrato de privacidade podem entrar em `data/published`.
 
 ## Evidências de conclusão
 
 - saída dos testes e do gerador;
-- `site/data/dashboard.json` e `site/data/audit-report.json` gerados a partir da fonte real;
+- `data/published/dashboard.json` e `data/published/audit-report.json` gerados a partir da fonte real;
 - inspeção visual em desktop e mobile;
 - histórico Git com incrementos separados;
 - execução do workflow no GitHub após a publicação do repositório.
 
 ## Situação em 2026-10-03
 
-Fato verificado: o recurso CSV oficial responde em `https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/CNES/cnes_estabelecimentos_csv.zip` e continha `cnes_estabelecimentos.csv` com cabeçalho separado por ponto e vírgula. A publicação no GitHub ainda não foi executada.
-
+Fato verificado: o recurso CSV oficial responde em `https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/CNES/cnes_estabelecimentos_csv.zip` e continha `cnes_estabelecimentos.csv` com cabeçalho separado por ponto e vírgula. Em 2026-10-03, a entrega foi alterada de site estático para um único painel Streamlit por decisão do usuário. A publicação externa ainda não foi executada.

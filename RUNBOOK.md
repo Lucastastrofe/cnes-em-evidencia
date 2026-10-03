@@ -8,10 +8,11 @@ Requisitos: Python 3.11 ou mais recente. O pipeline de produção não possui de
 $env:PYTHONPATH = "src"
 python -m unittest discover -s tests -v
 python -m cnes_audit.cli
-python -m http.server 8000 --directory site
+python -m pip install -r requirements.txt
+streamlit run streamlit_app.py
 ```
 
-O segundo comando baixa a fonte oficial para `data/work`, processa o CSV diretamente do ZIP e substitui os dois JSON de `site/data` de forma atômica.
+O segundo comando baixa a fonte oficial para `data/work`, processa o CSV diretamente do ZIP e substitui os dois JSON de `data/published` de forma atômica.
 
 Para reproduzir uma fotografia já baixada:
 
@@ -20,21 +21,22 @@ $env:PYTHONPATH = "src"
 python -m cnes_audit.cli --input caminho/arquivo.zip
 ```
 
-## Publicação
+## Publicação no Streamlit Community Cloud
 
 1. Criar um repositório público no GitHub e enviar a branch `main`.
-2. Em **Settings → Pages → Build and deployment**, selecionar **GitHub Actions**.
-3. Executar manualmente `Atualizar dados e publicar` na primeira publicação.
-4. Conferir a URL exposta pelo ambiente `github-pages`.
+2. Entrar em <https://share.streamlit.io> com a conta do GitHub.
+3. Criar o app apontando para o repositório, branch `main` e `streamlit_app.py`.
+4. Selecionar Python 3.13 nas configurações avançadas.
+5. Executar manualmente `Atualizar dados do painel` na primeira publicação.
 
-Depois disso, o fluxo roda diariamente às 09:17 UTC, além de cada envio para `main`. O agendamento não garante horário exato: o GitHub pode atrasar execuções em períodos de maior carga.
+Depois disso, o fluxo roda diariamente às 09:17 UTC e cria um commit apenas quando os agregados mudarem. O Streamlit acompanha o repositório e atualiza o app quando o commit chega. O agendamento não garante horário exato: o GitHub pode atrasar execuções em períodos de maior carga.
 
 ## Evidências de uma execução
 
 - logs do job com quantidade de registros e controles com achados;
-- artefato do GitHub Pages com retenção de sete dias;
-- `site/data/audit-report.json` publicado, contendo execução, versão do código, hash, metadados da fonte e reconciliação;
-- ambiente `github-pages` vinculado ao deployment.
+- commit automatizado contendo apenas os agregados alterados;
+- `data/published/audit-report.json`, contendo execução, versão do código, hash, metadados da fonte e reconciliação;
+- logs do Streamlit Community Cloud para diagnóstico do aplicativo.
 
 ## Falhas esperadas
 
@@ -50,14 +52,12 @@ O pipeline informa as colunas contratuais ausentes e interrompe a publicação. 
 
 Nenhum artefato novo deve ser promovido. Preserve o ZIP da execução com acesso restrito durante a investigação e não o anexe a issues públicas.
 
-### O site foi publicado com problema visual
+### O painel foi publicado com problema visual
 
-Reexecute o deployment do commit anterior na interface do GitHub Actions ou reverta o commit defeituoso. Os dados brutos não precisam ser recuperados para o rollback do site.
+Reverta o commit defeituoso. O Streamlit atualizará o app a partir do estado anterior do repositório. Os dados brutos não precisam ser recuperados para o rollback.
 
 ## Retenção
 
 - `data/work`: temporário e não versionado;
-- artefato de deploy: sete dias;
-- JSON agregado e relatório de auditoria: permanecem no site publicado até a próxima execução;
+- JSON agregado e relatório de auditoria: permanecem versionados até a próxima execução com mudança;
 - logs do workflow: conforme a configuração de retenção do repositório.
-
