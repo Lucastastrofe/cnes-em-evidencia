@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Auditoria reproduzível da base aberta de estabelecimentos do CNES.">
+    <title>CNES em Evidência</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+    <header class="site-header">
+      <div class="page-width header-row">
+        <a class="brand" href="#inicio" aria-label="CNES em Evidência, início">CNES em Evidência</a>
+        <nav aria-label="Navegação principal">
+          <a href="#estados">Estados</a>
+          <a href="#controles">Controles</a>
+          <a href="#metodo">Método</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="conteudo">
+      <section class="intro page-width" id="inicio">
+        <p class="eyebrow">Cadastro Nacional de Estabelecimentos de Saúde</p>
+        <h1>O dado aberto também precisa mostrar onde falha.</h1>
+        <p class="intro-copy">
+          Esta leitura verifica completude, unicidade e validade antes de apresentar os números
+          do CNES. Os resultados descrevem o cadastro processado, não a qualidade do atendimento.
+        </p>
+        <p class="source-line" id="source-line" aria-live="polite">Carregando a execução mais recente…</p>
+      </section>
+
+      <div class="page-width" id="loading" role="status">Preparando os indicadores…</div>
+      <div class="page-width error" id="error" role="alert" hidden>
+        Não foi possível carregar os dados desta publicação. Tente novamente em alguns instantes.
+      </div>
+
+      <div id="dashboard" hidden>
+        <section class="finding page-width" aria-labelledby="finding-title">
+          <div>
+            <p class="section-kicker">Principal achado cadastral</p>
+            <h2 id="finding-title">Cobertura de coordenadas</h2>
+            <p id="finding-copy"></p>
+          </div>
+          <div class="finding-number" aria-label="Percentual de registros sem coordenadas">
+            <strong id="finding-rate">—</strong>
+            <span>sem o par completo</span>
+          </div>
+        </section>
+
+        <section class="overview page-width" aria-label="Resumo da execução">
+          <dl>
+            <div>
+              <dt>Registros lidos</dt>
+              <dd id="total-records">—</dd>
+            </div>
+            <div>
+              <dt>UFs presentes</dt>
+              <dd id="state-count">—</dd>
+            </div>
+            <div>
+              <dt>Controles executados</dt>
+              <dd id="check-count">—</dd>
+            </div>
+            <div>
+              <dt>Controles com achados</dt>
+              <dd id="finding-count">—</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="section page-width" id="estados" aria-labelledby="states-title">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Distribuição territorial</p>
+              <h2 id="states-title">Onde estão os registros e os achados</h2>
+              <p>O volume contextualiza a base; a taxa evita comparar estados apenas pelo tamanho.</p>
+            </div>
+            <label for="state-filter">
+              Detalhar UF
+              <select id="state-filter">
+                <option value="all">Todas as UFs</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="state-detail" id="state-detail" aria-live="polite"></div>
+          <div class="chart" id="state-chart" aria-label="Dez UFs com mais registros"></div>
+          <p class="chart-note">As barras mostram as dez UFs com maior volume. A taxa considera ocorrências de regras, portanto um registro pode contribuir para mais de um achado.</p>
+        </section>
+
+        <section class="section muted-section" id="controles" aria-labelledby="checks-title">
+          <div class="page-width">
+            <div class="section-heading compact">
+              <div>
+                <p class="section-kicker">Auditoria publicada</p>
+                <h2 id="checks-title">Resultado de cada controle</h2>
+              </div>
+              <a class="text-link" href="data/audit-report.json" download>Baixar relatório JSON</a>
+            </div>
+            <div class="table-wrap" tabindex="0" aria-label="Tabela de controles de qualidade">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Regra</th>
+                    <th scope="col">Dimensão</th>
+                    <th scope="col">Resultado</th>
+                    <th scope="col" class="number">Ocorrências</th>
+                    <th scope="col" class="number">Taxa</th>
+                  </tr>
+                </thead>
+                <tbody id="checks-table"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="section page-width split" aria-labelledby="management-title">
+          <div>
+            <p class="section-kicker">Contexto do cadastro</p>
+            <h2 id="management-title">Registros por tipo de gestão</h2>
+            <p>Este corte descreve a responsabilidade informada no cadastro. Não representa participação no atendimento.</p>
+          </div>
+          <div class="chart compact-chart" id="management-chart"></div>
+        </section>
+
+        <section class="section method" id="metodo" aria-labelledby="method-title">
+          <div class="page-width split">
+            <div>
+              <p class="section-kicker">Como ler</p>
+              <h2 id="method-title">O que esta auditoria faz</h2>
+              <p>
+                O pipeline baixa o ZIP oficial, confere o schema, calcula os controles em fluxo,
+                reconcilia os totais e produz somente contagens agregadas. A publicação é interrompida
+                se o contrato da fonte mudar ou se a reconciliação falhar.
+              </p>
+            </div>
+            <dl class="provenance">
+              <div><dt>Execução</dt><dd id="run-id">—</dd></div>
+              <div><dt>Arquivo obtido em</dt><dd id="generated-at">—</dd></div>
+              <div><dt>SHA-256</dt><dd id="source-hash">—</dd></div>
+              <div><dt>Reconciliação</dt><dd id="reconciliation">—</dd></div>
+            </dl>
+          </div>
+          <div class="page-width limits">
+            <h3>Limites de interpretação</h3>
+            <ul id="limitations"></ul>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <div class="page-width footer-row">
+        <p>Fonte: Ministério da Saúde — CNES.</p>
+        <a href="https://dadosabertos.saude.gov.br/dataset/cnes-cadastro-nacional-de-estabelecimentos-de-saude">Consultar a fonte oficial</a>
+      </div>
+    </footer>
+  </body>
+</html>
+
