@@ -1,0 +1,484 @@
+{
+  "summary": {
+    "total_records": 637996,
+    "states_with_records": 27,
+    "checks_run": 8,
+    "checks_with_findings": 1
+  },
+  "checks": [
+    {
+      "id": "cnes_missing",
+      "label": "Chave CNES não preenchida",
+      "dimension": "completude",
+      "severity": "alerta",
+      "status": "aprovado",
+      "evaluated": 637996,
+      "failures": 0,
+      "failure_rate": 0.0
+    },
+    {
+      "id": "cnes_duplicate",
+      "label": "Chave CNES repetida",
+      "dimension": "unicidade",
+      "severity": "alerta",
+      "status": "aprovado",
+      "evaluated": 637996,
+      "failures": 0,
+      "failure_rate": 0.0
+    },
+    {
+      "id": "uf_invalid",
+      "label": "Código de UF fora do domínio",
+      "dimension": "validade",
+      "severity": "alerta",
+      "status": "aprovado",
+      "evaluated": 637996,
+      "failures": 0,
+      "failure_rate": 0.0
+    },
+    {
+      "id": "municipality_code_invalid",
+      "label": "Código de município ausente ou fora do formato esperado",
+      "dimension": "validade",
+      "severity": "alerta",
+      "status": "aprovado",
+      "evaluated": 637996,
+      "failures": 0,
+      "failure_rate": 0.0
+    },
+    {
+      "id": "coordinates_missing",
+      "label": "Par de coordenadas não preenchido",
+      "dimension": "completude",
+      "severity": "observação",
+      "status": "observação",
+      "evaluated": 637996,
+      "failures": 59184,
+      "failure_rate": 0.092765
+    },
+    {
+      "id": "coordinates_out_of_range",
+      "label": "Par de coordenadas fora das faixas geográficas",
+      "dimension": "validade",
+      "severity": "alerta",
+      "status": "aprovado",
+      "evaluated": 637996,
+      "failures": 0,
+      "failure_rate": 0.0
+    },
+    {
+      "id": "unit_type_missing",
+      "label": "Tipo de unidade não preenchido",
+      "dimension": "completude",
+      "severity": "alerta",
+      "status": "aprovado",
+      "evaluated": 637996,
+      "failures": 0,
+      "failure_rate": 0.0
+    },
+    {
+      "id": "management_missing",
+      "label": "Tipo de gestão não preenchido",
+      "dimension": "completude",
+      "severity": "observação",
+      "status": "aprovado",
+      "evaluated": 637996,
+      "failures": 0,
+      "failure_rate": 0.0
+    }
+  ],
+  "by_state": [
+    {
+      "code": "35",
+      "name": "São Paulo",
+      "records": 154166,
+      "issues": 18517
+    },
+    {
+      "code": "31",
+      "name": "Minas Gerais",
+      "records": 78705,
+      "issues": 5100
+    },
+    {
+      "code": "33",
+      "name": "Rio de Janeiro",
+      "records": 58435,
+      "issues": 8290
+    },
+    {
+      "code": "43",
+      "name": "Rio Grande do Sul",
+      "records": 50805,
+      "issues": 2587
+    },
+    {
+      "code": "41",
+      "name": "Paraná",
+      "records": 43883,
+      "issues": 3052
+    },
+    {
+      "code": "42",
+      "name": "Santa Catarina",
+      "records": 36310,
+      "issues": 2056
+    },
+    {
+      "code": "29",
+      "name": "Bahia",
+      "records": 30062,
+      "issues": 2582
+    },
+    {
+      "code": "23",
+      "name": "Ceará",
+      "records": 19343,
+      "issues": 918
+    },
+    {
+      "code": "52",
+      "name": "Goiás",
+      "records": 18676,
+      "issues": 718
+    },
+    {
+      "code": "26",
+      "name": "Pernambuco",
+      "records": 18240,
+      "issues": 2233
+    },
+    {
+      "code": "51",
+      "name": "Mato Grosso",
+      "records": 13973,
+      "issues": 674
+    },
+    {
+      "code": "32",
+      "name": "Espírito Santo",
+      "records": 13269,
+      "issues": 1508
+    },
+    {
+      "code": "15",
+      "name": "Pará",
+      "records": 12768,
+      "issues": 1576
+    },
+    {
+      "code": "53",
+      "name": "Distrito Federal",
+      "records": 12599,
+      "issues": 4042
+    },
+    {
+      "code": "25",
+      "name": "Paraíba",
+      "records": 10748,
+      "issues": 634
+    },
+    {
+      "code": "50",
+      "name": "Mato Grosso do Sul",
+      "records": 9612,
+      "issues": 575
+    },
+    {
+      "code": "21",
+      "name": "Maranhão",
+      "records": 9493,
+      "issues": 515
+    },
+    {
+      "code": "24",
+      "name": "Rio Grande do Norte",
+      "records": 7874,
+      "issues": 515
+    },
+    {
+      "code": "11",
+      "name": "Rondônia",
+      "records": 7394,
+      "issues": 551
+    },
+    {
+      "code": "22",
+      "name": "Piauí",
+      "records": 6459,
+      "issues": 823
+    },
+    {
+      "code": "28",
+      "name": "Sergipe",
+      "records": 6101,
+      "issues": 290
+    },
+    {
+      "code": "27",
+      "name": "Alagoas",
+      "records": 5572,
+      "issues": 391
+    },
+    {
+      "code": "13",
+      "name": "Amazonas",
+      "records": 4581,
+      "issues": 435
+    },
+    {
+      "code": "17",
+      "name": "Tocantins",
+      "records": 3625,
+      "issues": 98
+    },
+    {
+      "code": "12",
+      "name": "Acre",
+      "records": 2104,
+      "issues": 193
+    },
+    {
+      "code": "14",
+      "name": "Roraima",
+      "records": 1851,
+      "issues": 221
+    },
+    {
+      "code": "16",
+      "name": "Amapá",
+      "records": 1348,
+      "issues": 90
+    }
+  ],
+  "by_unit_type": [
+    {
+      "code": "22",
+      "label": "Tipo 22",
+      "records": 310022
+    },
+    {
+      "code": "36",
+      "label": "Tipo 36",
+      "records": 116328
+    },
+    {
+      "code": "2",
+      "label": "Tipo 2",
+      "records": 47984
+    },
+    {
+      "code": "39",
+      "label": "Tipo 39",
+      "records": 42901
+    },
+    {
+      "code": "43",
+      "label": "Tipo 43",
+      "records": 32548
+    },
+    {
+      "code": "4",
+      "label": "Tipo 4",
+      "records": 16099
+    },
+    {
+      "code": "1",
+      "label": "Tipo 1",
+      "records": 10582
+    },
+    {
+      "code": "42",
+      "label": "Tipo 42",
+      "records": 7171
+    },
+    {
+      "code": "5",
+      "label": "Tipo 5",
+      "records": 6936
+    },
+    {
+      "code": "68",
+      "label": "Tipo 68",
+      "records": 6686
+    },
+    {
+      "code": "50",
+      "label": "Tipo 50",
+      "records": 4557
+    },
+    {
+      "code": "74",
+      "label": "Tipo 74",
+      "records": 4275
+    },
+    {
+      "code": "70",
+      "label": "Tipo 70",
+      "records": 3882
+    },
+    {
+      "code": "40",
+      "label": "Tipo 40",
+      "records": 3706
+    },
+    {
+      "code": "77",
+      "label": "Tipo 77",
+      "records": 2680
+    },
+    {
+      "code": "84",
+      "label": "Tipo 84",
+      "records": 2547
+    },
+    {
+      "code": "73",
+      "label": "Tipo 73",
+      "records": 2071
+    },
+    {
+      "code": "60",
+      "label": "Tipo 60",
+      "records": 2022
+    },
+    {
+      "code": "81",
+      "label": "Tipo 81",
+      "records": 1814
+    },
+    {
+      "code": "72",
+      "label": "Tipo 72",
+      "records": 1584
+    },
+    {
+      "code": "7",
+      "label": "Tipo 7",
+      "records": 1496
+    },
+    {
+      "code": "71",
+      "label": "Tipo 71",
+      "records": 1392
+    },
+    {
+      "code": "85",
+      "label": "Tipo 85",
+      "records": 1284
+    },
+    {
+      "code": "62",
+      "label": "Tipo 62",
+      "records": 1282
+    },
+    {
+      "code": "83",
+      "label": "Tipo 83",
+      "records": 1233
+    },
+    {
+      "code": "80",
+      "label": "Tipo 80",
+      "records": 1103
+    },
+    {
+      "code": "69",
+      "label": "Tipo 69",
+      "records": 792
+    },
+    {
+      "code": "15",
+      "label": "Tipo 15",
+      "records": 611
+    },
+    {
+      "code": "75",
+      "label": "Tipo 75",
+      "records": 549
+    },
+    {
+      "code": "20",
+      "label": "Tipo 20",
+      "records": 418
+    },
+    {
+      "code": "16",
+      "label": "Tipo 16",
+      "records": 338
+    },
+    {
+      "code": "76",
+      "label": "Tipo 76",
+      "records": 283
+    },
+    {
+      "code": "32",
+      "label": "Tipo 32",
+      "records": 162
+    },
+    {
+      "code": "82",
+      "label": "Tipo 82",
+      "records": 142
+    },
+    {
+      "code": "21",
+      "label": "Tipo 21",
+      "records": 129
+    },
+    {
+      "code": "64",
+      "label": "Tipo 64",
+      "records": 125
+    },
+    {
+      "code": "78",
+      "label": "Tipo 78",
+      "records": 95
+    },
+    {
+      "code": "79",
+      "label": "Tipo 79",
+      "records": 71
+    },
+    {
+      "code": "61",
+      "label": "Tipo 61",
+      "records": 66
+    },
+    {
+      "code": "67",
+      "label": "Tipo 67",
+      "records": 30
+    }
+  ],
+  "by_management": [
+    {
+      "code": "M",
+      "label": "Municipal",
+      "records": 611794
+    },
+    {
+      "code": "E",
+      "label": "Estadual",
+      "records": 22762
+    },
+    {
+      "code": "D",
+      "label": "Dupla",
+      "records": 3338
+    },
+    {
+      "code": "S",
+      "label": "Sem informação",
+      "records": 102
+    }
+  ],
+  "metadata": {
+    "run_id": "20261003T143406Z-59e93007eafa",
+    "generated_at": "2026-10-03T14:34:06Z",
+    "source_last_modified": "arquivo local",
+    "source_sha256": "59e93007eafa1ee0da5d7d06906ff186b7934bf327f7ca9879736aecf6f2dfe7"
+  }
+}

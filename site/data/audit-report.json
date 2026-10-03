@@ -1,0 +1,116 @@
+{
+  "status": "concluído",
+  "run_id": "20261003T143406Z-59e93007eafa",
+  "generated_at": "2026-10-03T14:34:06Z",
+  "process": "cnes-audit",
+  "code_version": "local-validation",
+  "source": {
+    "catalog_url": "https://dadosabertos.saude.gov.br/dataset/cnes-cadastro-nacional-de-estabelecimentos-de-saude",
+    "resource_url": "https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/CNES/cnes_estabelecimentos_csv.zip",
+    "obtained_at": "2026-10-03T14:34:06Z",
+    "last_modified": "arquivo local",
+    "etag": "não informado",
+    "sha256": "59e93007eafa1ee0da5d7d06906ff186b7934bf327f7ca9879736aecf6f2dfe7",
+    "archive_bytes": 56408580,
+    "entry_name": "cnes_estabelecimentos.csv",
+    "entry_bytes": 231007483
+  },
+  "contract": {
+    "version": "1.0",
+    "publication_level": "somente contagens agregadas",
+    "raw_data_published": false
+  },
+  "reconciliation": {
+    "rows_read": 637996,
+    "rows_aggregated": 637996,
+    "difference": 0
+  },
+  "checks": [
+    {
+      "id": "cnes_missing",
+      "label": "Chave CNES não preenchida",
+      "dimension": "completude",
+      "severity": "alerta",
+      "status": "aprovado",
+      "evaluated": 637996,
+      "failures": 0,
+      "failure_rate": 0.0
+    },
+    {
+      "id": "cnes_duplicate",
+      "label": "Chave CNES repetida",
+      "dimension": "unicidade",
+      "severity": "alerta",
+      "status": "aprovado",
+      "evaluated": 637996,
+      "failures": 0,
+      "failure_rate": 0.0
+    },
+    {
+      "id": "uf_invalid",
+      "label": "Código de UF fora do domínio",
+      "dimension": "validade",
+      "severity": "alerta",
+      "status": "aprovado",
+      "evaluated": 637996,
+      "failures": 0,
+      "failure_rate": 0.0
+    },
+    {
+      "id": "municipality_code_invalid",
+      "label": "Código de município ausente ou fora do formato esperado",
+      "dimension": "validade",
+      "severity": "alerta",
+      "status": "aprovado",
+      "evaluated": 637996,
+      "failures": 0,
+      "failure_rate": 0.0
+    },
+    {
+      "id": "coordinates_missing",
+      "label": "Par de coordenadas não preenchido",
+      "dimension": "completude",
+      "severity": "observação",
+      "status": "observação",
+      "evaluated": 637996,
+      "failures": 59184,
+      "failure_rate": 0.092765
+    },
+    {
+      "id": "coordinates_out_of_range",
+      "label": "Par de coordenadas fora das faixas geográficas",
+      "dimension": "validade",
+      "severity": "alerta",
+      "status": "aprovado",
+      "evaluated": 637996,
+      "failures": 0,
+      "failure_rate": 0.0
+    },
+    {
+      "id": "unit_type_missing",
+      "label": "Tipo de unidade não preenchido",
+      "dimension": "completude",
+      "severity": "alerta",
+      "status": "aprovado",
+      "evaluated": 637996,
+      "failures": 0,
+      "failure_rate": 0.0
+    },
+    {
+      "id": "management_missing",
+      "label": "Tipo de gestão não preenchido",
+      "dimension": "completude",
+      "severity": "observação",
+      "status": "aprovado",
+      "evaluated": 637996,
+      "failures": 0,
+      "failure_rate": 0.0
+    }
+  ],
+  "limitations": [
+    "Os resultados descrevem o arquivo processado e não a qualidade da assistência.",
+    "A fonte pode refletir ritmos diferentes de atualização entre gestores locais.",
+    "Ausência cadastral não comprova ausência de serviço ou estrutura.",
+    "Os tipos de unidade são exibidos por código até a incorporação de tabela oficial versionada."
+  ]
+}

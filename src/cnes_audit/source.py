@@ -26,7 +26,7 @@ def iter_csv_rows(source: str | Path | BinaryIO) -> Iterator[dict[str, str]]:
             raise ValueError(f"esperado um CSV no ZIP; encontrados {len(entries)}")
 
         with archive.open(entries[0]) as raw:
-            with io.TextIOWrapper(raw, encoding="utf-8-sig", newline="") as text:
+            with io.TextIOWrapper(raw, encoding="cp1252", newline="") as text:
                 reader = csv.DictReader(text, delimiter=";")
                 columns = set(reader.fieldnames or [])
                 missing = set(REQUIRED_COLUMNS) - columns
@@ -51,4 +51,3 @@ def zip_entry_metadata(source: str | Path | BinaryIO) -> dict[str, int | str]:
             "uncompressed_bytes": entry.file_size,
             "compressed_bytes": entry.compress_size,
         }
-
