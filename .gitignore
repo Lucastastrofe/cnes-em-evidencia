@@ -1,0 +1,13 @@
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.venv/
+*.pyc
+
+data/raw/*
+!data/raw/.gitkeep
+data/work/*
+!data/work/.gitkeep
+
+site/data/*.tmp
+
