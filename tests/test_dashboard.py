@@ -5,6 +5,8 @@ from pathlib import Path
 
 from cnes_audit.presentation import (
     describe_controls,
+    format_source_date,
+    format_timestamp,
     interpret_materiality,
     management_without_information,
     split_checks,
@@ -113,6 +115,16 @@ class DashboardContractTest(unittest.TestCase):
     def test_data_cache_is_invalidated_when_published_files_change(self):
         self.assertIn("def load_data(data_version:", self.source)
         self.assertIn("published_data_version()", self.source)
+
+    def test_timestamps_are_presented_in_brasilia_time(self):
+        self.assertEqual(
+            format_timestamp("2026-10-05T10:55:49Z"),
+            "05/10/2026 às 07:55 (horário de Brasília)",
+        )
+        self.assertEqual(
+            format_source_date("Sat, 03 Oct 2026 06:00:25 GMT"),
+            "03/10/2026 às 03:00 (horário de Brasília)",
+        )
 
     def test_published_data_excludes_source_columns_outside_the_contract(self):
         for prohibited in (

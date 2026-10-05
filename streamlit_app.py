@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime
-from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 import pandas as pd
@@ -10,6 +8,8 @@ import streamlit as st
 
 from cnes_audit.presentation import (
     describe_controls,
+    format_source_date,
+    format_timestamp,
     interpret_materiality,
     management_without_information,
     split_checks,
@@ -43,17 +43,6 @@ def format_percent(value: float) -> str:
 
 def format_small_percent(value: float) -> str:
     return f"{value * 100:.3f}%".replace(".", ",")
-
-
-def format_timestamp(value: str) -> str:
-    moment = datetime.fromisoformat(value.replace("Z", "+00:00"))
-    return moment.strftime("%d/%m/%Y às %H:%M UTC")
-
-
-def format_source_date(value: str) -> str:
-    if value == "não informado":
-        return value
-    return parsedate_to_datetime(value).strftime("%d/%m/%Y às %H:%M UTC")
 
 
 def state_table(states: list[dict]) -> pd.DataFrame:

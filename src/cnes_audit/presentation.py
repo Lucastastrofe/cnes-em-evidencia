@@ -1,5 +1,31 @@
 from __future__ import annotations
 
+from datetime import datetime, timedelta, timezone
+from email.utils import parsedate_to_datetime
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
+
+
+try:
+    BRASILIA_TIMEZONE = ZoneInfo("America/Sao_Paulo")
+except ZoneInfoNotFoundError:
+    BRASILIA_TIMEZONE = timezone(timedelta(hours=-3), name="America/Sao_Paulo")
+
+
+def _format_brasilia_time(moment: datetime) -> str:
+    local_time = moment.astimezone(BRASILIA_TIMEZONE)
+    return local_time.strftime("%d/%m/%Y às %H:%M (horário de Brasília)")
+
+
+def format_timestamp(value: str) -> str:
+    moment = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    return _format_brasilia_time(moment)
+
+
+def format_source_date(value: str) -> str:
+    if value == "não informado":
+        return value
+    return _format_brasilia_time(parsedate_to_datetime(value))
+
 
 CONTROL_DESCRIPTIONS = {
     "cnes_missing": (
