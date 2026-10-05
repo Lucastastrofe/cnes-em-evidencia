@@ -18,8 +18,16 @@ from cnes_audit.presentation import (
 DATA_DIRECTORY = Path(__file__).parent / "data" / "published"
 
 
+def published_data_version() -> tuple[int, int]:
+    return tuple(
+        (DATA_DIRECTORY / filename).stat().st_mtime_ns
+        for filename in ("dashboard.json", "audit-report.json")
+    )
+
+
 @st.cache_data(show_spinner=False)
-def load_data() -> tuple[dict, dict]:
+def load_data(data_version: tuple[int, int]) -> tuple[dict, dict]:
+    del data_version
     dashboard = json.loads((DATA_DIRECTORY / "dashboard.json").read_text(encoding="utf-8"))
     audit = json.loads((DATA_DIRECTORY / "audit-report.json").read_text(encoding="utf-8"))
     return dashboard, audit
@@ -102,7 +110,7 @@ def render() -> None:
     )
 
     try:
-        dashboard, audit = load_data()
+        dashboard, audit = load_data(published_data_version())
     except (OSError, json.JSONDecodeError, KeyError) as error:
         st.error("Os dados do painel não estão disponíveis nesta execução.")
         st.exception(error)

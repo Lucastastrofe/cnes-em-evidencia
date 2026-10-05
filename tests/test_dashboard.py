@@ -110,6 +110,10 @@ class DashboardContractTest(unittest.TestCase):
         self.assertIn("Última verificação automática", self.source)
         self.assertIn("Data informada pela fonte", self.source)
 
+    def test_data_cache_is_invalidated_when_published_files_change(self):
+        self.assertIn("def load_data(data_version:", self.source)
+        self.assertIn("published_data_version()", self.source)
+
     def test_published_data_excludes_source_columns_outside_the_contract(self):
         for prohibited in (
             "nu_telefone",
