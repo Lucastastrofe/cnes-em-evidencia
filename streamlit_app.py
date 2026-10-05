@@ -173,10 +173,7 @@ def render() -> None:
     with chart_tab:
         top_states = states.nlargest(10, "Registros").set_index("UF")
         st.bar_chart(top_states["Registros"], horizontal=True, color="#176B52")
-        st.caption(
-            "Dez UFs com maior quantidade de registros na fonte mais recente verificada. "
-            "O gráfico é regenerado em cada execução automática."
-        )
+        st.caption("Dez UFs com maior quantidade de registros na fonte mais recente verificada.")
     with table_tab:
         st.dataframe(
             states,

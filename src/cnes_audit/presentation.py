@@ -13,7 +13,7 @@ except ZoneInfoNotFoundError:
 
 def _format_brasilia_time(moment: datetime) -> str:
     local_time = moment.astimezone(BRASILIA_TIMEZONE)
-    return local_time.strftime("%d/%m/%Y às %H:%M (horário de Brasília)")
+    return local_time.strftime("%d/%m/%Y às %H:%M")
 
 
 def format_timestamp(value: str) -> str:
