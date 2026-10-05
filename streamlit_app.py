@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from datetime import datetime
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 import pandas as pd
@@ -39,6 +40,12 @@ def format_small_percent(value: float) -> str:
 def format_timestamp(value: str) -> str:
     moment = datetime.fromisoformat(value.replace("Z", "+00:00"))
     return moment.strftime("%d/%m/%Y às %H:%M UTC")
+
+
+def format_source_date(value: str) -> str:
+    if value == "não informado":
+        return value
+    return parsedate_to_datetime(value).strftime("%d/%m/%Y às %H:%M UTC")
 
 
 def state_table(states: list[dict]) -> pd.DataFrame:
@@ -117,7 +124,12 @@ def render() -> None:
         unsafe_allow_html=True,
     )
     st.markdown(
-        f'<p class="source">Fotografia processada em {format_timestamp(dashboard["metadata"]["generated_at"])}.</p>',
+        (
+            '<p class="source">'
+            f'Última verificação automática: {format_timestamp(dashboard["metadata"]["generated_at"])}. '
+            f'Data informada pela fonte: {format_source_date(dashboard["metadata"]["source_last_modified"])}.'
+            "</p>"
+        ),
         unsafe_allow_html=True,
     )
 
@@ -164,7 +176,10 @@ def render() -> None:
     with chart_tab:
         top_states = states.nlargest(10, "Registros").set_index("UF")
         st.bar_chart(top_states["Registros"], horizontal=True, color="#176B52")
-        st.caption("Dez UFs com maior quantidade de registros no arquivo processado.")
+        st.caption(
+            "Dez UFs com maior quantidade de registros na fonte mais recente verificada. "
+            "O gráfico é regenerado em cada execução automática."
+        )
     with table_tab:
         st.dataframe(
             states,

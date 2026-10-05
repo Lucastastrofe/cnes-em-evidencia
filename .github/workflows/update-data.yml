@@ -35,32 +35,15 @@ jobs:
           PYTHONPATH: src
         run: python -m unittest discover -s tests -v
 
-      - name: Registrar a versão atual da fonte
-        id: baseline
-        run: |
-          old_hash=$(python -c "import json; print(json.load(open('data/published/audit-report.json', encoding='utf-8'))['source']['sha256'])")
-          echo "source_hash=$old_hash" >> "$GITHUB_OUTPUT"
-
       - name: Obter e processar o CNES
         env:
           PYTHONPATH: src
         run: python -m cnes_audit.cli --code-version "$GITHUB_SHA"
 
-      - name: Verificar se os agregados mudaram
-        id: changes
-        run: |
-          new_hash=$(python -c "import json; print(json.load(open('data/published/audit-report.json', encoding='utf-8'))['source']['sha256'])")
-          if [ "$new_hash" = "${{ steps.baseline.outputs.source_hash }}" ]; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Registrar a nova fotografia
-        if: steps.changes.outputs.changed == 'true'
+      - name: Registrar a verificação diária
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/published
-          git commit -m "data: atualiza fotografia do CNES"
+          git commit -m "data: registra verificação diária do CNES"
           git push

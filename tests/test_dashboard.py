@@ -106,6 +106,10 @@ class DashboardContractTest(unittest.TestCase):
         self.assertEqual(summary["records"], 1)
         self.assertEqual(summary["rate"], 0.001)
 
+    def test_dashboard_distinguishes_source_date_from_daily_check(self):
+        self.assertIn("Última verificação automática", self.source)
+        self.assertIn("Data informada pela fonte", self.source)
+
     def test_published_data_excludes_source_columns_outside_the_contract(self):
         for prohibited in (
             "nu_telefone",

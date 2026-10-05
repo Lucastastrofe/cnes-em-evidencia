@@ -29,7 +29,7 @@ python -m cnes_audit.cli --input caminho/arquivo.zip
 4. Selecionar Python 3.13 nas configurações avançadas.
 5. Executar manualmente `Atualizar dados do painel` na primeira publicação.
 
-Depois disso, o fluxo roda diariamente às 09:17 UTC e cria um commit apenas quando os agregados mudarem. O Streamlit acompanha o repositório e atualiza o app quando o commit chega. O agendamento não garante horário exato: o GitHub pode atrasar execuções em períodos de maior carga.
+Depois disso, o fluxo roda diariamente a partir das 09:17 UTC e registra cada verificação concluída. O Streamlit acompanha o repositório e atualiza o app quando o commit chega. A interface separa o horário da verificação da data informada pela fonte: uma execução nova não significa, por si só, que o publicador alterou o arquivo. O agendamento não garante horário exato; o GitHub pode atrasar execuções em períodos de maior carga.
 
 ## Evidências de uma execução
 

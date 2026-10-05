@@ -14,7 +14,7 @@ Esses resultados descrevem o arquivo processado. Eles não medem qualidade assis
 - controles reproduzíveis de completude, unicidade e validade;
 - reconciliação entre registros lidos e agregados;
 - painel interativo em Streamlit;
-- atualização diária dos agregados pelo GitHub Actions;
+- verificação diária da fonte e regeneração dos agregados pelo GitHub Actions;
 - minimização de dados e contrato automatizado de privacidade.
 
 ## Fluxo
