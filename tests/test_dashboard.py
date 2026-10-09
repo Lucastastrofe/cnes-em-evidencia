@@ -4,6 +4,7 @@ import unittest
 from pathlib import Path
 
 from cnes_audit.presentation import (
+    CONTROL_DESCRIPTIONS,
     describe_controls,
     format_source_date,
     format_timestamp,
@@ -83,17 +84,20 @@ class DashboardContractTest(unittest.TestCase):
         self.assertIn("UF", interpretation["unaffected_use"])
 
     def test_controls_are_explained_and_the_finding_is_named(self):
-        checks = json.loads(
-            (self.root / "data" / "published" / "dashboard.json").read_text(encoding="utf-8")
-        )["checks"]
+        checks = [
+            {
+                "id": "coordinates_missing",
+                "failures": 12_345,
+                "failure_rate": 0.123,
+            }
+        ]
 
         descriptions = describe_controls(checks)
 
-        self.assertEqual(len(descriptions), 8)
-        coordinate_check = next(
-            item for item in descriptions if item["Controle"] == "Coordenadas preenchidas"
-        )
-        self.assertEqual(coordinate_check["Resultado"], "Atenção: 59.184 registros (9,3%)")
+        self.assertEqual(len(CONTROL_DESCRIPTIONS), 8)
+        coordinate_check = descriptions[0]
+        self.assertEqual(coordinate_check["Controle"], "Coordenadas preenchidas")
+        self.assertEqual(coordinate_check["Resultado"], "Atenção: 12.345 registros (12,3%)")
         self.assertIn("latitude e longitude", coordinate_check["O que verifica"])
 
     def test_management_without_information_is_visible_even_when_rate_is_small(self):
