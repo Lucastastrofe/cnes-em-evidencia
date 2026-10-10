@@ -69,6 +69,21 @@ class PopulationSourceTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "mais de um ano"):
                 read_population_estimates(path, expected_states=2)
 
+    def test_rejects_state_code_outside_the_official_domain(self):
+        payload = sidra_payload(
+            [
+                {"V": "1757338", "D1C": "11", "D1N": "Rondônia", "D3C": "2026", "D3N": "2026"},
+                {"V": "887794", "D1C": "99", "D1N": "Inválida", "D3C": "2026", "D3N": "2026"},
+            ]
+        )
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            path = Path(temporary_directory) / "population.json"
+            path.write_text(json.dumps(payload), encoding="utf-8")
+
+            with self.assertRaisesRegex(ValueError, "domínio oficial"):
+                read_population_estimates(path, expected_states=2)
+
     def test_calculates_establishments_per_100_thousand_inhabitants(self):
         cnes_states = [
             {"code": "11", "name": "Rondônia", "records": 200, "issues": 10},

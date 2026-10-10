@@ -16,6 +16,10 @@ def read_population_estimates(
 
     rows = payload[1:]
     state_codes = [str(row.get("D1C", "")) for row in rows]
+    unexpected_codes = set(state_codes) - set(UF_NAMES)
+    if unexpected_codes:
+        codes = ", ".join(sorted(unexpected_codes))
+        raise ValueError(f"códigos fora do domínio oficial de UFs: {codes}")
     if len(rows) != expected_states or len(set(state_codes)) != expected_states:
         raise ValueError(
             f"cobertura de UFs incompatível: esperadas {expected_states}, recebidas {len(set(state_codes))}"
