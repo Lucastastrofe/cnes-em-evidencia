@@ -10,12 +10,17 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from cnes_audit.population import enrich_states_with_population, read_population_estimates
 from cnes_audit.quality import audit_rows
 from cnes_audit.source import iter_csv_rows, zip_entry_metadata
 
 DEFAULT_SOURCE_URL = (
     "https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/"
     "CNES/cnes_estabelecimentos_csv.zip"
+)
+DEFAULT_POPULATION_URL = (
+    "https://apisidra.ibge.gov.br/values/t/6579/n3/all/v/9324/"
+    "p/last%201?formato=json"
 )
 
 
@@ -68,16 +73,31 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
 
 def build_public_artifacts(
     source_path: Path,
+    population_path: Path,
     output_directory: Path,
     source_url: str,
+    population_url: str,
     obtained_at: str,
     source_last_modified: str,
+    population_last_modified: str,
     code_version: str,
     source_etag: str = "não informado",
+    population_etag: str = "não informado",
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     source_hash = sha256_file(source_path)
+    population_hash = sha256_file(population_path)
     archive = zip_entry_metadata(source_path)
     dashboard = audit_rows(iter_csv_rows(source_path))
+    population = read_population_estimates(population_path)
+    dashboard["by_state"] = enrich_states_with_population(
+        dashboard["by_state"], population
+    )
+    dashboard["summary"].update(
+        {
+            "population_reference_year": population["reference_year"],
+            "total_population": population["total_population"],
+        }
+    )
     total_rows = dashboard["summary"]["total_records"]
     aggregated_rows = sum(item["records"] for item in dashboard["by_state"])
     if total_rows != aggregated_rows:
@@ -91,6 +111,7 @@ def build_public_artifacts(
         "generated_at": obtained_at,
         "source_last_modified": source_last_modified,
         "source_sha256": source_hash,
+        "population_source_sha256": population_hash,
     }
     dashboard["metadata"] = public_metadata
     audit = {
@@ -113,8 +134,22 @@ def build_public_artifacts(
             "entry_name": archive["name"],
             "entry_bytes": archive["uncompressed_bytes"],
         },
+        "population_source": {
+            "catalog_url": (
+                "https://www.ibge.gov.br/estatisticas/sociais/populacao/"
+                "9103-estimativas-de-populacao.html"
+            ),
+            "resource_url": population_url,
+            "obtained_at": obtained_at,
+            "last_modified": population_last_modified,
+            "etag": population_etag,
+            "sha256": population_hash,
+            "reference_year": population["reference_year"],
+            "states": len(population["by_state"]),
+            "total_population": population["total_population"],
+        },
         "contract": {
-            "version": "1.0",
+            "version": "2.0",
             "publication_level": "somente contagens agregadas",
             "raw_data_published": False,
         },
@@ -128,10 +163,10 @@ def build_public_artifacts(
             "Os resultados descrevem o arquivo processado e não a qualidade da assistência.",
             "A fonte pode refletir ritmos diferentes de atualização entre gestores locais.",
             "Ausência cadastral não comprova ausência de serviço ou estrutura.",
+            "A taxa por população mede presença cadastral relativa, não capacidade assistencial.",
             "Os tipos de unidade são exibidos por código até a incorporação de tabela oficial versionada.",
         ],
     }
     _write_json(output_directory / "dashboard.json", dashboard)
     _write_json(output_directory / "audit-report.json", audit)
     return dashboard, audit
-
