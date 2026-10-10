@@ -16,6 +16,15 @@ Quais problemas de completude, unicidade e validade aparecem no cadastro naciona
 - expor fonte, horário, hash do arquivo, regras executadas, resultados e limitações;
 - atualizar e publicar o site automaticamente pelo GitHub Actions.
 
+## Escopo do segundo incremento
+
+- extrair a estimativa populacional anual mais recente do IBGE pela API SIDRA;
+- validar ano único, valores positivos, unicidade e cobertura das 27 UFs;
+- integrar CNES e IBGE pelo código da UF;
+- calcular registros cadastrais do CNES por 100 mil habitantes;
+- publicar hash, referência e metadados das duas fontes na trilha de auditoria;
+- comparar UFs sem interpretar a taxa como oferta, acesso ou capacidade assistencial.
+
 ## Fora de escopo
 
 - avaliar qualidade assistencial ou desempenho de estabelecimentos;
@@ -23,6 +32,7 @@ Quais problemas de completude, unicidade e validade aparecem no cadastro naciona
 - publicar registros individuais, contatos, endereços, CNPJ ou coordenadas;
 - criar uma nota composta de qualidade com pesos arbitrários;
 - manter histórico longitudinal antes de haver execuções suficientes para comparação.
+- explicar as diferenças entre UFs por causalidade ou avaliar suficiência da rede.
 
 ## Critérios de aceite
 
@@ -33,6 +43,10 @@ Quais problemas de completude, unicidade e validade aparecem no cadastro naciona
 5. O painel Streamlit possui filtro por UF, estado de erro e leitura adequada em tela estreita.
 6. Testes automatizados cobrem normalização, controles, reconciliação e contrato de privacidade.
 7. O fluxo agendado baixa novamente a fonte, testa, gera e publica o mesmo artefato validado.
+8. O ETL interrompe a publicação se a fonte populacional não trouxer uma única estimativa para as 27 UFs.
+9. A junção entre CNES e IBGE não aceita UF válida sem correspondência populacional.
+10. O painel apresenta a taxa por 100 mil habitantes, o ano do denominador e seu limite de interpretação.
+11. O relatório de auditoria identifica URL, hash, referência e horário de obtenção das duas fontes.
 
 ## Restrições e riscos
 
@@ -52,3 +66,7 @@ Quais problemas de completude, unicidade e validade aparecem no cadastro naciona
 ## Situação em 2026-10-03
 
 Fato verificado: o recurso CSV oficial responde em `https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/CNES/cnes_estabelecimentos_csv.zip` e continha `cnes_estabelecimentos.csv` com cabeçalho separado por ponto e vírgula. Em 2026-10-03, a entrega foi alterada de site estático para um único painel Streamlit por decisão do usuário. A publicação externa ainda não foi executada.
+
+## Situação em 2026-10-10
+
+Fato verificado: a API SIDRA da tabela 6579, variável 9324, retornou estimativas de 2026 para as 27 UFs. O ETL integrado foi executado com as fontes reais, reconciliou 638.867 registros do CNES e publicou população total de 214.211.951 pessoas. A taxa nacional calculada foi de 298,24 registros cadastrais por 100 mil habitantes. A publicação externa desta segunda parte depende do envio dos commits e da validação do workflow no GitHub.

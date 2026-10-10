@@ -4,7 +4,9 @@ Painel Streamlit e pipeline de qualidade da base aberta de estabelecimentos de s
 
 ## Resultado atual
 
-A fotografia processada em 3 de outubro de 2026 continha 637.996 registros. Sete dos oito controles não encontraram ocorrências; o controle de completude geográfica encontrou 59.184 registros sem o par completo de coordenadas, ou 9,3% da base.
+A fotografia processada em 10 de outubro de 2026 continha 638.867 registros. Sete dos oito controles não encontraram ocorrências; o controle de completude geográfica encontrou 59.174 registros sem o par completo de coordenadas, ou 9,3% da base.
+
+A segunda parte integra a fotografia do CNES à estimativa populacional de 2026 do IBGE. O resultado nacional foi de 298,24 registros cadastrais por 100 mil habitantes. A taxa permite comparar presença cadastral relativa, mas não mede oferta, acesso ou capacidade assistencial.
 
 Esses resultados descrevem o arquivo processado. Eles não medem qualidade assistencial, conformidade sanitária ou disponibilidade atual de serviços.
 
@@ -15,20 +17,16 @@ Esses resultados descrevem o arquivo processado. Eles não medem qualidade assis
 - reconciliação entre registros lidos e agregados;
 - painel interativo em Streamlit;
 - verificação diária da fonte e regeneração dos agregados pelo GitHub Actions;
+- ETL integrado entre CNES e estimativas populacionais do IBGE;
+- comparação por UF usando população como denominador explícito;
 - minimização de dados e contrato automatizado de privacidade.
 
 ## Fluxo
 
 ```text
-Arquivo oficial do CNES
-        ↓
-validação do schema e leitura em fluxo
-        ↓
-controles e agregações por UF
-        ↓
-reconciliação + relatório de auditoria
-        ↓
-painel Streamlit atualizado a partir do repositório
+CNES (ZIP/CSV) ──→ validação + auditoria ──┐
+                                           ├─→ junção por UF ─→ agregados + auditoria ─→ Streamlit
+IBGE (SIDRA/JSON) ─→ validação das 27 UFs ─┘
 ```
 
 ## Privacidade
@@ -75,6 +73,7 @@ O escopo e os critérios de aceite estão em [`PROJECT_CONTEXT.md`](PROJECT_CONT
 - uma ausência cadastral não comprova ausência de estrutura ou serviço;
 - tipos de estabelecimento aparecem por código até que uma tabela oficial versionada seja incorporada;
 - o primeiro incremento não guarda série histórica.
+- a taxa por população descreve cadastro relativo e não permite concluir suficiência da rede.
 
 ## Licença
 

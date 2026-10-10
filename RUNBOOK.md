@@ -12,13 +12,13 @@ python -m pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
 
-O segundo comando baixa a fonte oficial para `data/work`, processa o CSV diretamente do ZIP e substitui os dois JSON de `data/published` de forma atômica.
+O segundo comando baixa o CNES e a estimativa populacional mais recente do IBGE para `data/work`, valida as duas fontes, integra por UF e substitui os dois JSON de `data/published` de forma atômica.
 
 Para reproduzir uma fotografia já baixada:
 
 ```powershell
 $env:PYTHONPATH = "src"
-python -m cnes_audit.cli --input caminho/arquivo.zip
+python -m cnes_audit.cli --input caminho/cnes.zip --population-input caminho/populacao.json
 ```
 
 ## Publicação no Streamlit Community Cloud
@@ -36,6 +36,7 @@ Depois disso, o fluxo roda diariamente a partir das 09:17 UTC e registra cada ve
 - logs do job com quantidade de registros e controles com achados;
 - commit automatizado contendo apenas os agregados alterados;
 - `data/published/audit-report.json`, contendo execução, versão do código, hash, metadados da fonte e reconciliação;
+- metadados separados do CNES e do IBGE, incluindo hashes e ano populacional usado;
 - logs do Streamlit Community Cloud para diagnóstico do aplicativo.
 
 ## Falhas esperadas
@@ -47,6 +48,10 @@ O download tenta novamente três vezes e encerra com erro. O deploy não roda, p
 ### O schema mudou
 
 O pipeline informa as colunas contratuais ausentes e interrompe a publicação. Compare a fonte com `DATA_CONTEXT.md`, ajuste o contrato e os testes antes de aceitar a mudança.
+
+### A população não cobre as 27 UFs
+
+O ETL interrompe a publicação se a API do IBGE retornar mais de um ano, códigos repetidos, valor não positivo ou cobertura diferente das 27 UFs. Confirme a tabela 6579 e a variável 9324 antes de alterar o contrato.
 
 ### A reconciliação falhou
 
