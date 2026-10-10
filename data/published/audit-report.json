@@ -1,19 +1,19 @@
 {
   "status": "concluído",
-  "run_id": "20261009T161828Z-9f6465949216",
-  "generated_at": "2026-10-09T16:18:28Z",
+  "run_id": "20261010T152640Z-3bd465b76fb1",
+  "generated_at": "2026-10-10T15:26:40Z",
   "process": "cnes-audit",
-  "code_version": "39b95145769b8c67247d8138cab0e32f4fdacab4",
+  "code_version": "095c570204dad913e73e65ba223c63e8bd24b930",
   "source": {
     "catalog_url": "https://dadosabertos.saude.gov.br/dataset/cnes-cadastro-nacional-de-estabelecimentos-de-saude",
     "resource_url": "https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/CNES/cnes_estabelecimentos_csv.zip",
-    "obtained_at": "2026-10-09T16:18:28Z",
-    "last_modified": "Fri, 09 Oct 2026 07:23:45 GMT",
-    "etag": "4be222665e79b6da068f1525f09461fd-7",
-    "sha256": "9f646594921609786c5aaf5bb92030004b57844125b26f0b1b96abd723cde2c7",
-    "archive_bytes": 56460257,
+    "obtained_at": "2026-10-10T15:26:40Z",
+    "last_modified": "Sat, 10 Oct 2026 06:01:44 GMT",
+    "etag": "e2b29a597ff809dee5be43205154f13c-7",
+    "sha256": "3bd465b76fb113af1b0df6938ca543c0f14cb64c5724cb12d532d0455d4330f3",
+    "archive_bytes": 56491985,
     "entry_name": "cnes_estabelecimentos.csv",
-    "entry_bytes": 231202813
+    "entry_bytes": 231316992
   },
   "contract": {
     "version": "1.0",
@@ -21,8 +21,8 @@
     "raw_data_published": false
   },
   "reconciliation": {
-    "rows_read": 638547,
-    "rows_aggregated": 638547,
+    "rows_read": 638867,
+    "rows_aggregated": 638867,
     "difference": 0
   },
   "checks": [
@@ -32,7 +32,7 @@
       "dimension": "completude",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 638547,
+      "evaluated": 638867,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -42,7 +42,7 @@
       "dimension": "unicidade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 638547,
+      "evaluated": 638867,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -52,7 +52,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 638547,
+      "evaluated": 638867,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -62,7 +62,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 638547,
+      "evaluated": 638867,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -72,9 +72,9 @@
       "dimension": "completude",
       "severity": "observação",
       "status": "observação",
-      "evaluated": 638547,
-      "failures": 59179,
-      "failure_rate": 0.092678
+      "evaluated": 638867,
+      "failures": 59174,
+      "failure_rate": 0.092623
     },
     {
       "id": "coordinates_out_of_range",
@@ -82,7 +82,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 638547,
+      "evaluated": 638867,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -92,7 +92,7 @@
       "dimension": "completude",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 638547,
+      "evaluated": 638867,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -102,7 +102,7 @@
       "dimension": "completude",
       "severity": "observação",
       "status": "aprovado",
-      "evaluated": 638547,
+      "evaluated": 638867,
       "failures": 0,
       "failure_rate": 0.0
     }
