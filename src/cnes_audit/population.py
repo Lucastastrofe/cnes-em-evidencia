@@ -4,6 +4,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from cnes_audit.quality import UF_NAMES
+
 
 def read_population_estimates(
     source_path: Path, expected_states: int = 27
@@ -44,3 +46,37 @@ def read_population_estimates(
         "total_population": sum(int(item["population"]) for item in by_state),
         "by_state": by_state,
     }
+
+
+def enrich_states_with_population(
+    cnes_states: list[dict[str, Any]], population: dict[str, Any]
+) -> list[dict[str, Any]]:
+    population_by_code = {
+        str(item["code"]): int(item["population"])
+        for item in population["by_state"]
+    }
+    enriched: list[dict[str, Any]] = []
+
+    for state in cnes_states:
+        code = str(state["code"])
+        if code not in UF_NAMES:
+            enriched.append(
+                {**state, "population": None, "establishments_per_100k": None}
+            )
+            continue
+        if code not in population_by_code:
+            raise ValueError(f"UF {code} sem correspondência na população do IBGE")
+
+        inhabitants = population_by_code[code]
+        enriched.append(
+            {
+                **state,
+                "population": inhabitants,
+                "establishments_per_100k": round(
+                    int(state["records"]) / inhabitants * 100_000,
+                    2,
+                ),
+            }
+        )
+
+    return enriched
