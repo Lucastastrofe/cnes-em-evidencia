@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" role="img" aria-labelledby="title desc">
+  <title id="title">CNES em Evidência — Parte 2</title>
+  <desc id="desc">Resumo da comparação proporcional dos registros do CNES com a população estimada pelo IBGE em 2026.</desc>
+  <rect width="1080" height="1080" fill="#f4f1e9"/>
+  <rect x="54" y="54" width="972" height="972" rx="24" fill="#fffdf8" stroke="#c5cfca" stroke-width="2"/>
+
+  <g font-family="Arial, Helvetica, sans-serif">
+    <rect x="94" y="92" width="116" height="34" rx="17" fill="#176b52"/>
+    <text x="152" y="115" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="700" letter-spacing="1">PARTE 2</text>
+    <text x="94" y="185" fill="#17221f" font-size="52" font-weight="700">CNES em Evidência</text>
+    <text x="94" y="229" fill="#53635d" font-size="25">O que muda quando a população entra na comparação?</text>
+
+    <line x1="94" y1="270" x2="986" y2="270" stroke="#d7dfdb" stroke-width="2"/>
+
+    <g>
+      <rect x="94" y="314" width="276" height="142" rx="16" fill="#f2f6f3" stroke="#d5ded9"/>
+      <text x="120" y="350" fill="#53635d" font-size="18">Registros do CNES</text>
+      <text x="120" y="414" fill="#17221f" font-size="46" font-weight="700">638.867</text>
+    </g>
+    <g>
+      <rect x="402" y="314" width="276" height="142" rx="16" fill="#f2f6f3" stroke="#d5ded9"/>
+      <text x="428" y="350" fill="#53635d" font-size="18">População estimada</text>
+      <text x="428" y="414" fill="#17221f" font-size="46" font-weight="700">214,2 mi</text>
+    </g>
+    <g>
+      <rect x="710" y="314" width="276" height="142" rx="16" fill="#e8f2ed" stroke="#b9d2c6"/>
+      <text x="736" y="350" fill="#53635d" font-size="18">Brasil · por 100 mil</text>
+      <text x="736" y="414" fill="#176b52" font-size="46" font-weight="700">298</text>
+    </g>
+
+    <text x="94" y="526" fill="#17221f" font-size="25" font-weight="700">Presença cadastral relativa nas UFs</text>
+    <text x="94" y="573" fill="#53635d" font-size="20">Rio Grande do Sul</text>
+    <rect x="306" y="550" width="590" height="30" rx="7" fill="#2b716f"/>
+    <text x="924" y="574" fill="#17221f" font-size="23" font-weight="700">453</text>
+
+    <text x="94" y="632" fill="#53635d" font-size="20">Amazonas</text>
+    <rect x="306" y="609" width="137" height="30" rx="7" fill="#8aada4"/>
+    <text x="467" y="633" fill="#17221f" font-size="23" font-weight="700">105</text>
+
+    <rect x="94" y="700" width="892" height="160" rx="16" fill="#f6f3eb" stroke="#ddd7c9"/>
+    <text x="124" y="744" fill="#17221f" font-size="21" font-weight="700">Como interpretar</text>
+    <text x="124" y="786" fill="#53635d" font-size="20">A taxa ajuda a localizar diferenças entre os estados.</text>
+    <text x="124" y="820" fill="#53635d" font-size="20">Ela não mede, sozinha, acesso, qualidade ou capacidade de atendimento.</text>
+
+    <line x1="94" y1="910" x2="986" y2="910" stroke="#d7dfdb" stroke-width="2"/>
+    <text x="94" y="958" fill="#17221f" font-size="20" font-weight="700">CNES + IBGE 2026</text>
+    <text x="986" y="958" text-anchor="end" fill="#687872" font-size="17">Dados públicos · atualização diária</text>
+  </g>
+</svg>
