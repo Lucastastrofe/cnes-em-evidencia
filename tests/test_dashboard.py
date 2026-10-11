@@ -134,9 +134,10 @@ class DashboardContractTest(unittest.TestCase):
         self.assertNotIn("O gráfico é regenerado em cada execução automática.", self.source)
 
     def test_second_part_compares_cnes_with_population_without_claiming_capacity(self):
-        self.assertIn("Parte 2 · Painel de comparação por população", self.source)
+        self.assertIn("Parte 2 · Comparação proporcional", self.source)
         self.assertIn("por 100 mil habitantes", self.source)
         self.assertIn("não mede oferta, acesso ou capacidade assistencial", self.source)
+        self.assertNotIn("O ETL combina", self.source)
 
     def test_second_part_is_an_interactive_dashboard_view(self):
         self.assertIn("Painel de comparação por população", self.source)
@@ -145,6 +146,17 @@ class DashboardContractTest(unittest.TestCase):
         self.assertIn("Recorte da comparação", self.source)
         self.assertIn("Taxa ponderada da seleção", self.source)
         self.assertIn("UFs na comparação", self.source)
+
+    def test_each_part_has_its_own_dashboard_navigation(self):
+        self.assertIn("st.navigation", self.source)
+        self.assertIn('"Painéis da série"', self.source)
+        self.assertIn('"1 · Qualidade cadastral"', self.source)
+        self.assertIn('"2 · Presença por população"', self.source)
+
+    def test_population_rates_are_calculated_with_precision_but_displayed_as_whole_numbers(self):
+        self.assertIn("def format_rate", self.source)
+        self.assertIn('format=".0f"', self.source)
+        self.assertIn('format="%.0f"', self.source)
 
     def test_published_data_excludes_source_columns_outside_the_contract(self):
         for prohibited in (

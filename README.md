@@ -1,6 +1,6 @@
 # CNES em Evidência
 
-Painel Streamlit e pipeline de qualidade da base aberta de estabelecimentos de saúde do CNES. O painel concentra indicadores, filtros e controles; a explicação completa do projeto fica no portfólio.
+Aplicação Streamlit e pipeline de qualidade da base aberta de estabelecimentos de saúde do CNES. A navegação separa o painel de qualidade cadastral do painel de comparação por população; a explicação completa do projeto fica no portfólio.
 
 ## Resultado atual
 
@@ -15,7 +15,7 @@ Esses resultados descrevem o arquivo processado. Eles não medem qualidade assis
 - processamento de um CSV de 231 MB diretamente do ZIP, sem carregar a base inteira na memória;
 - controles reproduzíveis de completude, unicidade e validade;
 - reconciliação entre registros lidos e agregados;
-- painel interativo em Streamlit;
+- dois painéis interativos em uma única aplicação Streamlit;
 - verificação diária da fonte e regeneração dos agregados pelo GitHub Actions;
 - ETL integrado entre CNES e estimativas populacionais do IBGE;
 - comparação por UF usando população como denominador explícito;
