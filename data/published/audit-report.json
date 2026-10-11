@@ -1,13 +1,13 @@
 {
   "status": "concluído",
-  "run_id": "20261011T180247Z-3bd465b76fb1",
-  "generated_at": "2026-10-11T18:02:47Z",
+  "run_id": "20261011T182029Z-3bd465b76fb1",
+  "generated_at": "2026-10-11T18:20:29Z",
   "process": "cnes-audit",
-  "code_version": "working-tree",
+  "code_version": "a26a93133a7ecb4a4a9aad616f26cbf360c5044e",
   "source": {
     "catalog_url": "https://dadosabertos.saude.gov.br/dataset/cnes-cadastro-nacional-de-estabelecimentos-de-saude",
     "resource_url": "https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/CNES/cnes_estabelecimentos_csv.zip",
-    "obtained_at": "2026-10-11T18:02:47Z",
+    "obtained_at": "2026-10-11T18:20:29Z",
     "last_modified": "Sat, 10 Oct 2026 06:01:44 GMT",
     "etag": "e2b29a597ff809dee5be43205154f13c-7",
     "sha256": "3bd465b76fb113af1b0df6938ca543c0f14cb64c5724cb12d532d0455d4330f3",
@@ -18,7 +18,7 @@
   "population_source": {
     "catalog_url": "https://www.ibge.gov.br/estatisticas/sociais/populacao/9103-estimativas-de-populacao.html",
     "resource_url": "https://apisidra.ibge.gov.br/values/t/6579/n3/all/v/9324/p/last%201?formato=json",
-    "obtained_at": "2026-10-11T18:02:47Z",
+    "obtained_at": "2026-10-11T18:20:29Z",
     "last_modified": "não informado",
     "etag": "não informado",
     "sha256": "17389fa5c36be0efa240441fe4011080d9a27b338befb3c8049c4a81da8be946",
