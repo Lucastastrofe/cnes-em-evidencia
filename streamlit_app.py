@@ -122,12 +122,38 @@ def render_population_panel(dashboard: dict, audit: dict) -> None:
     )
     render_update_context(dashboard)
 
-    st.subheader("Painel de comparação por população")
+    st.subheader("Para que serve")
     st.write(
-        "Estados com populações diferentes não devem ser comparados apenas pelo total de "
-        "cadastros. Este painel apresenta quantos registros do CNES existem para cada 100 mil "
-        "habitantes, permitindo observar diferenças relativas entre as UFs."
+        "O painel permite comparar a presença cadastral entre estados de tamanhos diferentes e "
+        "identificar UFs que merecem uma investigação mais detalhada. A população funciona como "
+        "referência para que a comparação não dependa apenas do volume absoluto de cadastros."
     )
+
+    cnes_definition, population_definition, rate_definition = st.columns(3)
+    with cnes_definition.container(border=True):
+        st.markdown("**Registros do CNES**")
+        st.write(
+            "Quantidade de cadastros da UF no arquivo processado. Não representa número de "
+            "atendimentos realizados."
+        )
+    with population_definition.container(border=True):
+        st.markdown("**População estimada**")
+        st.write(
+            "Estimativa anual do IBGE usada como denominador para tornar as UFs comparáveis."
+        )
+    with rate_definition.container(border=True):
+        st.markdown("**Cadastros por 100 mil habitantes**")
+        st.write(
+            "Razão entre os registros e a população. Uma taxa de 300 equivale a cerca de 300 "
+            "registros cadastrais para cada 100 mil habitantes."
+        )
+
+    st.info(
+        "Uma taxa maior não significa, por si só, melhor oferta ou acesso à saúde. O indicador "
+        "mostra presença cadastral relativa e orienta onde aprofundar a análise."
+    )
+
+    st.subheader("Explore os dados")
     filter_states, filter_scope = st.columns([2, 1])
     with filter_states:
         selected_ufs = st.multiselect(
@@ -165,6 +191,10 @@ def render_population_panel(dashboard: dict, audit: dict) -> None:
     rate_c.caption(highest["UF"])
     rate_d.metric("Menor taxa", format_rate(lowest["Cadastros por 100 mil habitantes"]))
     rate_d.caption(lowest["UF"])
+    st.caption(
+        "A taxa ponderada divide o total de registros pela população total das UFs selecionadas; "
+        "não é a média simples das taxas estaduais."
+    )
 
     rate_chart = (
         alt.Chart(comparison)

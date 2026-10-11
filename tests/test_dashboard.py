@@ -140,7 +140,7 @@ class DashboardContractTest(unittest.TestCase):
         self.assertNotIn("O ETL combina", self.source)
 
     def test_second_part_is_an_interactive_dashboard_view(self):
-        self.assertIn("Painel de comparação por população", self.source)
+        self.assertIn("Explore os dados", self.source)
         self.assertIn("multiselect", self.source)
         self.assertIn("vazio = Brasil completo", self.source)
         self.assertIn("Recorte da comparação", self.source)
@@ -157,6 +157,13 @@ class DashboardContractTest(unittest.TestCase):
         self.assertIn("def format_rate", self.source)
         self.assertIn('format=".0f"', self.source)
         self.assertIn('format="%.0f"', self.source)
+
+    def test_population_panel_explains_its_purpose_and_metrics(self):
+        self.assertIn("Para que serve", self.source)
+        self.assertIn("Registros do CNES", self.source)
+        self.assertIn("População estimada", self.source)
+        self.assertIn("Uma taxa maior não significa", self.source)
+        self.assertIn("não é a média simples", self.source)
 
     def test_published_data_excludes_source_columns_outside_the_contract(self):
         for prohibited in (
