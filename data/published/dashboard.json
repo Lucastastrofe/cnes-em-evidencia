@@ -3,7 +3,9 @@
     "total_records": 638867,
     "states_with_records": 27,
     "checks_run": 8,
-    "checks_with_findings": 1
+    "checks_with_findings": 1,
+    "population_reference_year": 2026,
+    "total_population": 214211951
   },
   "checks": [
     {
@@ -92,163 +94,217 @@
       "code": "35",
       "name": "São Paulo",
       "records": 154325,
-      "issues": 18515
+      "issues": 18515,
+      "population": 46179008,
+      "establishments_per_100k": 334.19
     },
     {
       "code": "31",
       "name": "Minas Gerais",
       "records": 78845,
-      "issues": 5099
+      "issues": 5099,
+      "population": 21460311,
+      "establishments_per_100k": 367.4
     },
     {
       "code": "33",
       "name": "Rio de Janeiro",
       "records": 58476,
-      "issues": 8289
+      "issues": 8289,
+      "population": 17225410,
+      "establishments_per_100k": 339.48
     },
     {
       "code": "43",
       "name": "Rio Grande do Sul",
       "records": 50895,
-      "issues": 2587
+      "issues": 2587,
+      "population": 11233317,
+      "establishments_per_100k": 453.07
     },
     {
       "code": "41",
       "name": "Paraná",
       "records": 43947,
-      "issues": 3052
+      "issues": 3052,
+      "population": 11952456,
+      "establishments_per_100k": 367.68
     },
     {
       "code": "42",
       "name": "Santa Catarina",
       "records": 36366,
-      "issues": 2055
+      "issues": 2055,
+      "population": 8312759,
+      "establishments_per_100k": 437.47
     },
     {
       "code": "29",
       "name": "Bahia",
       "records": 30120,
-      "issues": 2582
+      "issues": 2582,
+      "population": 14889472,
+      "establishments_per_100k": 202.29
     },
     {
       "code": "23",
       "name": "Ceará",
       "records": 19354,
-      "issues": 917
+      "issues": 917,
+      "population": 9302211,
+      "establishments_per_100k": 208.06
     },
     {
       "code": "52",
       "name": "Goiás",
       "records": 18705,
-      "issues": 717
+      "issues": 717,
+      "population": 7495033,
+      "establishments_per_100k": 249.57
     },
     {
       "code": "26",
       "name": "Pernambuco",
       "records": 18257,
-      "issues": 2233
+      "issues": 2233,
+      "population": 9583176,
+      "establishments_per_100k": 190.51
     },
     {
       "code": "51",
       "name": "Mato Grosso",
       "records": 13993,
-      "issues": 674
+      "issues": 674,
+      "population": 3950330,
+      "establishments_per_100k": 354.22
     },
     {
       "code": "32",
       "name": "Espírito Santo",
       "records": 13280,
-      "issues": 1508
+      "issues": 1508,
+      "population": 4150692,
+      "establishments_per_100k": 319.95
     },
     {
       "code": "15",
       "name": "Pará",
       "records": 12785,
-      "issues": 1575
+      "issues": 1575,
+      "population": 8756324,
+      "establishments_per_100k": 146.01
     },
     {
       "code": "53",
       "name": "Distrito Federal",
       "records": 12619,
-      "issues": 4041
+      "issues": 4041,
+      "population": 3009996,
+      "establishments_per_100k": 419.24
     },
     {
       "code": "25",
       "name": "Paraíba",
       "records": 10764,
-      "issues": 633
+      "issues": 633,
+      "population": 4182828,
+      "establishments_per_100k": 257.34
     },
     {
       "code": "50",
       "name": "Mato Grosso do Sul",
       "records": 9631,
-      "issues": 575
+      "issues": 575,
+      "population": 2946317,
+      "establishments_per_100k": 326.88
     },
     {
       "code": "21",
       "name": "Maranhão",
       "records": 9507,
-      "issues": 515
+      "issues": 515,
+      "population": 7024557,
+      "establishments_per_100k": 135.34
     },
     {
       "code": "24",
       "name": "Rio Grande do Norte",
       "records": 7879,
-      "issues": 515
+      "issues": 515,
+      "population": 3463737,
+      "establishments_per_100k": 227.47
     },
     {
       "code": "11",
       "name": "Rondônia",
       "records": 7405,
-      "issues": 551
+      "issues": 551,
+      "population": 1757338,
+      "establishments_per_100k": 421.38
     },
     {
       "code": "22",
       "name": "Piauí",
       "records": 6473,
-      "issues": 823
+      "issues": 823,
+      "population": 3392617,
+      "establishments_per_100k": 190.8
     },
     {
       "code": "28",
       "name": "Sergipe",
       "records": 6118,
-      "issues": 290
+      "issues": 290,
+      "population": 2307255,
+      "establishments_per_100k": 265.16
     },
     {
       "code": "27",
       "name": "Alagoas",
       "records": 5581,
-      "issues": 391
+      "issues": 391,
+      "population": 3221128,
+      "establishments_per_100k": 173.26
     },
     {
       "code": "13",
       "name": "Amazonas",
       "records": 4599,
-      "issues": 435
+      "issues": 435,
+      "population": 4360926,
+      "establishments_per_100k": 105.46
     },
     {
       "code": "17",
       "name": "Tocantins",
       "records": 3638,
-      "issues": 98
+      "issues": 98,
+      "population": 1595994,
+      "establishments_per_100k": 227.95
     },
     {
       "code": "12",
       "name": "Acre",
       "records": 2104,
-      "issues": 193
+      "issues": 193,
+      "population": 887794,
+      "establishments_per_100k": 236.99
     },
     {
       "code": "14",
       "name": "Roraima",
       "records": 1853,
-      "issues": 221
+      "issues": 221,
+      "population": 761012,
+      "establishments_per_100k": 243.49
     },
     {
       "code": "16",
       "name": "Amapá",
       "records": 1348,
-      "issues": 90
+      "issues": 90,
+      "population": 809953,
+      "establishments_per_100k": 166.43
     }
   ],
   "by_unit_type": [
@@ -476,9 +532,10 @@
     }
   ],
   "metadata": {
-    "run_id": "20261011T154704Z-3bd465b76fb1",
-    "generated_at": "2026-10-11T15:47:04Z",
+    "run_id": "20261010T112404Z-3bd465b76fb1",
+    "generated_at": "2026-10-10T11:24:04Z",
     "source_last_modified": "Sat, 10 Oct 2026 06:01:44 GMT",
-    "source_sha256": "3bd465b76fb113af1b0df6938ca543c0f14cb64c5724cb12d532d0455d4330f3"
+    "source_sha256": "3bd465b76fb113af1b0df6938ca543c0f14cb64c5724cb12d532d0455d4330f3",
+    "population_source_sha256": "17389fa5c36be0efa240441fe4011080d9a27b338befb3c8049c4a81da8be946"
   }
 }

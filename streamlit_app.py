@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import altair as alt
 import pandas as pd
 import streamlit as st
 
@@ -45,12 +46,31 @@ def format_small_percent(value: float) -> str:
     return f"{value * 100:.3f}%".replace(".", ",")
 
 
+def format_decimal(value: float) -> str:
+    return f"{value:.1f}".replace(".", ",")
+
+
 def state_table(states: list[dict]) -> pd.DataFrame:
     frame = pd.DataFrame(states).rename(
-        columns={"name": "UF", "records": "Registros", "issues": "Ocorrências"}
+        columns={
+            "name": "UF",
+            "records": "Registros",
+            "issues": "Ocorrências",
+            "population": "População estimada",
+            "establishments_per_100k": "Cadastros por 100 mil habitantes",
+        }
     )
     frame["Taxa de ocorrências"] = frame["Ocorrências"] / frame["Registros"]
-    return frame[["UF", "Registros", "Ocorrências", "Taxa de ocorrências"]]
+    return frame[
+        [
+            "UF",
+            "Registros",
+            "População estimada",
+            "Cadastros por 100 mil habitantes",
+            "Ocorrências",
+            "Taxa de ocorrências",
+        ]
+    ]
 
 
 def render() -> None:
@@ -164,10 +184,17 @@ def render() -> None:
     selected_state = st.selectbox("Detalhar uma UF", ["Todas", *states["UF"].tolist()])
     if selected_state != "Todas":
         detail = states.loc[states["UF"] == selected_state].iloc[0]
-        detail_a, detail_b, detail_c = st.columns(3)
+        detail_a, detail_b, detail_c, detail_d = st.columns(4)
         detail_a.metric("Registros na UF", format_integer(int(detail["Registros"])))
-        detail_b.metric("Ocorrências de regras", format_integer(int(detail["Ocorrências"])))
-        detail_c.metric("Taxa de ocorrências", format_percent(detail["Taxa de ocorrências"]))
+        detail_b.metric(
+            "População estimada",
+            format_integer(int(detail["População estimada"])),
+        )
+        detail_c.metric(
+            "Cadastros por 100 mil",
+            format_decimal(detail["Cadastros por 100 mil habitantes"]),
+        )
+        detail_d.metric("Taxa de ocorrências", format_percent(detail["Taxa de ocorrências"]))
 
     chart_tab, table_tab = st.tabs(["Distribuição por UF", "Tabela completa"])
     with chart_tab:
@@ -181,6 +208,10 @@ def render() -> None:
             hide_index=True,
             column_config={
                 "Registros": st.column_config.NumberColumn(format="localized"),
+                "População estimada": st.column_config.NumberColumn(format="localized"),
+                "Cadastros por 100 mil habitantes": st.column_config.NumberColumn(
+                    format="%.2f"
+                ),
                 "Ocorrências": st.column_config.NumberColumn(format="localized"),
                 "Taxa de ocorrências": st.column_config.ProgressColumn(
                     min_value=0,
@@ -189,6 +220,71 @@ def render() -> None:
                 ),
             },
         )
+
+    st.subheader("Parte 2 · CNES e população")
+    st.write(
+        "A contagem bruta favorece UFs mais populosas. Para tornar a comparação proporcional, "
+        "o ETL combina os registros do CNES com a estimativa populacional mais recente do IBGE "
+        "e calcula quantos cadastros existem por 100 mil habitantes."
+    )
+    population_states = states.dropna(
+        subset=["População estimada", "Cadastros por 100 mil habitantes"]
+    )
+    national_rate = (
+        population_states["Registros"].sum()
+        / population_states["População estimada"].sum()
+        * 100_000
+    )
+    highest = population_states.nlargest(1, "Cadastros por 100 mil habitantes").iloc[0]
+    lowest = population_states.nsmallest(1, "Cadastros por 100 mil habitantes").iloc[0]
+
+    rate_a, rate_b, rate_c = st.columns(3)
+    rate_a.metric("Brasil", f"{format_decimal(national_rate)} por 100 mil")
+    rate_b.metric(
+        "Maior taxa",
+        format_decimal(highest["Cadastros por 100 mil habitantes"]),
+    )
+    rate_b.caption(highest["UF"])
+    rate_c.metric(
+        "Menor taxa",
+        format_decimal(lowest["Cadastros por 100 mil habitantes"]),
+    )
+    rate_c.caption(lowest["UF"])
+
+    rate_chart = (
+        alt.Chart(population_states)
+        .mark_bar(color="#2B716F")
+        .encode(
+            x=alt.X(
+                "Cadastros por 100 mil habitantes:Q",
+                title="Cadastros por 100 mil habitantes",
+            ),
+            y=alt.Y(
+                "UF:N",
+                sort=alt.SortField(
+                    field="Cadastros por 100 mil habitantes",
+                    order="descending",
+                ),
+                title=None,
+            ),
+            tooltip=[
+                alt.Tooltip("UF:N"),
+                alt.Tooltip("Registros:Q", format=",.0f"),
+                alt.Tooltip("População estimada:Q", format=",.0f"),
+                alt.Tooltip(
+                    "Cadastros por 100 mil habitantes:Q",
+                    format=".2f",
+                ),
+            ],
+        )
+        .properties(height=650)
+    )
+    st.altair_chart(rate_chart, width="stretch")
+    st.caption(
+        f"CNES da execução atual e população estimada pelo IBGE para "
+        f'{summary["population_reference_year"]}. A métrica descreve presença cadastral; '
+        "não mede oferta, acesso ou capacidade assistencial."
+    )
 
     st.subheader("Controles de qualidade")
     st.write(
@@ -240,6 +336,13 @@ def render() -> None:
         )
         st.write(f"**SHA-256 da fonte:** `{audit['source']['sha256']}`")
         st.link_button("Consultar a fonte oficial", audit["source"]["catalog_url"])
+        st.write(
+            f"**SHA-256 da população:** `{audit['population_source']['sha256']}`"
+        )
+        st.link_button(
+            "Consultar estimativas do IBGE",
+            audit["population_source"]["catalog_url"],
+        )
 
     st.caption(
         "Os indicadores descrevem o cadastro processado. Não medem qualidade assistencial, "
