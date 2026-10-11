@@ -19,6 +19,7 @@ Esses resultados descrevem o arquivo processado. Eles não medem qualidade assis
 - verificação diária da fonte e regeneração dos agregados pelo GitHub Actions;
 - ETL integrado entre CNES e estimativas populacionais do IBGE;
 - comparação por UF usando população como denominador explícito;
+- filtros para comparar UFs e alternar entre todas, as dez maiores e as dez menores taxas;
 - minimização de dados e contrato automatizado de privacidade.
 
 ## Fluxo

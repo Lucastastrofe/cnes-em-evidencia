@@ -221,7 +221,7 @@ def render() -> None:
             },
         )
 
-    st.subheader("Parte 2 · CNES e população")
+    st.subheader("Parte 2 · Painel de comparação por população")
     st.write(
         "A contagem bruta favorece UFs mais populosas. Para tornar a comparação proporcional, "
         "o ETL combina os registros do CNES com a estimativa populacional mais recente do IBGE "
@@ -230,29 +230,52 @@ def render() -> None:
     population_states = states.dropna(
         subset=["População estimada", "Cadastros por 100 mil habitantes"]
     )
-    national_rate = (
-        population_states["Registros"].sum()
-        / population_states["População estimada"].sum()
+    filter_states, filter_scope = st.columns([2, 1])
+    with filter_states:
+        selected_ufs = st.multiselect(
+            "UFs para comparar (vazio = Brasil completo)",
+            population_states["UF"].tolist(),
+            placeholder="Todas as UFs",
+        )
+    with filter_scope:
+        comparison_scope = st.selectbox(
+            "Recorte da comparação",
+            ["Todas as UFs selecionadas", "10 maiores taxas", "10 menores taxas"],
+        )
+
+    if not selected_ufs:
+        selected_ufs = population_states["UF"].tolist()
+
+    comparison = population_states.loc[population_states["UF"].isin(selected_ufs)]
+    if comparison_scope == "10 maiores taxas":
+        comparison = comparison.nlargest(10, "Cadastros por 100 mil habitantes")
+    elif comparison_scope == "10 menores taxas":
+        comparison = comparison.nsmallest(10, "Cadastros por 100 mil habitantes")
+
+    weighted_rate = (
+        comparison["Registros"].sum()
+        / comparison["População estimada"].sum()
         * 100_000
     )
-    highest = population_states.nlargest(1, "Cadastros por 100 mil habitantes").iloc[0]
-    lowest = population_states.nsmallest(1, "Cadastros por 100 mil habitantes").iloc[0]
+    highest = comparison.nlargest(1, "Cadastros por 100 mil habitantes").iloc[0]
+    lowest = comparison.nsmallest(1, "Cadastros por 100 mil habitantes").iloc[0]
 
-    rate_a, rate_b, rate_c = st.columns(3)
-    rate_a.metric("Brasil", f"{format_decimal(national_rate)} por 100 mil")
-    rate_b.metric(
+    rate_a, rate_b, rate_c, rate_d = st.columns(4)
+    rate_a.metric("Taxa ponderada da seleção", f"{format_decimal(weighted_rate)} por 100 mil")
+    rate_b.metric("UFs na comparação", len(comparison))
+    rate_c.metric(
         "Maior taxa",
         format_decimal(highest["Cadastros por 100 mil habitantes"]),
     )
-    rate_b.caption(highest["UF"])
-    rate_c.metric(
+    rate_c.caption(highest["UF"])
+    rate_d.metric(
         "Menor taxa",
         format_decimal(lowest["Cadastros por 100 mil habitantes"]),
     )
-    rate_c.caption(lowest["UF"])
+    rate_d.caption(lowest["UF"])
 
     rate_chart = (
-        alt.Chart(population_states)
+        alt.Chart(comparison)
         .mark_bar(color="#2B716F")
         .encode(
             x=alt.X(
@@ -277,9 +300,31 @@ def render() -> None:
                 ),
             ],
         )
-        .properties(height=650)
+        .properties(height=max(260, len(comparison) * 24))
     )
-    st.altair_chart(rate_chart, width="stretch")
+    rate_chart_tab, rate_table_tab = st.tabs(["Comparação visual", "Dados da seleção"])
+    with rate_chart_tab:
+        st.altair_chart(rate_chart, width="stretch")
+    with rate_table_tab:
+        st.dataframe(
+            comparison[
+                [
+                    "UF",
+                    "Registros",
+                    "População estimada",
+                    "Cadastros por 100 mil habitantes",
+                ]
+            ].sort_values("Cadastros por 100 mil habitantes", ascending=False),
+            width="stretch",
+            hide_index=True,
+            column_config={
+                "Registros": st.column_config.NumberColumn(format="localized"),
+                "População estimada": st.column_config.NumberColumn(format="localized"),
+                "Cadastros por 100 mil habitantes": st.column_config.NumberColumn(
+                    format="%.2f"
+                ),
+            },
+        )
     st.caption(
         f"CNES da execução atual e população estimada pelo IBGE para "
         f'{summary["population_reference_year"]}. A métrica descreve presença cadastral; '

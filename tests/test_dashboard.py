@@ -134,9 +134,17 @@ class DashboardContractTest(unittest.TestCase):
         self.assertNotIn("O gráfico é regenerado em cada execução automática.", self.source)
 
     def test_second_part_compares_cnes_with_population_without_claiming_capacity(self):
-        self.assertIn("Parte 2 · CNES e população", self.source)
+        self.assertIn("Parte 2 · Painel de comparação por população", self.source)
         self.assertIn("por 100 mil habitantes", self.source)
         self.assertIn("não mede oferta, acesso ou capacidade assistencial", self.source)
+
+    def test_second_part_is_an_interactive_dashboard_view(self):
+        self.assertIn("Painel de comparação por população", self.source)
+        self.assertIn("multiselect", self.source)
+        self.assertIn("vazio = Brasil completo", self.source)
+        self.assertIn("Recorte da comparação", self.source)
+        self.assertIn("Taxa ponderada da seleção", self.source)
+        self.assertIn("UFs na comparação", self.source)
 
     def test_published_data_excludes_source_columns_outside_the_contract(self):
         for prohibited in (
