@@ -69,4 +69,8 @@ Fato verificado: o recurso CSV oficial responde em `https://s3.sa-east-1.amazona
 
 ## Situação em 2026-10-10
 
-Fato verificado: a API SIDRA da tabela 6579, variável 9324, retornou estimativas de 2026 para as 27 UFs. O ETL integrado foi executado com as fontes reais, reconciliou 638.867 registros do CNES e publicou população total de 214.211.951 pessoas. A taxa nacional calculada foi de 298,24 registros cadastrais por 100 mil habitantes. A publicação externa desta segunda parte depende do envio dos commits e da validação do workflow no GitHub.
+Fato verificado: a API SIDRA da tabela 6579, variável 9324, retornou estimativas de 2026 para as 27 UFs. O ETL integrado foi executado com as fontes reais, reconciliou 638.867 registros do CNES e publicou população total de 214.211.951 pessoas. A taxa nacional calculada foi de 298,24 registros cadastrais por 100 mil habitantes.
+
+## Situação em 2026-10-11
+
+Fato verificado: a execução manual nº 11 do workflow terminou com sucesso para o commit `a26a931` e gerou o commit de dados `5ea3be3`. O Streamlit público apresentou a verificação das 15:20, os dois painéis em rotas próprias e a parte 2 com definições, filtros, gráfico e tabela. A interface mostra taxas arredondadas, mantendo os valores decimais no cálculo e no ordenamento.
