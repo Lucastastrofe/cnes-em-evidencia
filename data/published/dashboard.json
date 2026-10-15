@@ -1,6 +1,6 @@
 {
   "summary": {
-    "total_records": 638867,
+    "total_records": 640120,
     "states_with_records": 27,
     "checks_run": 8,
     "checks_with_findings": 1,
@@ -14,7 +14,7 @@
       "dimension": "completude",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 638867,
+      "evaluated": 640120,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -24,7 +24,7 @@
       "dimension": "unicidade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 638867,
+      "evaluated": 640120,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -34,7 +34,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 638867,
+      "evaluated": 640120,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -44,7 +44,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 638867,
+      "evaluated": 640120,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -54,9 +54,9 @@
       "dimension": "completude",
       "severity": "observação",
       "status": "observação",
-      "evaluated": 638867,
-      "failures": 59174,
-      "failure_rate": 0.092623
+      "evaluated": 640120,
+      "failures": 59159,
+      "failure_rate": 0.092419
     },
     {
       "id": "coordinates_out_of_range",
@@ -64,7 +64,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 638867,
+      "evaluated": 640120,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -74,7 +74,7 @@
       "dimension": "completude",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 638867,
+      "evaluated": 640120,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -84,7 +84,7 @@
       "dimension": "completude",
       "severity": "observação",
       "status": "aprovado",
-      "evaluated": 638867,
+      "evaluated": 640120,
       "failures": 0,
       "failure_rate": 0.0
     }
@@ -93,194 +93,194 @@
     {
       "code": "35",
       "name": "São Paulo",
-      "records": 154325,
-      "issues": 18515,
+      "records": 154526,
+      "issues": 18513,
       "population": 46179008,
-      "establishments_per_100k": 334.19
+      "establishments_per_100k": 334.62
     },
     {
       "code": "31",
       "name": "Minas Gerais",
-      "records": 78845,
+      "records": 79018,
       "issues": 5099,
       "population": 21460311,
-      "establishments_per_100k": 367.4
+      "establishments_per_100k": 368.21
     },
     {
       "code": "33",
       "name": "Rio de Janeiro",
-      "records": 58476,
-      "issues": 8289,
+      "records": 58705,
+      "issues": 8281,
       "population": 17225410,
-      "establishments_per_100k": 339.48
+      "establishments_per_100k": 340.8
     },
     {
       "code": "43",
       "name": "Rio Grande do Sul",
-      "records": 50895,
+      "records": 50990,
       "issues": 2587,
       "population": 11233317,
-      "establishments_per_100k": 453.07
+      "establishments_per_100k": 453.92
     },
     {
       "code": "41",
       "name": "Paraná",
-      "records": 43947,
+      "records": 44008,
       "issues": 3052,
       "population": 11952456,
-      "establishments_per_100k": 367.68
+      "establishments_per_100k": 368.19
     },
     {
       "code": "42",
       "name": "Santa Catarina",
-      "records": 36366,
+      "records": 36419,
       "issues": 2055,
       "population": 8312759,
-      "establishments_per_100k": 437.47
+      "establishments_per_100k": 438.11
     },
     {
       "code": "29",
       "name": "Bahia",
-      "records": 30120,
+      "records": 30171,
       "issues": 2582,
       "population": 14889472,
-      "establishments_per_100k": 202.29
+      "establishments_per_100k": 202.63
     },
     {
       "code": "23",
       "name": "Ceará",
-      "records": 19354,
+      "records": 19386,
       "issues": 917,
       "population": 9302211,
-      "establishments_per_100k": 208.06
+      "establishments_per_100k": 208.4
     },
     {
       "code": "52",
       "name": "Goiás",
-      "records": 18705,
+      "records": 18741,
       "issues": 717,
       "population": 7495033,
-      "establishments_per_100k": 249.57
+      "establishments_per_100k": 250.05
     },
     {
       "code": "26",
       "name": "Pernambuco",
-      "records": 18257,
+      "records": 18305,
       "issues": 2233,
       "population": 9583176,
-      "establishments_per_100k": 190.51
+      "establishments_per_100k": 191.01
     },
     {
       "code": "51",
       "name": "Mato Grosso",
-      "records": 13993,
+      "records": 14040,
       "issues": 674,
       "population": 3950330,
-      "establishments_per_100k": 354.22
+      "establishments_per_100k": 355.41
     },
     {
       "code": "32",
       "name": "Espírito Santo",
-      "records": 13280,
+      "records": 13301,
       "issues": 1508,
       "population": 4150692,
-      "establishments_per_100k": 319.95
+      "establishments_per_100k": 320.45
     },
     {
       "code": "15",
       "name": "Pará",
-      "records": 12785,
-      "issues": 1575,
+      "records": 12810,
+      "issues": 1574,
       "population": 8756324,
-      "establishments_per_100k": 146.01
+      "establishments_per_100k": 146.29
     },
     {
       "code": "53",
       "name": "Distrito Federal",
-      "records": 12619,
+      "records": 12653,
       "issues": 4041,
       "population": 3009996,
-      "establishments_per_100k": 419.24
+      "establishments_per_100k": 420.37
     },
     {
       "code": "25",
       "name": "Paraíba",
-      "records": 10764,
+      "records": 10787,
       "issues": 633,
       "population": 4182828,
-      "establishments_per_100k": 257.34
+      "establishments_per_100k": 257.89
     },
     {
       "code": "50",
       "name": "Mato Grosso do Sul",
-      "records": 9631,
+      "records": 9643,
       "issues": 575,
       "population": 2946317,
-      "establishments_per_100k": 326.88
+      "establishments_per_100k": 327.29
     },
     {
       "code": "21",
       "name": "Maranhão",
-      "records": 9507,
+      "records": 9533,
       "issues": 515,
       "population": 7024557,
-      "establishments_per_100k": 135.34
+      "establishments_per_100k": 135.71
     },
     {
       "code": "24",
       "name": "Rio Grande do Norte",
-      "records": 7879,
-      "issues": 515,
+      "records": 7907,
+      "issues": 511,
       "population": 3463737,
-      "establishments_per_100k": 227.47
+      "establishments_per_100k": 228.28
     },
     {
       "code": "11",
       "name": "Rondônia",
-      "records": 7405,
+      "records": 7420,
       "issues": 551,
       "population": 1757338,
-      "establishments_per_100k": 421.38
+      "establishments_per_100k": 422.23
     },
     {
       "code": "22",
       "name": "Piauí",
-      "records": 6473,
+      "records": 6486,
       "issues": 823,
       "population": 3392617,
-      "establishments_per_100k": 190.8
+      "establishments_per_100k": 191.18
     },
     {
       "code": "28",
       "name": "Sergipe",
-      "records": 6118,
+      "records": 6126,
       "issues": 290,
       "population": 2307255,
-      "establishments_per_100k": 265.16
+      "establishments_per_100k": 265.51
     },
     {
       "code": "27",
       "name": "Alagoas",
-      "records": 5581,
+      "records": 5589,
       "issues": 391,
       "population": 3221128,
-      "establishments_per_100k": 173.26
+      "establishments_per_100k": 173.51
     },
     {
       "code": "13",
       "name": "Amazonas",
-      "records": 4599,
+      "records": 4602,
       "issues": 435,
       "population": 4360926,
-      "establishments_per_100k": 105.46
+      "establishments_per_100k": 105.53
     },
     {
       "code": "17",
       "name": "Tocantins",
-      "records": 3638,
+      "records": 3643,
       "issues": 98,
       "population": 1595994,
-      "establishments_per_100k": 227.95
+      "establishments_per_100k": 228.26
     },
     {
       "code": "12",
@@ -293,60 +293,60 @@
     {
       "code": "14",
       "name": "Roraima",
-      "records": 1853,
+      "records": 1855,
       "issues": 221,
       "population": 761012,
-      "establishments_per_100k": 243.49
+      "establishments_per_100k": 243.75
     },
     {
       "code": "16",
       "name": "Amapá",
-      "records": 1348,
+      "records": 1352,
       "issues": 90,
       "population": 809953,
-      "establishments_per_100k": 166.43
+      "establishments_per_100k": 166.92
     }
   ],
   "by_unit_type": [
     {
       "code": "22",
       "label": "Tipo 22",
-      "records": 310344
+      "records": 310908
     },
     {
       "code": "36",
       "label": "Tipo 36",
-      "records": 116534
+      "records": 116865
     },
     {
       "code": "2",
       "label": "Tipo 2",
-      "records": 47989
+      "records": 48016
     },
     {
       "code": "39",
       "label": "Tipo 39",
-      "records": 42955
+      "records": 42993
     },
     {
       "code": "43",
       "label": "Tipo 43",
-      "records": 32722
+      "records": 32880
     },
     {
       "code": "4",
       "label": "Tipo 4",
-      "records": 16112
+      "records": 16134
     },
     {
       "code": "1",
       "label": "Tipo 1",
-      "records": 10584
+      "records": 10571
     },
     {
       "code": "42",
       "label": "Tipo 42",
-      "records": 7190
+      "records": 7204
     },
     {
       "code": "5",
@@ -356,52 +356,52 @@
     {
       "code": "68",
       "label": "Tipo 68",
-      "records": 6688
+      "records": 6694
     },
     {
       "code": "50",
       "label": "Tipo 50",
-      "records": 4565
+      "records": 4566
     },
     {
       "code": "74",
       "label": "Tipo 74",
-      "records": 4281
+      "records": 4286
     },
     {
       "code": "70",
       "label": "Tipo 70",
-      "records": 3884
+      "records": 3890
     },
     {
       "code": "40",
       "label": "Tipo 40",
-      "records": 3729
+      "records": 3761
     },
     {
       "code": "77",
       "label": "Tipo 77",
-      "records": 2684
+      "records": 2692
     },
     {
       "code": "84",
       "label": "Tipo 84",
-      "records": 2550
+      "records": 2558
     },
     {
       "code": "73",
       "label": "Tipo 73",
-      "records": 2074
+      "records": 2078
     },
     {
       "code": "60",
       "label": "Tipo 60",
-      "records": 2026
+      "records": 2033
     },
     {
       "code": "81",
       "label": "Tipo 81",
-      "records": 1815
+      "records": 1820
     },
     {
       "code": "72",
@@ -411,57 +411,57 @@
     {
       "code": "7",
       "label": "Tipo 7",
-      "records": 1497
+      "records": 1499
     },
     {
       "code": "71",
       "label": "Tipo 71",
-      "records": 1391
+      "records": 1392
     },
     {
       "code": "85",
       "label": "Tipo 85",
-      "records": 1285
+      "records": 1290
     },
     {
       "code": "62",
       "label": "Tipo 62",
-      "records": 1281
+      "records": 1282
     },
     {
       "code": "83",
       "label": "Tipo 83",
-      "records": 1235
+      "records": 1237
     },
     {
       "code": "80",
       "label": "Tipo 80",
-      "records": 1103
+      "records": 1104
     },
     {
       "code": "69",
       "label": "Tipo 69",
-      "records": 792
+      "records": 793
     },
     {
       "code": "15",
       "label": "Tipo 15",
-      "records": 611
+      "records": 610
     },
     {
       "code": "75",
       "label": "Tipo 75",
-      "records": 552
+      "records": 559
     },
     {
       "code": "20",
       "label": "Tipo 20",
-      "records": 417
+      "records": 416
     },
     {
       "code": "16",
       "label": "Tipo 16",
-      "records": 348
+      "records": 360
     },
     {
       "code": "76",
@@ -476,7 +476,7 @@
     {
       "code": "82",
       "label": "Tipo 82",
-      "records": 143
+      "records": 142
     },
     {
       "code": "21",
@@ -491,7 +491,7 @@
     {
       "code": "78",
       "label": "Tipo 78",
-      "records": 95
+      "records": 96
     },
     {
       "code": "79",
@@ -513,12 +513,12 @@
     {
       "code": "M",
       "label": "Municipal",
-      "records": 612632
+      "records": 613850
     },
     {
       "code": "E",
       "label": "Estadual",
-      "records": 22793
+      "records": 22828
     },
     {
       "code": "D",
@@ -532,10 +532,10 @@
     }
   ],
   "metadata": {
-    "run_id": "20261014T143331Z-2e822538638b",
-    "generated_at": "2026-10-14T14:33:31Z",
-    "source_last_modified": "Wed, 14 Oct 2026 06:57:26 GMT",
-    "source_sha256": "2e822538638b27e06391cdea9732bd50895a639471525c58f69c6105dc44d130",
+    "run_id": "20261015T141326Z-f3873cb509d3",
+    "generated_at": "2026-10-15T14:13:26Z",
+    "source_last_modified": "Thu, 15 Oct 2026 07:37:05 GMT",
+    "source_sha256": "f3873cb509d3aad167e587de57753ac0a1ddc70626e3bf0c3717a1016ae64a8c",
     "population_source_sha256": "17389fa5c36be0efa240441fe4011080d9a27b338befb3c8049c4a81da8be946"
   }
 }

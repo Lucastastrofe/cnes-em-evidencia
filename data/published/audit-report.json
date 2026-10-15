@@ -1,24 +1,24 @@
 {
   "status": "concluído",
-  "run_id": "20261014T143331Z-2e822538638b",
-  "generated_at": "2026-10-14T14:33:31Z",
+  "run_id": "20261015T141326Z-f3873cb509d3",
+  "generated_at": "2026-10-15T14:13:26Z",
   "process": "cnes-audit",
-  "code_version": "b5eb84ec365e89a51bd120b9c65670919a8e1b9f",
+  "code_version": "1fd9effedbed4965235753c356bffd4280ef8b41",
   "source": {
     "catalog_url": "https://dadosabertos.saude.gov.br/dataset/cnes-cadastro-nacional-de-estabelecimentos-de-saude",
     "resource_url": "https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/CNES/cnes_estabelecimentos_csv.zip",
-    "obtained_at": "2026-10-14T14:33:31Z",
-    "last_modified": "Wed, 14 Oct 2026 06:57:26 GMT",
-    "etag": "c9578dd765466eb9f50615ea52605402-7",
-    "sha256": "2e822538638b27e06391cdea9732bd50895a639471525c58f69c6105dc44d130",
-    "archive_bytes": 56492287,
+    "obtained_at": "2026-10-15T14:13:26Z",
+    "last_modified": "Thu, 15 Oct 2026 07:37:05 GMT",
+    "etag": "3df318aed49fdffd9631f307f2e86986-7",
+    "sha256": "f3873cb509d3aad167e587de57753ac0a1ddc70626e3bf0c3717a1016ae64a8c",
+    "archive_bytes": 56613736,
     "entry_name": "cnes_estabelecimentos.csv",
-    "entry_bytes": 231317472
+    "entry_bytes": 231766294
   },
   "population_source": {
     "catalog_url": "https://www.ibge.gov.br/estatisticas/sociais/populacao/9103-estimativas-de-populacao.html",
     "resource_url": "https://apisidra.ibge.gov.br/values/t/6579/n3/all/v/9324/p/last%201?formato=json",
-    "obtained_at": "2026-10-14T14:33:31Z",
+    "obtained_at": "2026-10-15T14:13:26Z",
     "last_modified": "não informado",
     "etag": "não informado",
     "sha256": "17389fa5c36be0efa240441fe4011080d9a27b338befb3c8049c4a81da8be946",
@@ -32,8 +32,8 @@
     "raw_data_published": false
   },
   "reconciliation": {
-    "rows_read": 638867,
-    "rows_aggregated": 638867,
+    "rows_read": 640120,
+    "rows_aggregated": 640120,
     "difference": 0
   },
   "checks": [
@@ -43,7 +43,7 @@
       "dimension": "completude",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 638867,
+      "evaluated": 640120,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -53,7 +53,7 @@
       "dimension": "unicidade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 638867,
+      "evaluated": 640120,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -63,7 +63,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 638867,
+      "evaluated": 640120,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -73,7 +73,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 638867,
+      "evaluated": 640120,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -83,9 +83,9 @@
       "dimension": "completude",
       "severity": "observação",
       "status": "observação",
-      "evaluated": 638867,
-      "failures": 59174,
-      "failure_rate": 0.092623
+      "evaluated": 640120,
+      "failures": 59159,
+      "failure_rate": 0.092419
     },
     {
       "id": "coordinates_out_of_range",
@@ -93,7 +93,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 638867,
+      "evaluated": 640120,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -103,7 +103,7 @@
       "dimension": "completude",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 638867,
+      "evaluated": 640120,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -113,7 +113,7 @@
       "dimension": "completude",
       "severity": "observação",
       "status": "aprovado",
-      "evaluated": 638867,
+      "evaluated": 640120,
       "failures": 0,
       "failure_rate": 0.0
     }
