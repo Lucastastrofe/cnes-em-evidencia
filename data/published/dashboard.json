@@ -1,6 +1,6 @@
 {
   "summary": {
-    "total_records": 640120,
+    "total_records": 640126,
     "states_with_records": 27,
     "checks_run": 8,
     "checks_with_findings": 1,
@@ -14,7 +14,7 @@
       "dimension": "completude",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 640120,
+      "evaluated": 640126,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -24,7 +24,7 @@
       "dimension": "unicidade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 640120,
+      "evaluated": 640126,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -34,7 +34,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 640120,
+      "evaluated": 640126,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -44,7 +44,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 640120,
+      "evaluated": 640126,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -54,9 +54,9 @@
       "dimension": "completude",
       "severity": "observação",
       "status": "observação",
-      "evaluated": 640120,
+      "evaluated": 640126,
       "failures": 59159,
-      "failure_rate": 0.092419
+      "failure_rate": 0.092418
     },
     {
       "id": "coordinates_out_of_range",
@@ -64,7 +64,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 640120,
+      "evaluated": 640126,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -74,7 +74,7 @@
       "dimension": "completude",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 640120,
+      "evaluated": 640126,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -84,7 +84,7 @@
       "dimension": "completude",
       "severity": "observação",
       "status": "aprovado",
-      "evaluated": 640120,
+      "evaluated": 640126,
       "failures": 0,
       "failure_rate": 0.0
     }
@@ -101,7 +101,7 @@
     {
       "code": "31",
       "name": "Minas Gerais",
-      "records": 79018,
+      "records": 79020,
       "issues": 5099,
       "population": 21460311,
       "establishments_per_100k": 368.21
@@ -109,18 +109,18 @@
     {
       "code": "33",
       "name": "Rio de Janeiro",
-      "records": 58705,
+      "records": 58706,
       "issues": 8281,
       "population": 17225410,
-      "establishments_per_100k": 340.8
+      "establishments_per_100k": 340.81
     },
     {
       "code": "43",
       "name": "Rio Grande do Sul",
-      "records": 50990,
+      "records": 50991,
       "issues": 2587,
       "population": 11233317,
-      "establishments_per_100k": 453.92
+      "establishments_per_100k": 453.93
     },
     {
       "code": "41",
@@ -141,10 +141,10 @@
     {
       "code": "29",
       "name": "Bahia",
-      "records": 30171,
+      "records": 30172,
       "issues": 2582,
       "population": 14889472,
-      "establishments_per_100k": 202.63
+      "establishments_per_100k": 202.64
     },
     {
       "code": "23",
@@ -157,10 +157,10 @@
     {
       "code": "52",
       "name": "Goiás",
-      "records": 18741,
+      "records": 18742,
       "issues": 717,
       "population": 7495033,
-      "establishments_per_100k": 250.05
+      "establishments_per_100k": 250.06
     },
     {
       "code": "26",
@@ -311,12 +311,12 @@
     {
       "code": "22",
       "label": "Tipo 22",
-      "records": 310908
+      "records": 310910
     },
     {
       "code": "36",
       "label": "Tipo 36",
-      "records": 116865
+      "records": 116869
     },
     {
       "code": "2",
@@ -513,7 +513,7 @@
     {
       "code": "M",
       "label": "Municipal",
-      "records": 613850
+      "records": 613856
     },
     {
       "code": "E",
@@ -532,10 +532,10 @@
     }
   ],
   "metadata": {
-    "run_id": "20261015T141326Z-f3873cb509d3",
-    "generated_at": "2026-10-15T14:13:26Z",
-    "source_last_modified": "Thu, 15 Oct 2026 07:37:05 GMT",
-    "source_sha256": "f3873cb509d3aad167e587de57753ac0a1ddc70626e3bf0c3717a1016ae64a8c",
+    "run_id": "20261016T140031Z-e307c841ca06",
+    "generated_at": "2026-10-16T14:00:31Z",
+    "source_last_modified": "Fri, 16 Oct 2026 06:00:52 GMT",
+    "source_sha256": "e307c841ca068fa032ecf2bf1163a59e7e38000eab139293e018ee5c9883514f",
     "population_source_sha256": "17389fa5c36be0efa240441fe4011080d9a27b338befb3c8049c4a81da8be946"
   }
 }
