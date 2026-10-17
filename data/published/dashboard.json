@@ -531,10 +531,321 @@
       "records": 102
     }
   ],
+  "beds": {
+    "summary": {
+      "competence": "202608",
+      "rows_selected": 7220,
+      "total_beds": 523117,
+      "sus_beds": 354435,
+      "uti_beds": 64063,
+      "uti_sus_beds": 32096,
+      "beds_per_100k": 244.21,
+      "sus_beds_per_100k": 165.46
+    },
+    "by_state": [
+      {
+        "code": "12",
+        "name": "Acre",
+        "beds": 1847,
+        "sus_beds": 1635,
+        "uti_beds": 110,
+        "uti_sus_beds": 81,
+        "population": 887794,
+        "beds_per_100k": 208.04,
+        "sus_beds_per_100k": 184.16
+      },
+      {
+        "code": "27",
+        "name": "Alagoas",
+        "beds": 7701,
+        "sus_beds": 6173,
+        "uti_beds": 694,
+        "uti_sus_beds": 492,
+        "population": 3221128,
+        "beds_per_100k": 239.08,
+        "sus_beds_per_100k": 191.64
+      },
+      {
+        "code": "16",
+        "name": "Amapá",
+        "beds": 1995,
+        "sus_beds": 1646,
+        "uti_beds": 223,
+        "uti_sus_beds": 79,
+        "population": 809953,
+        "beds_per_100k": 246.31,
+        "sus_beds_per_100k": 203.22
+      },
+      {
+        "code": "13",
+        "name": "Amazonas",
+        "beds": 7531,
+        "sus_beds": 6166,
+        "uti_beds": 800,
+        "uti_sus_beds": 441,
+        "population": 4360926,
+        "beds_per_100k": 172.69,
+        "sus_beds_per_100k": 141.39
+      },
+      {
+        "code": "29",
+        "name": "Bahia",
+        "beds": 34587,
+        "sus_beds": 27122,
+        "uti_beds": 3437,
+        "uti_sus_beds": 1704,
+        "population": 14889472,
+        "beds_per_100k": 232.29,
+        "sus_beds_per_100k": 182.16
+      },
+      {
+        "code": "23",
+        "name": "Ceará",
+        "beds": 22405,
+        "sus_beds": 17634,
+        "uti_beds": 1933,
+        "uti_sus_beds": 1225,
+        "population": 9302211,
+        "beds_per_100k": 240.86,
+        "sus_beds_per_100k": 189.57
+      },
+      {
+        "code": "53",
+        "name": "Distrito Federal",
+        "beds": 10274,
+        "sus_beds": 5547,
+        "uti_beds": 2150,
+        "uti_sus_beds": 660,
+        "population": 3009996,
+        "beds_per_100k": 341.33,
+        "sus_beds_per_100k": 184.29
+      },
+      {
+        "code": "32",
+        "name": "Espírito Santo",
+        "beds": 10253,
+        "sus_beds": 6730,
+        "uti_beds": 1731,
+        "uti_sus_beds": 933,
+        "population": 4150692,
+        "beds_per_100k": 247.02,
+        "sus_beds_per_100k": 162.14
+      },
+      {
+        "code": "52",
+        "name": "Goiás",
+        "beds": 19674,
+        "sus_beds": 12982,
+        "uti_beds": 2168,
+        "uti_sus_beds": 1068,
+        "population": 7495033,
+        "beds_per_100k": 262.49,
+        "sus_beds_per_100k": 173.21
+      },
+      {
+        "code": "21",
+        "name": "Maranhão",
+        "beds": 16651,
+        "sus_beds": 14366,
+        "uti_beds": 1088,
+        "uti_sus_beds": 808,
+        "population": 7024557,
+        "beds_per_100k": 237.04,
+        "sus_beds_per_100k": 204.51
+      },
+      {
+        "code": "51",
+        "name": "Mato Grosso",
+        "beds": 9517,
+        "sus_beds": 6936,
+        "uti_beds": 1366,
+        "uti_sus_beds": 488,
+        "population": 3950330,
+        "beds_per_100k": 240.92,
+        "sus_beds_per_100k": 175.58
+      },
+      {
+        "code": "50",
+        "name": "Mato Grosso do Sul",
+        "beds": 6623,
+        "sus_beds": 4541,
+        "uti_beds": 800,
+        "uti_sus_beds": 461,
+        "population": 2946317,
+        "beds_per_100k": 224.79,
+        "sus_beds_per_100k": 154.12
+      },
+      {
+        "code": "31",
+        "name": "Minas Gerais",
+        "beds": 49743,
+        "sus_beds": 33103,
+        "uti_beds": 6146,
+        "uti_sus_beds": 3677,
+        "population": 21460311,
+        "beds_per_100k": 231.79,
+        "sus_beds_per_100k": 154.25
+      },
+      {
+        "code": "41",
+        "name": "Paraná",
+        "beds": 30953,
+        "sus_beds": 21815,
+        "uti_beds": 3691,
+        "uti_sus_beds": 2311,
+        "population": 11952456,
+        "beds_per_100k": 258.97,
+        "sus_beds_per_100k": 182.51
+      },
+      {
+        "code": "25",
+        "name": "Paraíba",
+        "beds": 11010,
+        "sus_beds": 8309,
+        "uti_beds": 1079,
+        "uti_sus_beds": 624,
+        "population": 4182828,
+        "beds_per_100k": 263.22,
+        "sus_beds_per_100k": 198.65
+      },
+      {
+        "code": "15",
+        "name": "Pará",
+        "beds": 17500,
+        "sus_beds": 13001,
+        "uti_beds": 1716,
+        "uti_sus_beds": 1005,
+        "population": 8756324,
+        "beds_per_100k": 199.86,
+        "sus_beds_per_100k": 148.48
+      },
+      {
+        "code": "26",
+        "name": "Pernambuco",
+        "beds": 25518,
+        "sus_beds": 17667,
+        "uti_beds": 2934,
+        "uti_sus_beds": 1440,
+        "population": 9583176,
+        "beds_per_100k": 266.28,
+        "sus_beds_per_100k": 184.35
+      },
+      {
+        "code": "22",
+        "name": "Piauí",
+        "beds": 7861,
+        "sus_beds": 6438,
+        "uti_beds": 501,
+        "uti_sus_beds": 334,
+        "population": 3392617,
+        "beds_per_100k": 231.71,
+        "sus_beds_per_100k": 189.77
+      },
+      {
+        "code": "24",
+        "name": "Rio Grande do Norte",
+        "beds": 8510,
+        "sus_beds": 6754,
+        "uti_beds": 882,
+        "uti_sus_beds": 467,
+        "population": 3463737,
+        "beds_per_100k": 245.69,
+        "sus_beds_per_100k": 194.99
+      },
+      {
+        "code": "43",
+        "name": "Rio Grande do Sul",
+        "beds": 33443,
+        "sus_beds": 23005,
+        "uti_beds": 3035,
+        "uti_sus_beds": 1880,
+        "population": 11233317,
+        "beds_per_100k": 297.71,
+        "sus_beds_per_100k": 204.79
+      },
+      {
+        "code": "33",
+        "name": "Rio de Janeiro",
+        "beds": 43967,
+        "sus_beds": 24444,
+        "uti_beds": 7964,
+        "uti_sus_beds": 2377,
+        "population": 17225410,
+        "beds_per_100k": 255.25,
+        "sus_beds_per_100k": 141.91
+      },
+      {
+        "code": "11",
+        "name": "Rondônia",
+        "beds": 6076,
+        "sus_beds": 4892,
+        "uti_beds": 676,
+        "uti_sus_beds": 300,
+        "population": 1757338,
+        "beds_per_100k": 345.75,
+        "sus_beds_per_100k": 278.38
+      },
+      {
+        "code": "14",
+        "name": "Roraima",
+        "beds": 1648,
+        "sus_beds": 1525,
+        "uti_beds": 107,
+        "uti_sus_beds": 90,
+        "population": 761012,
+        "beds_per_100k": 216.55,
+        "sus_beds_per_100k": 200.39
+      },
+      {
+        "code": "42",
+        "name": "Santa Catarina",
+        "beds": 18564,
+        "sus_beds": 13422,
+        "uti_beds": 1957,
+        "uti_sus_beds": 1334,
+        "population": 8312759,
+        "beds_per_100k": 223.32,
+        "sus_beds_per_100k": 161.46
+      },
+      {
+        "code": "28",
+        "name": "Sergipe",
+        "beds": 4375,
+        "sus_beds": 3214,
+        "uti_beds": 570,
+        "uti_sus_beds": 290,
+        "population": 2307255,
+        "beds_per_100k": 189.62,
+        "sus_beds_per_100k": 139.3
+      },
+      {
+        "code": "35",
+        "name": "São Paulo",
+        "beds": 110607,
+        "sus_beds": 62181,
+        "uti_beds": 15728,
+        "uti_sus_beds": 7325,
+        "population": 46179008,
+        "beds_per_100k": 239.52,
+        "sus_beds_per_100k": 134.65
+      },
+      {
+        "code": "17",
+        "name": "Tocantins",
+        "beds": 4284,
+        "sus_beds": 3187,
+        "uti_beds": 577,
+        "uti_sus_beds": 202,
+        "population": 1595994,
+        "beds_per_100k": 268.42,
+        "sus_beds_per_100k": 199.69
+      }
+    ]
+  },
   "metadata": {
-    "run_id": "20261017T130043Z-1da18197d811",
-    "generated_at": "2026-10-17T13:00:43Z",
-    "source_last_modified": "Sat, 17 Oct 2026 05:49:02 GMT",
+    "run_id": "20261017T134108Z-1da18197d811",
+    "generated_at": "2026-10-17T13:41:08Z",
+    "source_last_modified": "arquivo local",
     "source_sha256": "1da18197d811c171a981d8222e679e15361f32a240af6a37a6327c5b5938eed3",
     "population_source_sha256": "17389fa5c36be0efa240441fe4011080d9a27b338befb3c8049c4a81da8be946"
   }

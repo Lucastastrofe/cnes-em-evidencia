@@ -12,13 +12,13 @@ python -m pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
 
-O segundo comando baixa o CNES e a estimativa populacional mais recente do IBGE para `data/work`, valida as duas fontes, integra por UF e substitui os dois JSON de `data/published` de forma atômica.
+O segundo comando baixa o cadastro do CNES, a estimativa populacional mais recente do IBGE e o arquivo anual de leitos para `data/work`. O processamento valida as três fontes, seleciona a maior competência de leitos, integra por UF e substitui os dois JSON de `data/published` de forma atômica.
 
 Para reproduzir uma fotografia já baixada:
 
 ```powershell
 $env:PYTHONPATH = "src"
-python -m cnes_audit.cli --input caminho/cnes.zip --population-input caminho/populacao.json
+python -m cnes_audit.cli --input caminho/cnes.zip --population-input caminho/populacao.json --beds-input caminho/leitos.zip
 ```
 
 ## Publicação no Streamlit Community Cloud
@@ -37,6 +37,7 @@ Depois disso, o fluxo roda diariamente a partir das 09:17 UTC e registra cada ve
 - commit automatizado contendo apenas os agregados alterados;
 - `data/published/audit-report.json`, contendo execução, versão do código, hash, metadados da fonte e reconciliação;
 - metadados separados do CNES e do IBGE, incluindo hashes e ano populacional usado;
+- metadados da fonte de leitos, incluindo hash, competência e linhas selecionadas;
 - logs do Streamlit Community Cloud para diagnóstico do aplicativo.
 
 ## Falhas esperadas
@@ -52,6 +53,10 @@ O pipeline informa as colunas contratuais ausentes e interrompe a publicação. 
 ### A população não cobre as 27 UFs
 
 O ETL interrompe a publicação se a API do IBGE retornar mais de um ano, códigos repetidos, valor não positivo ou cobertura diferente das 27 UFs. Confirme a tabela 6579 e a variável 9324 antes de alterar o contrato.
+
+### A fonte de leitos falhou
+
+O processamento interrompe a publicação quando o ZIP não contém um único CSV, o schema contratado muda, a maior competência não cobre as 27 UFs, um CNES aparece repetido ou uma quantidade é negativa ou inconsistente. Confirme também se `DEFAULT_BEDS_URL` aponta para o arquivo do ano corrente; o portal publica um recurso separado a cada ano.
 
 ### A reconciliação falhou
 

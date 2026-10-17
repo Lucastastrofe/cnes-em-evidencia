@@ -152,6 +152,14 @@ class DashboardContractTest(unittest.TestCase):
         self.assertIn('"Painéis da série"', self.source)
         self.assertIn('"1 · Qualidade cadastral"', self.source)
         self.assertIn('"2 · Presença por população"', self.source)
+        self.assertIn('"3 · Capacidade hospitalar"', self.source)
+
+    def test_third_part_explains_capacity_without_claiming_availability(self):
+        self.assertIn("Parte 3 · Capacidade hospitalar", self.source)
+        self.assertIn("Leitos existentes", self.source)
+        self.assertIn("Leitos destinados ao SUS", self.source)
+        self.assertIn("não informa ocupação ou disponibilidade em tempo real", self.source)
+        self.assertIn("Competência da fonte", self.source)
 
     def test_population_rates_are_calculated_with_precision_but_displayed_as_whole_numbers(self):
         self.assertIn("def format_rate", self.source)

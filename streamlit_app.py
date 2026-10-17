@@ -85,7 +85,11 @@ def render_update_context(dashboard: dict) -> None:
     )
 
 
-def render_traceability(audit: dict, include_population: bool = False) -> None:
+def render_traceability(
+    audit: dict,
+    include_population: bool = False,
+    include_beds: bool = False,
+) -> None:
     with st.expander("Rastreabilidade da execução"):
         trace_first, trace_second = st.columns(2)
         trace_first.write(f"**Execução:** `{audit['run_id']}`")
@@ -103,6 +107,16 @@ def render_traceability(audit: dict, include_population: bool = False) -> None:
             st.link_button(
                 "Consultar estimativas do IBGE",
                 audit["population_source"]["catalog_url"],
+            )
+        if include_beds:
+            st.write(f"**SHA-256 da fonte de leitos:** `{audit['beds_source']['sha256']}`")
+            st.write(
+                "**Linhas da competência:** "
+                f"{format_integer(audit['beds_source']['rows_selected'])}"
+            )
+            st.link_button(
+                "Consultar a fonte de leitos",
+                audit["beds_source"]["catalog_url"],
             )
 
 
@@ -251,6 +265,182 @@ def render_population_panel(dashboard: dict, audit: dict) -> None:
     render_traceability(audit, include_population=True)
 
 
+def bed_table(states: list[dict]) -> pd.DataFrame:
+    return pd.DataFrame(states).rename(
+        columns={
+            "name": "UF",
+            "beds": "Leitos existentes",
+            "sus_beds": "Leitos destinados ao SUS",
+            "uti_beds": "Leitos de UTI",
+            "uti_sus_beds": "Leitos de UTI SUS",
+            "population": "População estimada",
+            "beds_per_100k": "Leitos por 100 mil habitantes",
+            "sus_beds_per_100k": "Leitos SUS por 100 mil habitantes",
+        }
+    )
+
+
+def render_bed_panel(dashboard: dict, audit: dict) -> None:
+    summary = dashboard["beds"]["summary"]
+    states = bed_table(dashboard["beds"]["by_state"])
+    competence = str(summary["competence"])
+    competence_label = f"{competence[4:]}/{competence[:4]}"
+
+    st.markdown('<p class="eyebrow">Parte 3 · Capacidade hospitalar</p>', unsafe_allow_html=True)
+    st.title("Leitos hospitalares por UF")
+    st.markdown(
+        '<p class="deck">Uma comparação da capacidade cadastrada, separando o total de '
+        "leitos e a parcela destinada ao SUS.</p>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        (
+            '<p class="source">'
+            f'Última verificação automática: {format_timestamp(dashboard["metadata"]["generated_at"])}. '
+            f'Competência da fonte: {competence_label}. '
+            f'Data informada pela fonte de leitos: {format_source_date(audit["beds_source"]["last_modified"])}.'
+            "</p>"
+        ),
+        unsafe_allow_html=True,
+    )
+
+    st.subheader("Para que serve")
+    st.write(
+        "O painel permite comparar a capacidade hospitalar cadastrada entre as UFs e observar "
+        "quanto desse total está destinado ao atendimento pelo SUS. A taxa por população evita "
+        "que estados maiores apareçam como mais estruturados apenas por terem mais habitantes."
+    )
+
+    total_definition, sus_definition, competence_definition = st.columns(3)
+    with total_definition.container(border=True):
+        st.markdown("**Leitos existentes**")
+        st.write("Total de leitos hospitalares informado no CNES para a competência selecionada.")
+    with sus_definition.container(border=True):
+        st.markdown("**Leitos destinados ao SUS**")
+        st.write("Parcela dos leitos existentes cadastrada para atendimento pelo SUS.")
+    with competence_definition.container(border=True):
+        st.markdown("**Competência da fonte**")
+        st.write(
+            "Mês de referência mais recente encontrado no arquivo anual, usado para evitar "
+            "somar fotografias mensais do mesmo estabelecimento."
+        )
+
+    st.info(
+        "O cadastro descreve capacidade instalada e não informa ocupação ou disponibilidade em tempo real. "
+        "Uma taxa maior também não comprova acesso, suficiência ou qualidade."
+    )
+
+    st.subheader("Explore os dados")
+    filter_states, filter_scope = st.columns([2, 1])
+    with filter_states:
+        selected_ufs = st.multiselect(
+            "UFs para comparar (vazio = Brasil completo)",
+            states["UF"].tolist(),
+            placeholder="Todas as UFs",
+            key="bed_state_filter",
+        )
+    with filter_scope:
+        comparison_scope = st.selectbox(
+            "Recorte da comparação",
+            ["Todas as UFs selecionadas", "10 maiores taxas", "10 menores taxas"],
+            key="bed_scope_filter",
+        )
+
+    if not selected_ufs:
+        selected_ufs = states["UF"].tolist()
+    comparison = states.loc[states["UF"].isin(selected_ufs)]
+    if comparison_scope == "10 maiores taxas":
+        comparison = comparison.nlargest(10, "Leitos por 100 mil habitantes")
+    elif comparison_scope == "10 menores taxas":
+        comparison = comparison.nsmallest(10, "Leitos por 100 mil habitantes")
+
+    selected_beds = int(comparison["Leitos existentes"].sum())
+    selected_sus_beds = int(comparison["Leitos destinados ao SUS"].sum())
+    selected_population = int(comparison["População estimada"].sum())
+    selected_rate = selected_beds / selected_population * 100_000
+    sus_share = selected_sus_beds / selected_beds if selected_beds else 0
+
+    metric_a, metric_b, metric_c, metric_d = st.columns(4)
+    metric_a.metric("Leitos existentes", format_integer(selected_beds))
+    metric_b.metric("Leitos destinados ao SUS", format_integer(selected_sus_beds))
+    metric_c.metric("Parcela destinada ao SUS", format_percent(sus_share))
+    metric_d.metric("Leitos por 100 mil", format_rate(selected_rate))
+    st.caption(
+        "Os indicadores acima são recalculados para as UFs exibidas. Leitos SUS estão contidos "
+        "no total de leitos existentes e não devem ser somados a ele."
+    )
+
+    chart_data = comparison.melt(
+        id_vars=["UF"],
+        value_vars=[
+            "Leitos por 100 mil habitantes",
+            "Leitos SUS por 100 mil habitantes",
+        ],
+        var_name="Indicador",
+        value_name="Taxa",
+    )
+    capacity_chart = (
+        alt.Chart(chart_data)
+        .mark_bar()
+        .encode(
+            x=alt.X("Taxa:Q", title="Leitos por 100 mil habitantes"),
+            y=alt.Y(
+                "UF:N",
+                sort=alt.SortField(field="Taxa", order="descending"),
+                title=None,
+            ),
+            color=alt.Color(
+                "Indicador:N",
+                scale=alt.Scale(
+                    domain=[
+                        "Leitos por 100 mil habitantes",
+                        "Leitos SUS por 100 mil habitantes",
+                    ],
+                    range=["#2B716F", "#9FBAB1"],
+                ),
+                title=None,
+            ),
+            yOffset="Indicador:N",
+            tooltip=[
+                alt.Tooltip("UF:N"),
+                alt.Tooltip("Indicador:N"),
+                alt.Tooltip("Taxa:Q", format=".1f"),
+            ],
+        )
+        .properties(height=max(280, len(comparison) * 28))
+    )
+    chart_tab, table_tab = st.tabs(["Comparação visual", "Dados da seleção"])
+    with chart_tab:
+        st.altair_chart(capacity_chart, width="stretch")
+    with table_tab:
+        st.dataframe(
+            comparison[
+                [
+                    "UF",
+                    "Leitos existentes",
+                    "Leitos destinados ao SUS",
+                    "Leitos por 100 mil habitantes",
+                    "Leitos SUS por 100 mil habitantes",
+                ]
+            ].sort_values("Leitos por 100 mil habitantes", ascending=False),
+            width="stretch",
+            hide_index=True,
+            column_config={
+                "Leitos existentes": st.column_config.NumberColumn(format="localized"),
+                "Leitos destinados ao SUS": st.column_config.NumberColumn(format="localized"),
+                "Leitos por 100 mil habitantes": st.column_config.NumberColumn(format="%.1f"),
+                "Leitos SUS por 100 mil habitantes": st.column_config.NumberColumn(format="%.1f"),
+            },
+        )
+
+    st.caption(
+        f"Leitos do CNES na competência {competence_label} e população estimada pelo IBGE para "
+        f'{dashboard["summary"]["population_reference_year"]}. A diferença de períodos permanece '
+        "visível porque as duas fontes têm ciclos de atualização distintos."
+    )
+    render_traceability(audit, include_population=True, include_beds=True)
+
+
 def render_quality_panel(dashboard: dict, audit: dict) -> None:
     summary = dashboard["summary"]
     checks = dashboard["checks"]
@@ -383,7 +573,7 @@ def render() -> None:
         page_title="CNES em Evidência",
         page_icon="🏥",
         layout="wide",
-        initial_sidebar_state="expanded",
+        initial_sidebar_state="auto",
     )
     st.markdown(
         """
@@ -439,6 +629,9 @@ def render() -> None:
     def population_page_content() -> None:
         render_population_panel(dashboard, audit)
 
+    def bed_page_content() -> None:
+        render_bed_panel(dashboard, audit)
+
     quality_page = st.Page(
         quality_page_content,
         title="1 · Qualidade cadastral",
@@ -450,8 +643,13 @@ def render() -> None:
         title="2 · Presença por população",
         icon=":material/compare_arrows:",
     )
+    bed_page = st.Page(
+        bed_page_content,
+        title="3 · Capacidade hospitalar",
+        icon=":material/bed:",
+    )
     navigation = st.navigation(
-        {"Painéis da série": [quality_page, population_page]},
+        {"Painéis da série": [quality_page, population_page, bed_page]},
         position="sidebar",
     )
     navigation.run()

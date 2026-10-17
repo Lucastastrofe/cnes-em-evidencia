@@ -1,12 +1,14 @@
 # CNES em Evidência
 
-Aplicação Streamlit e pipeline de qualidade da base aberta de estabelecimentos de saúde do CNES. A navegação separa o painel de qualidade cadastral do painel de comparação por população; a explicação completa do projeto fica no portfólio.
+Aplicação Streamlit e pipeline de dados abertos do CNES. A navegação separa qualidade cadastral, presença por população e capacidade hospitalar; a explicação completa do projeto fica no portfólio.
 
 ## Resultado atual
 
 A fotografia processada em 10 de outubro de 2026 continha 638.867 registros. Sete dos oito controles não encontraram ocorrências; o controle de completude geográfica encontrou 59.174 registros sem o par completo de coordenadas, ou 9,3% da base.
 
 A segunda parte integra a fotografia do CNES à estimativa populacional de 2026 do IBGE. O resultado nacional foi de 298,24 registros cadastrais por 100 mil habitantes. A taxa permite comparar presença cadastral relativa, mas não mede oferta, acesso ou capacidade assistencial.
+
+A terceira parte processa a competência 08/2026 da fonte oficial de Hospitais e Leitos. Foram reconciliados 523.117 leitos existentes, dos quais 354.435 destinados ao SUS. Isso corresponde a 244,21 leitos existentes e 165,46 leitos SUS por 100 mil habitantes. Os números descrevem capacidade cadastrada, não ocupação ou disponibilidade em tempo real.
 
 Esses resultados descrevem o arquivo processado. Eles não medem qualidade assistencial, conformidade sanitária ou disponibilidade atual de serviços.
 
@@ -15,19 +17,21 @@ Esses resultados descrevem o arquivo processado. Eles não medem qualidade assis
 - processamento de um CSV de 231 MB diretamente do ZIP, sem carregar a base inteira na memória;
 - controles reproduzíveis de completude, unicidade e validade;
 - reconciliação entre registros lidos e agregados;
-- dois painéis interativos em uma única aplicação Streamlit;
+- três painéis interativos em uma única aplicação Streamlit;
 - verificação diária da fonte e regeneração dos agregados pelo GitHub Actions;
 - ETL integrado entre CNES e estimativas populacionais do IBGE;
 - comparação por UF usando população como denominador explícito;
+- seleção automática da competência mais recente da fonte anual de leitos;
+- comparação de leitos existentes e destinados ao SUS por 100 mil habitantes;
 - filtros para comparar UFs e alternar entre todas, as dez maiores e as dez menores taxas;
 - minimização de dados e contrato automatizado de privacidade.
 
 ## Fluxo
 
 ```text
-CNES (ZIP/CSV) ──→ validação + auditoria ──┐
-                                           ├─→ junção por UF ─→ agregados + auditoria ─→ Streamlit
-IBGE (SIDRA/JSON) ─→ validação das 27 UFs ─┘
+CNES estabelecimentos (ZIP/CSV) ─→ qualidade ──────────┐
+IBGE (SIDRA/JSON) ───────────────→ população por UF ───┼─→ agregados + auditoria ─→ Streamlit
+CNES leitos (ZIP/CSV) ───────────→ última competência ─┘
 ```
 
 ## Privacidade
@@ -73,8 +77,10 @@ O escopo e os critérios de aceite estão em [`PROJECT_CONTEXT.md`](PROJECT_CONT
 - a fonte pode refletir ritmos diferentes de atualização entre gestores;
 - uma ausência cadastral não comprova ausência de estrutura ou serviço;
 - tipos de estabelecimento aparecem por código até que uma tabela oficial versionada seja incorporada;
-- o primeiro incremento não guarda série histórica.
+- o primeiro incremento não guarda série histórica;
 - a taxa por população descreve cadastro relativo e não permite concluir suficiência da rede.
+- os dados de leitos têm competência mensal e não informam ocupação ou disponibilidade;
+- a URL do arquivo de leitos é anual e precisa ser revisada na mudança de ano.
 
 ## Licença
 
