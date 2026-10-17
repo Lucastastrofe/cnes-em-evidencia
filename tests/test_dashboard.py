@@ -130,6 +130,9 @@ class DashboardContractTest(unittest.TestCase):
             "03/10/2026 às 03:00",
         )
 
+    def test_local_source_reference_is_not_parsed_as_an_http_date(self):
+        self.assertEqual(format_source_date("arquivo local"), "arquivo local")
+
     def test_chart_caption_does_not_repeat_automation_details(self):
         self.assertNotIn("O gráfico é regenerado em cada execução automática.", self.source)
 

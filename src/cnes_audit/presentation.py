@@ -22,7 +22,7 @@ def format_timestamp(value: str) -> str:
 
 
 def format_source_date(value: str) -> str:
-    if value == "não informado":
+    if value in {"não informado", "arquivo local"}:
         return value
     return _format_brasilia_time(parsedate_to_datetime(value))
 
