@@ -113,8 +113,8 @@ class DashboardContractTest(unittest.TestCase):
         self.assertEqual(summary["rate"], 0.001)
 
     def test_dashboard_distinguishes_source_date_from_daily_check(self):
-        self.assertIn("Última verificação automática", self.source)
-        self.assertIn("Data informada pela fonte", self.source)
+        self.assertIn("Arquivo informado pela fonte", self.source)
+        self.assertIn("Painel atualizado", self.source)
 
     def test_data_cache_is_invalidated_when_published_files_change(self):
         self.assertIn("def load_data(data_version:", self.source)
@@ -137,7 +137,22 @@ class DashboardContractTest(unittest.TestCase):
         self.assertNotIn("O gráfico é regenerado em cada execução automática.", self.source)
 
     def test_capacity_chart_keeps_legend_labels_visible(self):
-        self.assertIn("legend=alt.Legend(labelLimit=0)", self.source)
+        self.assertIn('title="Composição do total"', self.source)
+        self.assertIn('orient="top"', self.source)
+
+    def test_capacity_chart_shows_sus_as_part_of_the_total(self):
+        self.assertIn(
+            'value_vars=["Leitos destinados ao SUS", "Demais leitos cadastrados"]',
+            self.source,
+        )
+        self.assertIn('text=alt.Text("Percentual SUS:N")', self.source)
+        self.assertNotIn('yOffset="Indicador:N"', self.source)
+
+    def test_bed_source_dates_have_distinct_labels(self):
+        self.assertIn("Competência dos leitos", self.source)
+        self.assertIn("Arquivo informado pela fonte", self.source)
+        self.assertIn("Painel atualizado", self.source)
+        self.assertNotIn("Data informada pela fonte de leitos:", self.source)
 
     def test_second_part_compares_cnes_with_population_without_claiming_capacity(self):
         self.assertIn("Parte 2 · Comparação proporcional", self.source)
@@ -146,16 +161,16 @@ class DashboardContractTest(unittest.TestCase):
         self.assertNotIn("O ETL combina", self.source)
 
     def test_second_part_is_an_interactive_dashboard_view(self):
-        self.assertIn("Explore os dados", self.source)
+        self.assertIn("Compare as UFs", self.source)
         self.assertIn("multiselect", self.source)
         self.assertIn("vazio = Brasil completo", self.source)
         self.assertIn("Recorte da comparação", self.source)
-        self.assertIn("Taxa ponderada da seleção", self.source)
+        self.assertIn("Taxa ponderada", self.source)
         self.assertIn("UFs na comparação", self.source)
 
     def test_each_part_has_its_own_dashboard_navigation(self):
         self.assertIn("st.navigation", self.source)
-        self.assertIn('"Painéis da série"', self.source)
+        self.assertIn('"CNES em Evidência"', self.source)
         self.assertIn('"1 · Qualidade cadastral"', self.source)
         self.assertIn('"2 · Presença por população"', self.source)
         self.assertIn('"3 · Capacidade hospitalar"', self.source)
@@ -165,7 +180,7 @@ class DashboardContractTest(unittest.TestCase):
         self.assertIn("Leitos existentes", self.source)
         self.assertIn("Leitos destinados ao SUS", self.source)
         self.assertIn("não informa ocupação ou disponibilidade em tempo real", self.source)
-        self.assertIn("Competência da fonte", self.source)
+        self.assertIn("Competência dos leitos", self.source)
 
     def test_population_rates_are_calculated_with_precision_but_displayed_as_whole_numbers(self):
         self.assertIn("def format_rate", self.source)
@@ -173,11 +188,17 @@ class DashboardContractTest(unittest.TestCase):
         self.assertIn('format="%.0f"', self.source)
 
     def test_population_panel_explains_its_purpose_and_metrics(self):
-        self.assertIn("Para que serve", self.source)
+        self.assertIn("O que este painel responde", self.source)
         self.assertIn("Registros do CNES", self.source)
         self.assertIn("População estimada", self.source)
         self.assertIn("Uma taxa maior não significa", self.source)
         self.assertIn("não é a média simples", self.source)
+
+    def test_bed_counts_and_rates_are_displayed_without_fractional_units(self):
+        self.assertIn('.round().astype(int)', self.source)
+        self.assertIn('title="Taxa por 100 mil", format=".0f"', self.source)
+        self.assertNotIn('title="Taxa", format=".1f"', self.source)
+        self.assertNotIn('NumberColumn(format="%.1f")', self.source)
 
     def test_published_data_excludes_source_columns_outside_the_contract(self):
         for prohibited in (

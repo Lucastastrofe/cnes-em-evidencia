@@ -50,6 +50,22 @@ def format_rate(value: float) -> str:
     return f"{value:,.0f}".replace(",", ".")
 
 
+def render_source_facts(items: list[tuple[str, str]]) -> None:
+    facts = "".join(
+        f'<div class="source-fact"><span>{label}</span><strong>{value}</strong></div>'
+        for label, value in items
+    )
+    st.markdown(f'<div class="source-grid">{facts}</div>', unsafe_allow_html=True)
+
+
+def render_definition_grid(items: list[tuple[str, str]]) -> None:
+    definitions = "".join(
+        f'<div class="definition"><strong>{title}</strong><p>{description}</p></div>'
+        for title, description in items
+    )
+    st.markdown(f'<div class="definition-grid">{definitions}</div>', unsafe_allow_html=True)
+
+
 def state_table(states: list[dict]) -> pd.DataFrame:
     frame = pd.DataFrame(states).rename(
         columns={
@@ -74,14 +90,17 @@ def state_table(states: list[dict]) -> pd.DataFrame:
 
 
 def render_update_context(dashboard: dict) -> None:
-    st.markdown(
-        (
-            '<p class="source">'
-            f'Última verificação automática: {format_timestamp(dashboard["metadata"]["generated_at"])}. '
-            f'Data informada pela fonte: {format_source_date(dashboard["metadata"]["source_last_modified"])}.'
-            "</p>"
-        ),
-        unsafe_allow_html=True,
+    render_source_facts(
+        [
+            (
+                "Arquivo informado pela fonte",
+                format_source_date(dashboard["metadata"]["source_last_modified"]),
+            ),
+            (
+                "Painel atualizado",
+                format_timestamp(dashboard["metadata"]["generated_at"]),
+            ),
+        ]
     )
 
 
@@ -90,7 +109,7 @@ def render_traceability(
     include_population: bool = False,
     include_beds: bool = False,
 ) -> None:
-    with st.expander("Rastreabilidade da execução"):
+    with st.expander("Fontes e rastreabilidade"):
         trace_first, trace_second = st.columns(2)
         trace_first.write(f"**Execução:** `{audit['run_id']}`")
         trace_first.write(f"**Versão do código:** `{audit['code_version']}`")
@@ -136,38 +155,36 @@ def render_population_panel(dashboard: dict, audit: dict) -> None:
     )
     render_update_context(dashboard)
 
-    st.subheader("Para que serve")
+    st.subheader("O que este painel responde")
     st.write(
         "O painel permite comparar a presença cadastral entre estados de tamanhos diferentes e "
         "identificar UFs que merecem uma investigação mais detalhada. A população funciona como "
         "referência para que a comparação não dependa apenas do volume absoluto de cadastros."
     )
 
-    cnes_definition, population_definition, rate_definition = st.columns(3)
-    with cnes_definition.container(border=True):
-        st.markdown("**Registros do CNES**")
-        st.write(
-            "Quantidade de cadastros da UF no arquivo processado. Não representa número de "
-            "atendimentos realizados."
-        )
-    with population_definition.container(border=True):
-        st.markdown("**População estimada**")
-        st.write(
-            "Estimativa anual do IBGE usada como denominador para tornar as UFs comparáveis."
-        )
-    with rate_definition.container(border=True):
-        st.markdown("**Cadastros por 100 mil habitantes**")
-        st.write(
-            "Razão entre os registros e a população. Uma taxa de 300 equivale a cerca de 300 "
-            "registros cadastrais para cada 100 mil habitantes."
-        )
+    render_definition_grid(
+        [
+            (
+                "Registros do CNES",
+                "Cadastros encontrados no arquivo processado. Não representam atendimentos realizados.",
+            ),
+            (
+                "População estimada",
+                "Estimativa anual do IBGE usada para comparar estados de tamanhos diferentes.",
+            ),
+            (
+                "Cadastros por 100 mil habitantes",
+                "Taxa entre registros e população, apresentada sem casas decimais para facilitar a leitura.",
+            ),
+        ]
+    )
 
     st.info(
         "Uma taxa maior não significa, por si só, melhor oferta ou acesso à saúde. O indicador "
         "mostra presença cadastral relativa e orienta onde aprofundar a análise."
     )
 
-    st.subheader("Explore os dados")
+    st.subheader("Compare as UFs")
     filter_states, filter_scope = st.columns([2, 1])
     with filter_states:
         selected_ufs = st.multiselect(
@@ -199,7 +216,8 @@ def render_population_panel(dashboard: dict, audit: dict) -> None:
     lowest = comparison.nsmallest(1, "Cadastros por 100 mil habitantes").iloc[0]
 
     rate_a, rate_b, rate_c, rate_d = st.columns(4)
-    rate_a.metric("Taxa ponderada da seleção", f"{format_rate(weighted_rate)} por 100 mil")
+    rate_a.metric("Taxa ponderada", format_rate(weighted_rate))
+    rate_a.caption("cadastros por 100 mil habitantes")
     rate_b.metric("UFs na comparação", len(comparison))
     rate_c.metric("Maior taxa", format_rate(highest["Cadastros por 100 mil habitantes"]))
     rate_c.caption(highest["UF"])
@@ -293,44 +311,50 @@ def render_bed_panel(dashboard: dict, audit: dict) -> None:
         "leitos e a parcela destinada ao SUS.</p>",
         unsafe_allow_html=True,
     )
-    st.markdown(
-        (
-            '<p class="source">'
-            f'Última verificação automática: {format_timestamp(dashboard["metadata"]["generated_at"])}. '
-            f'Competência da fonte: {competence_label}. '
-            f'Data informada pela fonte de leitos: {format_source_date(audit["beds_source"]["last_modified"])}.'
-            "</p>"
-        ),
-        unsafe_allow_html=True,
+    render_source_facts(
+        [
+            ("Competência dos leitos", competence_label),
+            (
+                "Arquivo informado pela fonte",
+                format_source_date(audit["beds_source"]["last_modified"]),
+            ),
+            (
+                "Painel atualizado",
+                format_timestamp(dashboard["metadata"]["generated_at"]),
+            ),
+        ]
     )
 
-    st.subheader("Para que serve")
+    st.subheader("O que este painel responde")
     st.write(
         "O painel permite comparar a capacidade hospitalar cadastrada entre as UFs e observar "
         "quanto desse total está destinado ao atendimento pelo SUS. A taxa por população evita "
         "que estados maiores apareçam como mais estruturados apenas por terem mais habitantes."
     )
 
-    total_definition, sus_definition, competence_definition = st.columns(3)
-    with total_definition.container(border=True):
-        st.markdown("**Leitos existentes**")
-        st.write("Total de leitos hospitalares informado no CNES para a competência selecionada.")
-    with sus_definition.container(border=True):
-        st.markdown("**Leitos destinados ao SUS**")
-        st.write("Parcela dos leitos existentes cadastrada para atendimento pelo SUS.")
-    with competence_definition.container(border=True):
-        st.markdown("**Competência da fonte**")
-        st.write(
-            "Mês de referência mais recente encontrado no arquivo anual, usado para evitar "
-            "somar fotografias mensais do mesmo estabelecimento."
-        )
+    render_definition_grid(
+        [
+            (
+                "Leitos existentes",
+                "Quantidade total de leitos hospitalares informada para a competência selecionada.",
+            ),
+            (
+                "Leitos destinados ao SUS",
+                "Parte do total cadastrada para atendimento pelo Sistema Único de Saúde.",
+            ),
+            (
+                "Competência",
+                "Mês mais recente do arquivo anual. O recorte evita somar meses do mesmo estabelecimento.",
+            ),
+        ]
+    )
 
     st.info(
         "O cadastro descreve capacidade instalada e não informa ocupação ou disponibilidade em tempo real. "
         "Uma taxa maior também não comprova acesso, suficiência ou qualidade."
     )
 
-    st.subheader("Explore os dados")
+    st.subheader("Compare as UFs")
     filter_states, filter_scope = st.columns([2, 1])
     with filter_states:
         selected_ufs = st.multiselect(
@@ -370,48 +394,81 @@ def render_bed_panel(dashboard: dict, audit: dict) -> None:
         "no total de leitos existentes e não devem ser somados a ele."
     )
 
-    chart_data = comparison.melt(
-        id_vars=["UF"],
-        value_vars=[
-            "Leitos por 100 mil habitantes",
-            "Leitos SUS por 100 mil habitantes",
-        ],
-        var_name="Indicador",
+    chart_source = comparison.copy()
+    chart_source["Total"] = chart_source["Leitos por 100 mil habitantes"].round().astype(int)
+    chart_source["Leitos destinados ao SUS"] = (
+        chart_source["Leitos SUS por 100 mil habitantes"].round().astype(int)
+    )
+    chart_source["Demais leitos cadastrados"] = (
+        chart_source["Total"] - chart_source["Leitos destinados ao SUS"]
+    ).clip(lower=0)
+    chart_source["Percentual SUS"] = chart_source.apply(
+        lambda row: (
+            f'{row["Leitos destinados ao SUS"] / row["Total"]:.1%} SUS'.replace(".", ",")
+            if row["Total"]
+            else "0,0% SUS"
+        ),
+        axis=1,
+    )
+    chart_data = chart_source.melt(
+        id_vars=["UF", "Total", "Percentual SUS"],
+        value_vars=["Leitos destinados ao SUS", "Demais leitos cadastrados"],
+        var_name="Composição",
         value_name="Taxa",
     )
-    capacity_chart = (
+    chart_data["Ordem"] = chart_data["Composição"].map(
+        {"Leitos destinados ao SUS": 0, "Demais leitos cadastrados": 1}
+    )
+    state_order = chart_source.sort_values("Total", ascending=False)["UF"].tolist()
+    bars = (
         alt.Chart(chart_data)
         .mark_bar()
         .encode(
-            x=alt.X("Taxa:Q", title="Leitos por 100 mil habitantes"),
+            x=alt.X("Taxa:Q", stack="zero", title="Leitos por 100 mil habitantes"),
             y=alt.Y(
                 "UF:N",
-                sort=alt.SortField(field="Taxa", order="descending"),
+                sort=state_order,
                 title=None,
             ),
             color=alt.Color(
-                "Indicador:N",
+                "Composição:N",
                 scale=alt.Scale(
-                    domain=[
-                        "Leitos por 100 mil habitantes",
-                        "Leitos SUS por 100 mil habitantes",
-                    ],
-                    range=["#2B716F", "#9FBAB1"],
+                    domain=["Leitos destinados ao SUS", "Demais leitos cadastrados"],
+                    range=["#2B716F", "#D8E0DC"],
                 ),
-                legend=alt.Legend(labelLimit=0),
-                title=None,
+                legend=alt.Legend(
+                    labelLimit=0,
+                    orient="top",
+                    direction="horizontal",
+                    title="Composição do total",
+                ),
             ),
-            yOffset="Indicador:N",
+            order=alt.Order("Ordem:Q", sort="ascending"),
             tooltip=[
                 alt.Tooltip("UF:N"),
-                alt.Tooltip("Indicador:N"),
-                alt.Tooltip("Taxa:Q", format=".1f"),
+                alt.Tooltip("Total:Q", title="Total por 100 mil", format=".0f"),
+                alt.Tooltip("Composição:N"),
+                alt.Tooltip("Taxa:Q", title="Taxa por 100 mil", format=".0f"),
+                alt.Tooltip("Percentual SUS:N"),
             ],
         )
-        .properties(height=max(280, len(comparison) * 28))
     )
+    labels = alt.Chart(chart_source).mark_text(align="right", dx=-6, color="#183A39").encode(
+        x=alt.X("Total:Q", stack=None),
+        y=alt.Y(
+            "UF:N",
+            sort=state_order,
+            title=None,
+        ),
+        text=alt.Text("Percentual SUS:N"),
+    )
+    capacity_chart = (bars + labels).properties(height=max(280, len(comparison) * 28))
     chart_tab, table_tab = st.tabs(["Comparação visual", "Dados da seleção"])
     with chart_tab:
+        st.caption(
+            "Cada barra representa o total da UF. Verde escuro: leitos destinados ao SUS. "
+            "Verde claro: demais leitos cadastrados. O número na barra mostra a parcela SUS."
+        )
         st.altair_chart(capacity_chart, width="stretch")
     with table_tab:
         st.dataframe(
@@ -429,8 +486,8 @@ def render_bed_panel(dashboard: dict, audit: dict) -> None:
             column_config={
                 "Leitos existentes": st.column_config.NumberColumn(format="localized"),
                 "Leitos destinados ao SUS": st.column_config.NumberColumn(format="localized"),
-                "Leitos por 100 mil habitantes": st.column_config.NumberColumn(format="%.1f"),
-                "Leitos SUS por 100 mil habitantes": st.column_config.NumberColumn(format="%.1f"),
+                    "Leitos por 100 mil habitantes": st.column_config.NumberColumn(format="%.0f"),
+                    "Leitos SUS por 100 mil habitantes": st.column_config.NumberColumn(format="%.0f"),
             },
         )
 
@@ -451,7 +508,7 @@ def render_quality_panel(dashboard: dict, audit: dict) -> None:
         missing_location["id"], missing_location["failure_rate"]
     )
 
-    st.markdown('<p class="eyebrow">Auditoria antes da análise</p>', unsafe_allow_html=True)
+    st.markdown('<p class="eyebrow">Parte 1 · Qualidade cadastral</p>', unsafe_allow_html=True)
     st.title("CNES em Evidência")
     st.markdown(
         '<p class="deck">Uma leitura da qualidade cadastral antes de reutilizar a base '
@@ -459,6 +516,13 @@ def render_quality_panel(dashboard: dict, audit: dict) -> None:
         unsafe_allow_html=True,
     )
     render_update_context(dashboard)
+
+    st.subheader("O que este painel responde")
+    st.write(
+        "A primeira etapa verifica se os registros têm estrutura suficiente para sustentar "
+        "as análises seguintes. Os controles procuram ausências, duplicidades e códigos fora "
+        "do domínio esperado, sem transformar toda limitação em erro."
+    )
 
     first, second, third = st.columns(3)
     first.metric("Registros verificados", format_integer(summary["total_records"]))
@@ -475,7 +539,7 @@ def render_quality_panel(dashboard: dict, audit: dict) -> None:
         unsafe_allow_html=True,
     )
 
-    st.subheader("Achado que muda a forma de usar a base")
+    st.subheader("Achado que muda o uso da base")
     st.markdown(
         (
             '<div class="finding"><div class="finding-grid">'
@@ -580,29 +644,42 @@ def render() -> None:
         """
         <style>
         :root {
-            --ink: #17211d;
-            --muted: #56645e;
-            --line: #d9e0dc;
+            --ink: #17231f;
+            --muted: #586760;
+            --line: #d7dfda;
+            --surface: #f7f9f7;
             --green: #176b52;
-            --green-soft: #edf6f1;
-            --amber: #9a4f16;
-            --amber-soft: #fff4e8;
+            --green-dark: #124c3c;
+            --green-soft: #eaf3ee;
+            --amber: #8b4a1d;
+            --amber-soft: #fbf2e8;
         }
-        .block-container {max-width: 1120px; padding-top: 2.5rem; padding-bottom: 4rem;}
+        .stApp {background: #fcfdfc;}
+        .block-container {max-width: 1160px; padding-top: 3rem; padding-bottom: 5rem;}
         h1, h2, h3 {color: var(--ink); letter-spacing: -0.025em;}
-        h1 {font-size: clamp(2.25rem, 5vw, 3.8rem); line-height: 1.02; margin-bottom: 0.65rem;}
-        .eyebrow {color: var(--green); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;}
-        .deck {color: var(--muted); font-size: 1.08rem; max-width: 760px; margin: 0.5rem 0 0.25rem;}
-        .source {color: var(--muted); font-size: 0.85rem; margin-bottom: 1.75rem;}
-        [data-testid="stMetric"] {border-top: 2px solid var(--ink); padding-top: 0.75rem;}
+        h1 {font-size: clamp(2.25rem, 5vw, 3.65rem); line-height: 1.02; margin-bottom: 0.75rem;}
+        h2, h3 {margin-top: 2.4rem;}
+        .eyebrow {color: var(--green); font-size: 0.72rem; font-weight: 750; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.65rem;}
+        .deck {color: var(--muted); font-size: 1.12rem; line-height: 1.55; max-width: 780px; margin: 0 0 1.25rem;}
+        .source-grid {display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); margin: 1.25rem 0 2.25rem;}
+        .source-fact {background: var(--surface); padding: 0.85rem 1rem; min-height: 76px;}
+        .source-fact span {display: block; color: var(--muted); font-size: 0.72rem; letter-spacing: 0.04em; margin-bottom: 0.3rem;}
+        .source-fact strong {color: var(--ink); font-size: 0.92rem; font-weight: 650;}
+        .definition-grid {display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: 1.2rem 0 1.35rem;}
+        .definition {border: 1px solid var(--line); border-radius: 0.45rem; padding: 1.05rem 1.1rem; background: var(--surface);}
+        .definition strong {display: block; color: var(--ink); margin-bottom: 0.45rem;}
+        .definition p {color: var(--muted); font-size: 0.88rem; line-height: 1.55; margin: 0;}
+        [data-testid="stMetric"] {border-top: 2px solid var(--green-dark); padding: 0.85rem 0.15rem 0;}
         [data-testid="stMetricLabel"] {color: var(--muted);}
-        [data-testid="stMetricValue"] {color: var(--ink); font-size: 2rem;}
-        [data-testid="stSidebar"] {background: #f4f7f5; border-right: 1px solid var(--line);}
-        [data-testid="stSidebarNav"] a {border-radius: 0.55rem; margin: 0.2rem 0;}
-        [data-testid="stSidebarNav"] a:hover {background: #e7f1ec;}
-        .verdict {background: var(--green-soft); border-left: 4px solid var(--green); padding: 1rem 1.15rem; margin: 1.5rem 0;}
+        [data-testid="stMetricValue"] {color: var(--ink); font-size: clamp(1.75rem, 3vw, 2.2rem); letter-spacing: -0.035em;}
+        [data-testid="stSidebar"] {background: #f3f6f4; border-right: 1px solid var(--line);}
+        [data-testid="stSidebarNav"] a {border-radius: 0.35rem; margin: 0.25rem 0; min-height: 44px;}
+        [data-testid="stSidebarNav"] a:hover {background: #e4eee8;}
+        [data-testid="stTabs"] button {min-height: 44px;}
+        [data-testid="stDataFrame"] {border: 1px solid var(--line); border-radius: 0.35rem; overflow: hidden;}
+        .verdict {background: var(--green-soft); border-left: 4px solid var(--green); padding: 1.05rem 1.2rem; margin: 1.5rem 0 2rem;}
         .verdict strong {display: block; color: var(--ink); font-size: 1.2rem; margin: 0.2rem 0;}
-        .finding {border: 1px solid #e8c9aa; background: var(--amber-soft); padding: 1.25rem; margin: 1rem 0 1.25rem;}
+        .finding {border: 1px solid #dfc8b4; background: var(--amber-soft); padding: 1.35rem; margin: 1rem 0 1.5rem;}
         .finding-grid {display: grid; grid-template-columns: minmax(110px, 0.35fr) 1fr; gap: 1.25rem; align-items: start;}
         .finding-rate {color: var(--amber); font-size: 2.5rem; font-weight: 750; line-height: 1;}
         .finding-title {color: var(--ink); font-size: 1.15rem; font-weight: 700; margin-bottom: 0.35rem;}
@@ -610,6 +687,7 @@ def render() -> None:
         .scope-note {border-top: 1px solid var(--line); color: var(--muted); font-size: 0.9rem; margin-top: 1rem; padding-top: 0.75rem;}
         @media (max-width: 640px) {
             .block-container {padding-top: 1.5rem;}
+            .source-grid, .definition-grid {grid-template-columns: 1fr;}
             .finding-grid {grid-template-columns: 1fr; gap: 0.65rem;}
         }
         </style>
@@ -650,7 +728,7 @@ def render() -> None:
         icon=":material/bed:",
     )
     navigation = st.navigation(
-        {"Painéis da série": [quality_page, population_page, bed_page]},
+        {"CNES em Evidência": [quality_page, population_page, bed_page]},
         position="sidebar",
     )
     navigation.run()
