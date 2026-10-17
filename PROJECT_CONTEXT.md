@@ -25,6 +25,17 @@ Quais problemas de completude, unicidade e validade aparecem no cadastro naciona
 - publicar hash, referência e metadados das duas fontes na trilha de auditoria;
 - comparar UFs sem interpretar a taxa como oferta, acesso ou capacidade assistencial.
 
+## Escopo do terceiro incremento
+
+- processar o arquivo anual oficial de Hospitais e Leitos do CNES;
+- selecionar somente a competência mensal mais recente disponível no arquivo;
+- validar schema, competência, domínio das UFs, unicidade por CNES e valores não negativos;
+- agregar leitos existentes, leitos destinados ao SUS e leitos de UTI por UF;
+- integrar os agregados à estimativa populacional já validada pelo projeto;
+- calcular leitos existentes e leitos SUS por 100 mil habitantes;
+- publicar somente resultados agregados e os metadados da nova fonte;
+- deixar explícito que o cadastro não informa ocupação nem disponibilidade em tempo real.
+
 ## Fora de escopo
 
 - avaliar qualidade assistencial ou desempenho de estabelecimentos;
@@ -47,6 +58,11 @@ Quais problemas de completude, unicidade e validade aparecem no cadastro naciona
 9. A junção entre CNES e IBGE não aceita UF válida sem correspondência populacional.
 10. O painel apresenta a taxa por 100 mil habitantes, o ano do denominador e seu limite de interpretação.
 11. O relatório de auditoria identifica URL, hash, referência e horário de obtenção das duas fontes.
+12. O processamento de leitos usa apenas a maior competência válida presente no arquivo anual.
+13. O total nacional de leitos reconcilia com a soma das 27 UFs na competência selecionada.
+14. A publicação é interrompida se houver UF inválida, CNES repetido ou quantidade negativa na competência selecionada.
+15. O painel apresenta total, parcela SUS e taxas por 100 mil habitantes sem expor estabelecimentos, contatos ou endereços.
+16. A rastreabilidade identifica competência, URL, hash, quantidade de linhas e horário de obtenção da fonte de leitos.
 
 ## Restrições e riscos
 
@@ -74,3 +90,7 @@ Fato verificado: a API SIDRA da tabela 6579, variável 9324, retornou estimativa
 ## Situação em 2026-10-11
 
 Fato verificado: a execução manual nº 11 do workflow terminou com sucesso para o commit `a26a931` e gerou o commit de dados `5ea3be3`. O Streamlit público apresentou a verificação das 15:20, os dois painéis em rotas próprias e a parte 2 com definições, filtros, gráfico e tabela. A interface mostra taxas arredondadas, mantendo os valores decimais no cálculo e no ordenamento.
+
+## Situação em 2026-10-17
+
+Fato verificado localmente: o arquivo oficial `Leitos_csv_2026.zip` continha 57.608 linhas de janeiro a agosto de 2026. O processamento selecionou somente as 7.220 linhas da competência 08/2026, com cobertura das 27 UFs, e reconciliou 523.117 leitos existentes, 354.435 leitos destinados ao SUS, 64.063 leitos de UTI e 32.096 leitos de UTI destinados ao SUS. Com a estimativa populacional de 2026, a taxa nacional calculada foi de 244,21 leitos existentes e 165,46 leitos SUS por 100 mil habitantes. A publicação externa da parte 3 ainda depende de commit e execução do fluxo no GitHub.

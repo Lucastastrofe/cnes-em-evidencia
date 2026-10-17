@@ -14,12 +14,41 @@ class PipelineTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
             source = root / "source.zip"
+            beds_source = root / "beds.zip"
             population_source = root / "population.json"
             output = root / "site" / "data"
             header = ";".join(REQUIRED_COLUMNS)
             row = ";".join(["1", "35", "355030", "5", "M", "-23.5", "-46.6"])
             with ZipFile(source, "w") as archive:
                 archive.writestr("cnes_estabelecimentos.csv", f"{header}\n{row}\n")
+            bed_header = ";".join(
+                (
+                    "COMP",
+                    "UF",
+                    "CNES",
+                    "LEITOS_EXISTENTES",
+                    "LEITOS_SUS",
+                    "UTI_TOTAL_EXIST",
+                    "UTI_TOTAL_SUS",
+                    "NOME_ESTABELECIMENTO",
+                    "NU_TELEFONE",
+                )
+            )
+            bed_rows = [
+                ";".join(
+                    ["202609", abbreviation, f"{index:07d}", "10", "6", "2", "1", "Hospital", "123"]
+                )
+                for index, abbreviation in enumerate(
+                    (
+                        "RO", "AC", "AM", "RR", "PA", "AP", "TO", "MA", "PI",
+                        "CE", "RN", "PB", "PE", "AL", "SE", "BA", "MG", "ES",
+                        "RJ", "SP", "PR", "SC", "RS", "MS", "MT", "GO", "DF",
+                    ),
+                    start=1,
+                )
+            ]
+            with ZipFile(beds_source, "w") as archive:
+                archive.writestr("Leitos_2026.csv", "\n".join([bed_header, *bed_rows]))
             population_source.write_text(
                 json.dumps(
                     [
@@ -47,12 +76,15 @@ class PipelineTest(unittest.TestCase):
 
             build_public_artifacts(
                 source_path=source,
+                beds_path=beds_source,
                 population_path=population_source,
                 output_directory=output,
                 source_url="https://example.test/source.zip",
+                beds_url="https://example.test/beds.zip",
                 population_url="https://example.test/population.json",
                 obtained_at="2026-10-03T12:00:00Z",
                 source_last_modified="2026-10-03T06:00:00Z",
+                beds_last_modified="2026-09-20T20:20:00Z",
                 population_last_modified="2026-08-28T12:00:00Z",
                 code_version="test-version",
             )
@@ -70,6 +102,11 @@ class PipelineTest(unittest.TestCase):
             self.assertEqual(dashboard["by_state"][0]["establishments_per_100k"], 0.1)
             self.assertEqual(audit["population_source"]["states"], 27)
             self.assertEqual(audit["population_source"]["reference_year"], 2026)
+            self.assertEqual(dashboard["beds"]["summary"]["competence"], "202609")
+            self.assertEqual(dashboard["beds"]["summary"]["total_beds"], 270)
+            self.assertEqual(dashboard["beds"]["summary"]["sus_beds"], 162)
+            self.assertEqual(dashboard["beds"]["by_state"][0]["beds_per_100k"], 1.0)
+            self.assertEqual(audit["beds_source"]["rows_selected"], 27)
             for prohibited in (
                 "nu_telefone",
                 "no_email",
@@ -77,6 +114,7 @@ class PipelineTest(unittest.TestCase):
                 "nu_cnpj",
                 "nu_latitude",
                 "nu_longitude",
+                "nome_estabelecimento",
             ):
                 self.assertNotIn(prohibited, public_text)
 

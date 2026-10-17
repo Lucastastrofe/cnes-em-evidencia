@@ -10,6 +10,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from cnes_audit.beds import aggregate_latest_bed_capacity, enrich_beds_with_population
 from cnes_audit.population import enrich_states_with_population, read_population_estimates
 from cnes_audit.quality import audit_rows
 from cnes_audit.source import iter_csv_rows, zip_entry_metadata
@@ -21,6 +22,10 @@ DEFAULT_SOURCE_URL = (
 DEFAULT_POPULATION_URL = (
     "https://apisidra.ibge.gov.br/values/t/6579/n3/all/v/9324/"
     "p/last%201?formato=json"
+)
+DEFAULT_BEDS_URL = (
+    "https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/"
+    "Leitos_SUS/Leitos_csv_2026.zip"
 )
 
 
@@ -73,22 +78,28 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
 
 def build_public_artifacts(
     source_path: Path,
+    beds_path: Path,
     population_path: Path,
     output_directory: Path,
     source_url: str,
+    beds_url: str,
     population_url: str,
     obtained_at: str,
     source_last_modified: str,
+    beds_last_modified: str,
     population_last_modified: str,
     code_version: str,
     source_etag: str = "não informado",
+    beds_etag: str = "não informado",
     population_etag: str = "não informado",
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     source_hash = sha256_file(source_path)
+    beds_hash = sha256_file(beds_path)
     population_hash = sha256_file(population_path)
     archive = zip_entry_metadata(source_path)
     dashboard = audit_rows(iter_csv_rows(source_path))
     population = read_population_estimates(population_path)
+    beds = aggregate_latest_bed_capacity(beds_path)
     dashboard["by_state"] = enrich_states_with_population(
         dashboard["by_state"], population
     )
@@ -98,6 +109,26 @@ def build_public_artifacts(
             "total_population": population["total_population"],
         }
     )
+    bed_states = enrich_beds_with_population(beds["by_state"], population)
+    dashboard["beds"] = {
+        "summary": {
+            "competence": beds["competence"],
+            "rows_selected": beds["rows_selected"],
+            "total_beds": beds["total_beds"],
+            "sus_beds": beds["sus_beds"],
+            "uti_beds": beds["uti_beds"],
+            "uti_sus_beds": beds["uti_sus_beds"],
+            "beds_per_100k": round(
+                beds["total_beds"] / population["total_population"] * 100_000,
+                2,
+            ),
+            "sus_beds_per_100k": round(
+                beds["sus_beds"] / population["total_population"] * 100_000,
+                2,
+            ),
+        },
+        "by_state": bed_states,
+    }
     total_rows = dashboard["summary"]["total_records"]
     aggregated_rows = sum(item["records"] for item in dashboard["by_state"])
     if total_rows != aggregated_rows:
@@ -148,8 +179,21 @@ def build_public_artifacts(
             "states": len(population["by_state"]),
             "total_population": population["total_population"],
         },
+        "beds_source": {
+            "catalog_url": "https://dadosabertos.saude.gov.br/dataset/hospitais-e-leitos",
+            "resource_url": beds_url,
+            "obtained_at": obtained_at,
+            "last_modified": beds_last_modified,
+            "etag": beds_etag,
+            "sha256": beds_hash,
+            "archive_bytes": beds_path.stat().st_size,
+            "competence": beds["competence"],
+            "rows_read": beds["rows_read"],
+            "rows_selected": beds["rows_selected"],
+            "states": len(beds["by_state"]),
+        },
         "contract": {
-            "version": "2.0",
+            "version": "3.0",
             "publication_level": "somente contagens agregadas",
             "raw_data_published": False,
         },
@@ -157,6 +201,10 @@ def build_public_artifacts(
             "rows_read": total_rows,
             "rows_aggregated": aggregated_rows,
             "difference": total_rows - aggregated_rows,
+            "beds_national": beds["total_beds"],
+            "beds_by_state": sum(int(item["beds"]) for item in bed_states),
+            "sus_beds_national": beds["sus_beds"],
+            "sus_beds_by_state": sum(int(item["sus_beds"]) for item in bed_states),
         },
         "checks": dashboard["checks"],
         "limitations": [
@@ -164,6 +212,7 @@ def build_public_artifacts(
             "A fonte pode refletir ritmos diferentes de atualização entre gestores locais.",
             "Ausência cadastral não comprova ausência de serviço ou estrutura.",
             "A taxa por população mede presença cadastral relativa, não capacidade assistencial.",
+            "Leitos cadastrados não informam ocupação ou disponibilidade em tempo real.",
             "Os tipos de unidade são exibidos por código até a incorporação de tabela oficial versionada.",
         ],
     }
