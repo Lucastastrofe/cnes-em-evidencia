@@ -136,6 +136,9 @@ class DashboardContractTest(unittest.TestCase):
     def test_chart_caption_does_not_repeat_automation_details(self):
         self.assertNotIn("O gráfico é regenerado em cada execução automática.", self.source)
 
+    def test_capacity_chart_keeps_legend_labels_visible(self):
+        self.assertIn("legend=alt.Legend(labelLimit=0)", self.source)
+
     def test_second_part_compares_cnes_with_population_without_claiming_capacity(self):
         self.assertIn("Parte 2 · Comparação proporcional", self.source)
         self.assertIn("por 100 mil habitantes", self.source)

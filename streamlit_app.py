@@ -398,6 +398,7 @@ def render_bed_panel(dashboard: dict, audit: dict) -> None:
                     ],
                     range=["#2B716F", "#9FBAB1"],
                 ),
+                legend=alt.Legend(labelLimit=0),
                 title=None,
             ),
             yOffset="Indicador:N",
