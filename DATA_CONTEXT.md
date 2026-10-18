@@ -43,6 +43,16 @@ O ZIP bruto permanece apenas em `data/work`. O processamento lê somente `COMP`,
 
 A resposta HTML da consulta permanece em `data/work`. O artefato público contém somente contagens agregadas por UF e tipo de equipe, além de competência, URL e hash. Não são consultados nomes de profissionais, estabelecimentos ou registros individuais.
 
+### Serviços cadastrados
+
+- Conjunto: CNES — Estabelecimentos — Classificação do Serviço.
+- Responsável pela publicação: Ministério da Saúde, via TabNet/DATASUS.
+- Consulta: quantidade por Unidade da Federação segundo classificação do serviço.
+- Recorte: maior competência disponível no formulário nacional.
+- Unidade: registros de serviço/classificação.
+
+A resposta HTML da consulta permanece em `data/work`. O artefato público contém somente contagens agregadas por UF e classificação, além de competência, URL e hash. Como um estabelecimento pode informar mais de uma classificação, a soma não representa estabelecimentos únicos.
+
 ## Unidade de análise
 
 Uma linha do arquivo de estabelecimentos. `CO_CNES` é tratado como chave esperada para o controle de unicidade. Essa expectativa é um contrato do projeto e uma violação é publicada como alerta, sem remoção silenciosa.
@@ -73,3 +83,5 @@ A taxa integrada é calculada como `registros do CNES na UF / população estima
 Na terceira parte, `leitos existentes por 100 mil habitantes` e `leitos SUS por 100 mil habitantes` usam os totais da competência mensal mais recente como numerador e a estimativa anual do IBGE como denominador. `LEITOS_SUS` é uma parcela de `LEITOS_EXISTENTES`, não uma categoria adicional. Os indicadores descrevem capacidade cadastrada; não informam ocupação, disponibilidade imediata, produção, acesso efetivo ou qualidade assistencial.
 
 Na quarta parte, `equipes por 100 mil habitantes` usa os registros ativos da competência mais recente do TabNet e a estimativa anual do IBGE. O total descreve registros de equipes, não profissionais únicos, atendimentos, cobertura populacional ou qualidade da assistência. Categorias históricas e atuais permanecem separadas conforme a fonte; o projeto não cria equivalências sem uma regra oficial versionada.
+
+Na quinta parte, `registros de serviço/classificação por 100 mil habitantes` usa as contagens da competência mais recente do TabNet e a estimativa anual do IBGE. O indicador permite comparar presença cadastral relativa. Ele não mede atendimentos, disponibilidade operacional, capacidade instalada, produção, acesso ou suficiência. Os códigos e descrições permanecem como publicados pela fonte.

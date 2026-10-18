@@ -13,6 +13,7 @@ from typing import Any
 from cnes_audit.beds import aggregate_latest_bed_capacity, enrich_beds_with_population
 from cnes_audit.population import enrich_states_with_population, read_population_estimates
 from cnes_audit.quality import audit_rows
+from cnes_audit.services import enrich_services_with_population, parse_service_snapshot
 from cnes_audit.source import iter_csv_rows, zip_entry_metadata
 from cnes_audit.teams import enrich_teams_with_population, parse_team_snapshot
 
@@ -81,33 +82,40 @@ def build_public_artifacts(
     source_path: Path,
     beds_path: Path,
     teams_path: Path,
+    services_path: Path,
     population_path: Path,
     output_directory: Path,
     source_url: str,
     beds_url: str,
     teams_url: str,
+    services_url: str,
     population_url: str,
     obtained_at: str,
     source_last_modified: str,
     beds_last_modified: str,
     teams_last_modified: str,
+    services_last_modified: str,
     population_last_modified: str,
     teams_competence: str,
+    services_competence: str,
     code_version: str,
     source_etag: str = "não informado",
     beds_etag: str = "não informado",
     teams_etag: str = "não informado",
+    services_etag: str = "não informado",
     population_etag: str = "não informado",
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     source_hash = sha256_file(source_path)
     beds_hash = sha256_file(beds_path)
     teams_hash = sha256_file(teams_path)
+    services_hash = sha256_file(services_path)
     population_hash = sha256_file(population_path)
     archive = zip_entry_metadata(source_path)
     dashboard = audit_rows(iter_csv_rows(source_path))
     population = read_population_estimates(population_path)
     beds = aggregate_latest_bed_capacity(beds_path)
     teams = parse_team_snapshot(teams_path, competence=teams_competence)
+    services = parse_service_snapshot(services_path, competence=services_competence)
     dashboard["by_state"] = enrich_states_with_population(
         dashboard["by_state"], population
     )
@@ -153,6 +161,24 @@ def build_public_artifacts(
         "by_type": teams["by_type"],
         "by_state_type": teams["by_state_type"],
     }
+    service_states = enrich_services_with_population(services["by_state"], population)
+    dashboard["services"] = {
+        "summary": {
+            "competence": services["competence"],
+            "total_service_records": services["total_service_records"],
+            "states": services["states"],
+            "service_classifications": services["service_classifications"],
+            "service_records_per_100k": round(
+                services["total_service_records"]
+                / population["total_population"]
+                * 100_000,
+                2,
+            ),
+        },
+        "by_state": service_states,
+        "by_classification": services["by_classification"],
+        "by_state_classification": services["by_state_classification"],
+    }
     total_rows = dashboard["summary"]["total_records"]
     aggregated_rows = sum(item["records"] for item in dashboard["by_state"])
     if total_rows != aggregated_rows:
@@ -168,6 +194,7 @@ def build_public_artifacts(
         "source_sha256": source_hash,
         "population_source_sha256": population_hash,
         "teams_source_sha256": teams_hash,
+        "services_source_sha256": services_hash,
     }
     dashboard["metadata"] = public_metadata
     audit = {
@@ -230,8 +257,21 @@ def build_public_artifacts(
             "team_types": teams["team_types"],
             "total_teams": teams["total_teams"],
         },
+        "services_source": {
+            "catalog_url": "https://datasus.saude.gov.br/cnes-estabelecimentos/",
+            "resource_url": services_url,
+            "obtained_at": obtained_at,
+            "last_modified": services_last_modified,
+            "etag": services_etag,
+            "sha256": services_hash,
+            "response_bytes": services_path.stat().st_size,
+            "competence": services["competence"],
+            "states": services["states"],
+            "service_classifications": services["service_classifications"],
+            "total_service_records": services["total_service_records"],
+        },
         "contract": {
-            "version": "4.0",
+            "version": "5.0",
             "publication_level": "somente contagens agregadas",
             "raw_data_published": False,
         },
@@ -246,6 +286,13 @@ def build_public_artifacts(
             "teams_national": teams["total_teams"],
             "teams_by_state": sum(int(item["teams"]) for item in team_states),
             "teams_by_type": sum(int(item["teams"]) for item in teams["by_type"]),
+            "services_national": services["total_service_records"],
+            "services_by_state": sum(
+                int(item["service_records"]) for item in service_states
+            ),
+            "services_by_classification": sum(
+                int(item["service_records"]) for item in services["by_classification"]
+            ),
         },
         "checks": dashboard["checks"],
         "limitations": [
@@ -254,8 +301,18 @@ def build_public_artifacts(
             "Ausência cadastral não comprova ausência de serviço ou estrutura.",
             "A taxa por população mede presença cadastral relativa, não capacidade assistencial.",
             "Leitos cadastrados não informam ocupação ou disponibilidade em tempo real.",
-            "Equipes cadastradas não representam quantidade de profissionais, atendimentos ou cobertura efetiva.",
-            "Os tipos de unidade são exibidos por código até a incorporação de tabela oficial versionada.",
+            (
+                "Equipes cadastradas não representam quantidade de profissionais, "
+                "atendimentos ou cobertura efetiva."
+            ),
+            (
+                "Serviços cadastrados não comprovam atendimento realizado, "
+                "disponibilidade operacional ou produção."
+            ),
+            (
+                "Os tipos de unidade são exibidos por código até a incorporação "
+                "de tabela oficial versionada."
+            ),
         ],
     }
     _write_json(output_directory / "dashboard.json", dashboard)

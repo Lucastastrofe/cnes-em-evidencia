@@ -46,6 +46,16 @@ Quais problemas de completude, unicidade e validade aparecem no cadastro naciona
 - publicar somente agregados por UF e por tipo, com hash e competência da consulta;
 - deixar explícito que registros de equipes não equivalem a profissionais, atendimentos ou cobertura efetiva.
 
+## Escopo do quinto incremento
+
+- consultar a competência mais recente de serviço/classificação no TabNet do CNES;
+- validar a cobertura das 27 UFs e reconciliar o total nacional por UF e por classificação;
+- integrar os totais estaduais à estimativa populacional já validada pelo projeto;
+- calcular registros de serviço/classificação por 100 mil habitantes;
+- preservar códigos e descrições informados pela fonte, sem criar agrupamentos clínicos próprios;
+- publicar somente agregados por UF e classificação, com hash e competência da consulta;
+- deixar explícito que cadastro não comprova atendimento, disponibilidade, capacidade ou produção.
+
 ## Fora de escopo
 
 - avaliar qualidade assistencial ou desempenho de estabelecimentos;
@@ -77,6 +87,10 @@ Quais problemas de completude, unicidade e validade aparecem no cadastro naciona
 18. O total nacional de equipes reconcilia com a soma das 27 UFs e com a soma dos tipos informados.
 19. O painel permite comparar UFs e recalcula totais e taxa para o recorte selecionado.
 20. A publicação de equipes não expõe profissionais, estabelecimentos ou qualquer registro individual.
+21. A consulta de serviços seleciona automaticamente a maior competência disponível no TabNet.
+22. O total nacional de serviços reconcilia com as 27 UFs e com todas as classificações publicadas.
+23. O painel permite comparar UFs e recalcula totais, taxa e classificações para o recorte selecionado.
+24. A publicação de serviços mantém apenas contagens agregadas e as descrições oficiais das categorias.
 
 ## Restrições e riscos
 
@@ -110,3 +124,5 @@ Fato verificado: a execução manual nº 11 do workflow terminou com sucesso par
 Fato verificado localmente: o arquivo oficial `Leitos_csv_2026.zip` continha 57.608 linhas de janeiro a agosto de 2026. O processamento selecionou somente as 7.220 linhas da competência 08/2026, com cobertura das 27 UFs, e reconciliou 523.117 leitos existentes, 354.435 leitos destinados ao SUS, 64.063 leitos de UTI e 32.096 leitos de UTI destinados ao SUS. Com a estimativa populacional de 2026, a taxa nacional calculada foi de 244,21 leitos existentes e 165,46 leitos SUS por 100 mil habitantes. A publicação externa da parte 3 ainda depende de commit e execução do fluxo no GitHub.
 
 Fato verificado localmente: o TabNet do CNES disponibilizou a competência 09/2026 para equipes de saúde. A consulta agregada reconciliou 124.459 registros de equipes nas 27 UFs e em 40 tipos com quantidade maior que zero. A taxa nacional calculada foi de 58,10 registros de equipes por 100 mil habitantes. O resultado descreve registros ativos na competência e não quantidade de profissionais, atendimentos ou cobertura assistencial.
+
+Fato verificado: o TabNet do CNES disponibilizou a competência 09/2026 para serviço/classificação. A consulta nacional reconciliou 1.060.015 registros nas 27 UFs e em 342 classificações, o equivalente a 494,84 registros por 100 mil habitantes. O resultado admite múltiplas classificações por estabelecimento e não representa estabelecimentos únicos ou atendimentos realizados.

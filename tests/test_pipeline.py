@@ -16,6 +16,7 @@ class PipelineTest(unittest.TestCase):
             source = root / "source.zip"
             beds_source = root / "beds.zip"
             teams_source = root / "teams.html"
+            services_source = root / "services.html"
             population_source = root / "population.json"
             output = root / "site" / "data"
             header = ";".join(REQUIRED_COLUMNS)
@@ -64,6 +65,28 @@ class PipelineTest(unittest.TestCase):
                     + '\n"Total";54;27;81\n</pre></body></html>'
                 ).encode("latin-1")
             )
+            abbreviations = (
+                "RO", "AC", "AM", "RR", "PA", "AP", "TO", "MA", "PI",
+                "CE", "RN", "PB", "PE", "AL", "SE", "BA", "MG", "ES",
+                "RJ", "SP", "PR", "SC", "RS", "MS", "MT", "GO", "DF",
+            )
+            services_source.write_bytes(
+                (
+                    "<html><body><pre>\n"
+                    '"Classifica&ccedil;&atilde;o do Servi&ccedil;o";'
+                    + ";".join(f'"{abbreviation}"' for abbreviation in abbreviations)
+                    + ';"Total"\n'
+                    '"103001 103 SERVICO DE URGENCIA / 001 AMBULANCIA DE TRANSPORTE";'
+                    + ";".join("2" for _ in abbreviations)
+                    + ";54\n"
+                    '"105002 105 SERVICO DE ATENCAO DOMICILIAR / 002 ATENDIMENTO DOMICILIAR";'
+                    + ";".join("1" for _ in abbreviations)
+                    + ";27\n"
+                    '"Total";'
+                    + ";".join("3" for _ in abbreviations)
+                    + ";81\n</pre></body></html>"
+                ).encode("latin-1")
+            )
             population_source.write_text(
                 json.dumps(
                     [
@@ -93,18 +116,22 @@ class PipelineTest(unittest.TestCase):
                 source_path=source,
                 beds_path=beds_source,
                 teams_path=teams_source,
+                services_path=services_source,
                 population_path=population_source,
                 output_directory=output,
                 source_url="https://example.test/source.zip",
                 beds_url="https://example.test/beds.zip",
                 teams_url="https://example.test/teams",
+                services_url="https://example.test/services",
                 population_url="https://example.test/population.json",
                 obtained_at="2026-10-03T12:00:00Z",
                 source_last_modified="2026-10-03T06:00:00Z",
                 beds_last_modified="2026-09-20T20:20:00Z",
                 teams_last_modified="não informado",
+                services_last_modified="não informado",
                 population_last_modified="2026-08-28T12:00:00Z",
                 teams_competence="202609",
+                services_competence="202609",
                 code_version="test-version",
             )
 
@@ -130,6 +157,13 @@ class PipelineTest(unittest.TestCase):
             self.assertEqual(dashboard["teams"]["summary"]["total_teams"], 81)
             self.assertEqual(dashboard["teams"]["by_state"][0]["teams_per_100k"], 0.3)
             self.assertEqual(audit["teams_source"]["states"], 27)
+            self.assertEqual(dashboard["services"]["summary"]["competence"], "202609")
+            self.assertEqual(dashboard["services"]["summary"]["total_service_records"], 81)
+            self.assertEqual(
+                dashboard["services"]["by_state"][0]["service_records_per_100k"],
+                0.3,
+            )
+            self.assertEqual(audit["services_source"]["service_classifications"], 2)
             for prohibited in (
                 "nu_telefone",
                 "no_email",
