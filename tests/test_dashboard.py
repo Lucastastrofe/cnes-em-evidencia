@@ -174,6 +174,13 @@ class DashboardContractTest(unittest.TestCase):
         self.assertIn('"1 · Qualidade cadastral"', self.source)
         self.assertIn('"2 · Presença por população"', self.source)
         self.assertIn('"3 · Capacidade hospitalar"', self.source)
+        self.assertIn('"4 · Equipes de saúde"', self.source)
+
+    def test_fourth_part_explains_teams_without_claiming_workforce_or_coverage(self):
+        self.assertIn("Parte 4 · Equipes de saúde", self.source)
+        self.assertIn("Equipes cadastradas", self.source)
+        self.assertIn("não representa quantidade de profissionais", self.source)
+        self.assertIn("Competência das equipes", self.source)
 
     def test_third_part_explains_capacity_without_claiming_availability(self):
         self.assertIn("Parte 3 · Capacidade hospitalar", self.source)

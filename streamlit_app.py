@@ -108,6 +108,7 @@ def render_traceability(
     audit: dict,
     include_population: bool = False,
     include_beds: bool = False,
+    include_teams: bool = False,
 ) -> None:
     with st.expander("Fontes e rastreabilidade"):
         trace_first, trace_second = st.columns(2)
@@ -137,6 +138,16 @@ def render_traceability(
                 "Consultar a fonte de leitos",
                 audit["beds_source"]["catalog_url"],
             )
+        if include_teams:
+            st.write(f"**SHA-256 da consulta de equipes:** `{audit['teams_source']['sha256']}`")
+            st.write(
+                "**Equipes reconciliadas:** "
+                f"{format_integer(audit['teams_source']['total_teams'])}"
+            )
+            st.link_button(
+                "Consultar equipes no TabNet",
+                audit["teams_source"]["catalog_url"],
+            )
 
 
 def render_population_panel(dashboard: dict, audit: dict) -> None:
@@ -149,8 +160,8 @@ def render_population_panel(dashboard: dict, audit: dict) -> None:
     st.markdown('<p class="eyebrow">Parte 2 · Comparação proporcional</p>', unsafe_allow_html=True)
     st.title("CNES e população")
     st.markdown(
-        '<p class="deck">Um painel para comparar a presença cadastral entre UFs sem deixar '
-        "que o tamanho da população distorça a leitura.</p>",
+        '<p class="deck">A população entra como referência para comparar a presença cadastral '
+        "entre UFs de tamanhos diferentes.</p>",
         unsafe_allow_html=True,
     )
     render_update_context(dashboard)
@@ -307,8 +318,8 @@ def render_bed_panel(dashboard: dict, audit: dict) -> None:
     st.markdown('<p class="eyebrow">Parte 3 · Capacidade hospitalar</p>', unsafe_allow_html=True)
     st.title("Leitos hospitalares por UF")
     st.markdown(
-        '<p class="deck">Uma comparação da capacidade cadastrada, separando o total de '
-        "leitos e a parcela destinada ao SUS.</p>",
+        '<p class="deck">Esta etapa mostra a capacidade cadastrada em cada UF e identifica '
+        "quanto do total está destinado ao SUS.</p>",
         unsafe_allow_html=True,
     )
     render_source_facts(
@@ -499,6 +510,201 @@ def render_bed_panel(dashboard: dict, audit: dict) -> None:
     render_traceability(audit, include_population=True, include_beds=True)
 
 
+def team_table(states: list[dict]) -> pd.DataFrame:
+    return pd.DataFrame(states).rename(
+        columns={
+            "name": "UF",
+            "teams": "Equipes cadastradas",
+            "population": "População estimada",
+            "teams_per_100k": "Equipes por 100 mil habitantes",
+        }
+    )
+
+
+def render_team_panel(dashboard: dict, audit: dict) -> None:
+    summary = dashboard["teams"]["summary"]
+    states = team_table(dashboard["teams"]["by_state"])
+    state_types = pd.DataFrame(dashboard["teams"]["by_state_type"])
+    competence = str(summary["competence"])
+    competence_label = f"{competence[4:]}/{competence[:4]}"
+
+    st.markdown('<p class="eyebrow">Parte 4 · Equipes de saúde</p>', unsafe_allow_html=True)
+    st.title("Equipes de saúde por UF")
+    st.markdown(
+        '<p class="deck">Uma leitura dos registros de equipes ativas no CNES, com comparação '
+        "entre estados e abertura pelos tipos informados na fonte.</p>",
+        unsafe_allow_html=True,
+    )
+    render_source_facts(
+        [
+            ("Competência das equipes", competence_label),
+            ("Fonte consultada", "TabNet do CNES"),
+            (
+                "Painel atualizado",
+                format_timestamp(dashboard["metadata"]["generated_at"]),
+            ),
+        ]
+    )
+
+    st.subheader("O que este painel responde")
+    st.write(
+        "O painel mostra como os registros de equipes ativas se distribuem entre as UFs na "
+        "competência selecionada. A taxa por população coloca estados de tamanhos diferentes "
+        "na mesma escala e ajuda a localizar contrastes que merecem investigação."
+    )
+    render_definition_grid(
+        [
+            (
+                "Equipes cadastradas",
+                "Registros ativos encontrados no CNES para a competência consultada.",
+            ),
+            (
+                "Equipes por 100 mil habitantes",
+                "Relação entre os registros de equipes e a estimativa populacional do IBGE.",
+            ),
+            (
+                "Tipo de equipe",
+                "Classificação mantida como aparece no TabNet, sem reunir categorias diferentes.",
+            ),
+        ]
+    )
+    st.info(
+        "O total reúne registros de equipes ativas e não representa quantidade de profissionais, "
+        "atendimentos realizados, cobertura efetiva ou qualidade da assistência."
+    )
+
+    st.subheader("Compare as UFs")
+    filter_states, filter_scope = st.columns([2, 1])
+    with filter_states:
+        selected_ufs = st.multiselect(
+            "UFs para comparar (vazio = Brasil completo)",
+            states["UF"].tolist(),
+            placeholder="Todas as UFs",
+            key="team_state_filter",
+        )
+    with filter_scope:
+        comparison_scope = st.selectbox(
+            "Recorte da comparação",
+            ["Todas as UFs selecionadas", "10 maiores taxas", "10 menores taxas"],
+            key="team_scope_filter",
+        )
+
+    if not selected_ufs:
+        selected_ufs = states["UF"].tolist()
+    comparison = states.loc[states["UF"].isin(selected_ufs)]
+    if comparison_scope == "10 maiores taxas":
+        comparison = comparison.nlargest(10, "Equipes por 100 mil habitantes")
+    elif comparison_scope == "10 menores taxas":
+        comparison = comparison.nsmallest(10, "Equipes por 100 mil habitantes")
+
+    displayed_ufs = comparison["UF"].tolist()
+    selected_types = state_types.loc[state_types["state_name"].isin(displayed_ufs)]
+    type_totals = (
+        selected_types.groupby(["team_code", "team_name"], as_index=False)["teams"]
+        .sum()
+        .sort_values("teams", ascending=False)
+    )
+    selected_teams = int(comparison["Equipes cadastradas"].sum())
+    selected_population = int(comparison["População estimada"].sum())
+    selected_rate = selected_teams / selected_population * 100_000
+
+    metric_a, metric_b, metric_c, metric_d = st.columns(4)
+    metric_a.metric("Equipes cadastradas", format_integer(selected_teams))
+    metric_b.metric("Equipes por 100 mil", format_rate(selected_rate))
+    metric_c.metric("UFs na comparação", len(comparison))
+    metric_d.metric("Tipos presentes", len(type_totals))
+    st.caption(
+        "Os indicadores são recalculados para as UFs exibidas. A taxa usa a soma das equipes "
+        "e da população do recorte, sem média simples entre estados."
+    )
+
+    state_chart = (
+        alt.Chart(comparison)
+        .mark_bar(color="#2B716F")
+        .encode(
+            x=alt.X(
+                "Equipes por 100 mil habitantes:Q",
+                title="Equipes por 100 mil habitantes",
+            ),
+            y=alt.Y(
+                "UF:N",
+                sort=alt.SortField(
+                    field="Equipes por 100 mil habitantes",
+                    order="descending",
+                ),
+                title=None,
+            ),
+            tooltip=[
+                alt.Tooltip("UF:N"),
+                alt.Tooltip("Equipes cadastradas:Q", format=",.0f"),
+                alt.Tooltip("População estimada:Q", format=",.0f"),
+                alt.Tooltip("Equipes por 100 mil habitantes:Q", format=".0f"),
+            ],
+        )
+        .properties(height=max(280, len(comparison) * 25))
+    )
+    type_chart_data = type_totals.head(10).copy()
+    type_chart_data["Tipo"] = type_chart_data.apply(
+        lambda row: f'{row["team_code"]} · {row["team_name"].split(" - ", 1)[0]}',
+        axis=1,
+    )
+    type_chart = (
+        alt.Chart(type_chart_data)
+        .mark_bar(color="#6B8478")
+        .encode(
+            x=alt.X("teams:Q", title="Equipes cadastradas"),
+            y=alt.Y(
+                "Tipo:N",
+                sort=alt.SortField(field="teams", order="descending"),
+                title=None,
+            ),
+            tooltip=[
+                alt.Tooltip("team_code:N", title="Código"),
+                alt.Tooltip("team_name:N", title="Tipo informado"),
+                alt.Tooltip("teams:Q", title="Equipes", format=",.0f"),
+            ],
+        )
+        .properties(height=max(300, len(type_chart_data) * 34))
+    )
+
+    state_tab, type_tab, data_tab = st.tabs(
+        ["Comparação por UF", "Tipos mais registrados", "Dados da seleção"]
+    )
+    with state_tab:
+        st.altair_chart(state_chart, width="stretch")
+    with type_tab:
+        st.caption(
+            "O TabNet mantém categorias históricas e atuais. Elas aparecem separadas para "
+            "evitar agrupamentos que mudariam o significado do cadastro."
+        )
+        st.altair_chart(type_chart, width="stretch")
+    with data_tab:
+        st.dataframe(
+            comparison[
+                [
+                    "UF",
+                    "Equipes cadastradas",
+                    "População estimada",
+                    "Equipes por 100 mil habitantes",
+                ]
+            ].sort_values("Equipes por 100 mil habitantes", ascending=False),
+            width="stretch",
+            hide_index=True,
+            column_config={
+                "Equipes cadastradas": st.column_config.NumberColumn(format="localized"),
+                "População estimada": st.column_config.NumberColumn(format="localized"),
+                "Equipes por 100 mil habitantes": st.column_config.NumberColumn(format="%.0f"),
+            },
+        )
+
+    st.caption(
+        f"Equipes ativas do CNES na competência {competence_label} e população estimada "
+        f'pelo IBGE para {dashboard["summary"]["population_reference_year"]}. Os ciclos das '
+        "fontes são diferentes e permanecem identificados."
+    )
+    render_traceability(audit, include_population=True, include_teams=True)
+
+
 def render_quality_panel(dashboard: dict, audit: dict) -> None:
     summary = dashboard["summary"]
     checks = dashboard["checks"]
@@ -511,8 +717,8 @@ def render_quality_panel(dashboard: dict, audit: dict) -> None:
     st.markdown('<p class="eyebrow">Parte 1 · Qualidade cadastral</p>', unsafe_allow_html=True)
     st.title("CNES em Evidência")
     st.markdown(
-        '<p class="deck">Uma leitura da qualidade cadastral antes de reutilizar a base '
-        "em mapas, indicadores e estudos sobre a rede de saúde.</p>",
+        '<p class="deck">Antes de usar o CNES em mapas ou indicadores, esta etapa verifica '
+        "se os campos necessários sustentam a análise.</p>",
         unsafe_allow_html=True,
     )
     render_update_context(dashboard)
@@ -711,6 +917,9 @@ def render() -> None:
     def bed_page_content() -> None:
         render_bed_panel(dashboard, audit)
 
+    def team_page_content() -> None:
+        render_team_panel(dashboard, audit)
+
     quality_page = st.Page(
         quality_page_content,
         title="1 · Qualidade cadastral",
@@ -727,8 +936,13 @@ def render() -> None:
         title="3 · Capacidade hospitalar",
         icon=":material/bed:",
     )
+    team_page = st.Page(
+        team_page_content,
+        title="4 · Equipes de saúde",
+        icon=":material/groups:",
+    )
     navigation = st.navigation(
-        {"CNES em Evidência": [quality_page, population_page, bed_page]},
+        {"CNES em Evidência": [quality_page, population_page, bed_page, team_page]},
         position="sidebar",
     )
     navigation.run()

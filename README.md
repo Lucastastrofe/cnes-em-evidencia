@@ -1,6 +1,6 @@
 # CNES em Evidência
 
-Aplicação Streamlit e pipeline de dados abertos do CNES. A navegação separa qualidade cadastral, presença por população e capacidade hospitalar; a explicação completa do projeto fica no portfólio.
+Aplicação Streamlit e pipeline de dados abertos do CNES. A navegação separa qualidade cadastral, presença por população, capacidade hospitalar e equipes de saúde; a explicação completa do projeto fica no portfólio.
 
 ## Resultado atual
 
@@ -10,6 +10,8 @@ A segunda parte integra a fotografia do CNES à estimativa populacional de 2026 
 
 A terceira parte processa a competência 08/2026 da fonte oficial de Hospitais e Leitos. Foram reconciliados 523.117 leitos existentes, dos quais 354.435 destinados ao SUS. Isso corresponde a 244,21 leitos existentes e 165,46 leitos SUS por 100 mil habitantes. Os números descrevem capacidade cadastrada, não ocupação ou disponibilidade em tempo real.
 
+A quarta parte consulta a competência 09/2026 de Equipes de Saúde no TabNet. Foram reconciliados 124.459 registros de equipes nas 27 UFs e em 40 tipos com quantidade maior que zero, o equivalente a 58,10 registros por 100 mil habitantes. O total não representa profissionais, atendimentos ou cobertura efetiva.
+
 Esses resultados descrevem o arquivo processado. Eles não medem qualidade assistencial, conformidade sanitária ou disponibilidade atual de serviços.
 
 ## O que o projeto demonstra
@@ -17,12 +19,14 @@ Esses resultados descrevem o arquivo processado. Eles não medem qualidade assis
 - processamento de um CSV de 231 MB diretamente do ZIP, sem carregar a base inteira na memória;
 - controles reproduzíveis de completude, unicidade e validade;
 - reconciliação entre registros lidos e agregados;
-- três painéis interativos em uma única aplicação Streamlit;
+- quatro painéis interativos em uma única aplicação Streamlit;
 - verificação diária da fonte e regeneração dos agregados pelo GitHub Actions;
 - ETL integrado entre CNES e estimativas populacionais do IBGE;
 - comparação por UF usando população como denominador explícito;
 - seleção automática da competência mais recente da fonte anual de leitos;
 - comparação de leitos existentes e destinados ao SUS por 100 mil habitantes;
+- descoberta automática da competência mais recente de equipes no TabNet;
+- reconciliação de equipes por UF e por tipo antes da publicação;
 - filtros para comparar UFs e alternar entre todas, as dez maiores e as dez menores taxas;
 - minimização de dados e contrato automatizado de privacidade.
 
@@ -33,6 +37,8 @@ CNES estabelecimentos (ZIP/CSV) ─→ qualidade ──────────�
 IBGE (SIDRA/JSON) ───────────────→ população por UF ───┼─→ agregados + auditoria ─→ Streamlit
 CNES leitos (ZIP/CSV) ───────────→ última competência ─┘
 ```
+
+A consulta nacional de equipes do TabNet entra no mesmo fluxo e usa a maior competência disponível antes de gerar os agregados.
 
 ## Privacidade
 
@@ -80,6 +86,8 @@ O escopo e os critérios de aceite estão em [`PROJECT_CONTEXT.md`](PROJECT_CONT
 - o primeiro incremento não guarda série histórica;
 - a taxa por população descreve cadastro relativo e não permite concluir suficiência da rede.
 - os dados de leitos têm competência mensal e não informam ocupação ou disponibilidade;
+- os registros de equipes não informam quantidade de profissionais, atendimentos ou cobertura efetiva;
+- o TabNet mantém tipos históricos e atuais de equipe, que permanecem separados no painel;
 - a URL do arquivo de leitos é anual e precisa ser revisada na mudança de ano.
 
 ## Licença

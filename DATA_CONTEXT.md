@@ -33,6 +33,16 @@ O JSON bruto do SIDRA permanece apenas em `data/work`. O artefato público mant�
 
 O ZIP bruto permanece apenas em `data/work`. O processamento lê somente `COMP`, `UF`, `CNES`, `LEITOS_EXISTENTES`, `LEITOS_SUS`, `UTI_TOTAL_EXIST` e `UTI_TOTAL_SUS`. Nomes, endereços, contatos e linhas de estabelecimentos não entram nos artefatos públicos.
 
+### Equipes de saúde
+
+- Conjunto: CNES — Equipes de Saúde.
+- Responsável pela publicação: Ministério da Saúde, via TabNet/DATASUS.
+- Consulta: quantidade por tipo de equipe segundo Unidade da Federação.
+- Recorte: maior competência disponível no formulário nacional.
+- Unidade: registros de equipes ativas.
+
+A resposta HTML da consulta permanece em `data/work`. O artefato público contém somente contagens agregadas por UF e tipo de equipe, além de competência, URL e hash. Não são consultados nomes de profissionais, estabelecimentos ou registros individuais.
+
 ## Unidade de análise
 
 Uma linha do arquivo de estabelecimentos. `CO_CNES` é tratado como chave esperada para o controle de unicidade. Essa expectativa é um contrato do projeto e uma violação é publicada como alerta, sem remoção silenciosa.
@@ -61,3 +71,5 @@ Os indicadores descrevem o arquivo processado. Não medem qualidade do atendimen
 A taxa integrada é calculada como `registros do CNES na UF / população estimada da UF × 100.000`. Ela permite comparar presença cadastral relativa entre UFs de tamanhos diferentes. Não mede quantidade de leitos, equipes, procedimentos, capacidade instalada, acesso ou suficiência da rede. O numerador é uma fotografia corrente do CNES; o denominador é uma estimativa anual do IBGE, e essa diferença temporal deve permanecer visível.
 
 Na terceira parte, `leitos existentes por 100 mil habitantes` e `leitos SUS por 100 mil habitantes` usam os totais da competência mensal mais recente como numerador e a estimativa anual do IBGE como denominador. `LEITOS_SUS` é uma parcela de `LEITOS_EXISTENTES`, não uma categoria adicional. Os indicadores descrevem capacidade cadastrada; não informam ocupação, disponibilidade imediata, produção, acesso efetivo ou qualidade assistencial.
+
+Na quarta parte, `equipes por 100 mil habitantes` usa os registros ativos da competência mais recente do TabNet e a estimativa anual do IBGE. O total descreve registros de equipes, não profissionais únicos, atendimentos, cobertura populacional ou qualidade da assistência. Categorias históricas e atuais permanecem separadas conforme a fonte; o projeto não cria equivalências sem uma regra oficial versionada.
