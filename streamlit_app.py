@@ -9,7 +9,6 @@ import streamlit as st
 
 from cnes_audit.presentation import (
     describe_controls,
-    format_source_date,
     format_timestamp,
     interpret_materiality,
     management_without_information,
@@ -89,13 +88,10 @@ def state_table(states: list[dict]) -> pd.DataFrame:
     ]
 
 
-def render_update_context(dashboard: dict) -> None:
+def render_update_context(dashboard: dict, source_name: str) -> None:
     render_source_facts(
         [
-            (
-                "Arquivo informado pela fonte",
-                format_source_date(dashboard["metadata"]["source_last_modified"]),
-            ),
+            ("Fonte principal", source_name),
             (
                 "Painel atualizado",
                 format_timestamp(dashboard["metadata"]["generated_at"]),
@@ -164,7 +160,7 @@ def render_population_panel(dashboard: dict, audit: dict) -> None:
         "entre UFs de tamanhos diferentes.</p>",
         unsafe_allow_html=True,
     )
-    render_update_context(dashboard)
+    render_update_context(dashboard, "CNES Estabelecimentos + IBGE")
 
     st.subheader("O que este painel responde")
     st.write(
@@ -325,10 +321,7 @@ def render_bed_panel(dashboard: dict, audit: dict) -> None:
     render_source_facts(
         [
             ("Competência dos leitos", competence_label),
-            (
-                "Arquivo informado pela fonte",
-                format_source_date(audit["beds_source"]["last_modified"]),
-            ),
+            ("Fonte principal", "CNES Leitos + IBGE"),
             (
                 "Painel atualizado",
                 format_timestamp(dashboard["metadata"]["generated_at"]),
@@ -538,7 +531,7 @@ def render_team_panel(dashboard: dict, audit: dict) -> None:
     render_source_facts(
         [
             ("Competência das equipes", competence_label),
-            ("Fonte consultada", "TabNet do CNES"),
+            ("Fonte principal", "CNES Equipes + IBGE"),
             (
                 "Painel atualizado",
                 format_timestamp(dashboard["metadata"]["generated_at"]),
@@ -721,7 +714,7 @@ def render_quality_panel(dashboard: dict, audit: dict) -> None:
         "se os campos necessários sustentam a análise.</p>",
         unsafe_allow_html=True,
     )
-    render_update_context(dashboard)
+    render_update_context(dashboard, "CNES Estabelecimentos")
 
     st.subheader("O que este painel responde")
     st.write(

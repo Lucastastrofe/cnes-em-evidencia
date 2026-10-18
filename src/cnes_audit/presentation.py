@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
-from email.utils import parsedate_to_datetime
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 
@@ -19,12 +18,6 @@ def _format_brasilia_time(moment: datetime) -> str:
 def format_timestamp(value: str) -> str:
     moment = datetime.fromisoformat(value.replace("Z", "+00:00"))
     return _format_brasilia_time(moment)
-
-
-def format_source_date(value: str) -> str:
-    if value in {"não informado", "arquivo local"}:
-        return value
-    return _format_brasilia_time(parsedate_to_datetime(value))
 
 
 CONTROL_DESCRIPTIONS = {

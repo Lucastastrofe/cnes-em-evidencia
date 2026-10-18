@@ -6,7 +6,6 @@ from pathlib import Path
 from cnes_audit.presentation import (
     CONTROL_DESCRIPTIONS,
     describe_controls,
-    format_source_date,
     format_timestamp,
     interpret_materiality,
     management_without_information,
@@ -112,9 +111,14 @@ class DashboardContractTest(unittest.TestCase):
         self.assertEqual(summary["records"], 1)
         self.assertEqual(summary["rate"], 0.001)
 
-    def test_dashboard_distinguishes_source_date_from_daily_check(self):
-        self.assertIn("Arquivo informado pela fonte", self.source)
+    def test_dashboard_identifies_the_dataset_instead_of_the_local_file(self):
+        self.assertIn("Fonte principal", self.source)
+        self.assertIn("CNES Estabelecimentos + IBGE", self.source)
+        self.assertIn("CNES Leitos + IBGE", self.source)
+        self.assertIn("CNES Equipes + IBGE", self.source)
         self.assertIn("Painel atualizado", self.source)
+        self.assertNotIn("Arquivo informado pela fonte", self.source)
+        self.assertNotIn("arquivo local", self.source)
 
     def test_data_cache_is_invalidated_when_published_files_change(self):
         self.assertIn("def load_data(data_version:", self.source)
@@ -125,13 +129,6 @@ class DashboardContractTest(unittest.TestCase):
             format_timestamp("2026-10-05T10:55:49Z"),
             "05/10/2026 às 07:55",
         )
-        self.assertEqual(
-            format_source_date("Sat, 03 Oct 2026 06:00:25 GMT"),
-            "03/10/2026 às 03:00",
-        )
-
-    def test_local_source_reference_is_not_parsed_as_an_http_date(self):
-        self.assertEqual(format_source_date("arquivo local"), "arquivo local")
 
     def test_chart_caption_does_not_repeat_automation_details(self):
         self.assertNotIn("O gráfico é regenerado em cada execução automática.", self.source)
@@ -148,11 +145,10 @@ class DashboardContractTest(unittest.TestCase):
         self.assertIn('text=alt.Text("Percentual SUS:N")', self.source)
         self.assertNotIn('yOffset="Indicador:N"', self.source)
 
-    def test_bed_source_dates_have_distinct_labels(self):
+    def test_bed_source_facts_have_clear_labels(self):
         self.assertIn("Competência dos leitos", self.source)
-        self.assertIn("Arquivo informado pela fonte", self.source)
+        self.assertIn("CNES Leitos", self.source)
         self.assertIn("Painel atualizado", self.source)
-        self.assertNotIn("Data informada pela fonte de leitos:", self.source)
 
     def test_second_part_compares_cnes_with_population_without_claiming_capacity(self):
         self.assertIn("Parte 2 · Comparação proporcional", self.source)
