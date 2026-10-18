@@ -842,11 +842,3272 @@
       }
     ]
   },
+  "teams": {
+    "summary": {
+      "competence": "202609",
+      "total_teams": 124459,
+      "states": 27,
+      "team_types": 40,
+      "teams_per_100k": 58.1
+    },
+    "by_state": [
+      {
+        "code": "12",
+        "name": "Acre",
+        "teams": 585,
+        "population": 887794,
+        "teams_per_100k": 65.89
+      },
+      {
+        "code": "27",
+        "name": "Alagoas",
+        "teams": 2353,
+        "population": 3221128,
+        "teams_per_100k": 73.05
+      },
+      {
+        "code": "16",
+        "name": "Amapá",
+        "teams": 596,
+        "population": 809953,
+        "teams_per_100k": 73.58
+      },
+      {
+        "code": "13",
+        "name": "Amazonas",
+        "teams": 2568,
+        "population": 4360926,
+        "teams_per_100k": 58.89
+      },
+      {
+        "code": "29",
+        "name": "Bahia",
+        "teams": 10042,
+        "population": 14889472,
+        "teams_per_100k": 67.44
+      },
+      {
+        "code": "23",
+        "name": "Ceará",
+        "teams": 6688,
+        "population": 9302211,
+        "teams_per_100k": 71.9
+      },
+      {
+        "code": "53",
+        "name": "Distrito Federal",
+        "teams": 1145,
+        "population": 3009996,
+        "teams_per_100k": 38.04
+      },
+      {
+        "code": "32",
+        "name": "Espírito Santo",
+        "teams": 2550,
+        "population": 4150692,
+        "teams_per_100k": 61.44
+      },
+      {
+        "code": "52",
+        "name": "Goiás",
+        "teams": 4148,
+        "population": 7495033,
+        "teams_per_100k": 55.34
+      },
+      {
+        "code": "21",
+        "name": "Maranhão",
+        "teams": 5525,
+        "population": 7024557,
+        "teams_per_100k": 78.65
+      },
+      {
+        "code": "51",
+        "name": "Mato Grosso",
+        "teams": 2239,
+        "population": 3950330,
+        "teams_per_100k": 56.68
+      },
+      {
+        "code": "50",
+        "name": "Mato Grosso do Sul",
+        "teams": 1809,
+        "population": 2946317,
+        "teams_per_100k": 61.4
+      },
+      {
+        "code": "31",
+        "name": "Minas Gerais",
+        "teams": 14075,
+        "population": 21460311,
+        "teams_per_100k": 65.59
+      },
+      {
+        "code": "41",
+        "name": "Paraná",
+        "teams": 6857,
+        "population": 11952456,
+        "teams_per_100k": 57.37
+      },
+      {
+        "code": "25",
+        "name": "Paraíba",
+        "teams": 3783,
+        "population": 4182828,
+        "teams_per_100k": 90.44
+      },
+      {
+        "code": "15",
+        "name": "Pará",
+        "teams": 4738,
+        "population": 8756324,
+        "teams_per_100k": 54.11
+      },
+      {
+        "code": "26",
+        "name": "Pernambuco",
+        "teams": 6306,
+        "population": 9583176,
+        "teams_per_100k": 65.8
+      },
+      {
+        "code": "22",
+        "name": "Piauí",
+        "teams": 3165,
+        "population": 3392617,
+        "teams_per_100k": 93.29
+      },
+      {
+        "code": "24",
+        "name": "Rio Grande do Norte",
+        "teams": 2807,
+        "population": 3463737,
+        "teams_per_100k": 81.04
+      },
+      {
+        "code": "43",
+        "name": "Rio Grande do Sul",
+        "teams": 6492,
+        "population": 11233317,
+        "teams_per_100k": 57.79
+      },
+      {
+        "code": "33",
+        "name": "Rio de Janeiro",
+        "teams": 7136,
+        "population": 17225410,
+        "teams_per_100k": 41.43
+      },
+      {
+        "code": "11",
+        "name": "Rondônia",
+        "teams": 867,
+        "population": 1757338,
+        "teams_per_100k": 49.34
+      },
+      {
+        "code": "14",
+        "name": "Roraima",
+        "teams": 468,
+        "population": 761012,
+        "teams_per_100k": 61.5
+      },
+      {
+        "code": "42",
+        "name": "Santa Catarina",
+        "teams": 5432,
+        "population": 8312759,
+        "teams_per_100k": 65.35
+      },
+      {
+        "code": "28",
+        "name": "Sergipe",
+        "teams": 1591,
+        "population": 2307255,
+        "teams_per_100k": 68.96
+      },
+      {
+        "code": "35",
+        "name": "São Paulo",
+        "teams": 19083,
+        "population": 46179008,
+        "teams_per_100k": 41.32
+      },
+      {
+        "code": "17",
+        "name": "Tocantins",
+        "teams": 1411,
+        "population": 1595994,
+        "teams_per_100k": 88.41
+      }
+    ],
+    "by_type": [
+      {
+        "code": "70",
+        "name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 57585
+      },
+      {
+        "code": "71",
+        "name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 44404
+      },
+      {
+        "code": "72",
+        "name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 9202
+      },
+      {
+        "code": "76",
+        "name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 7223
+      },
+      {
+        "code": "74",
+        "name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 1239
+      },
+      {
+        "code": "22",
+        "name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 1163
+      },
+      {
+        "code": "23",
+        "name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 980
+      },
+      {
+        "code": "75",
+        "name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 577
+      },
+      {
+        "code": "46",
+        "name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 496
+      },
+      {
+        "code": "73",
+        "name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 462
+      },
+      {
+        "code": "08",
+        "name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 349
+      },
+      {
+        "code": "04",
+        "name": "EACS - EQUIPE DE AGENTES COMUNITARIOS DE SAUDE",
+        "teams": 236
+      },
+      {
+        "code": "01",
+        "name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 164
+      },
+      {
+        "code": "47",
+        "name": "EAD - EQUIPE DE CUIDADOS DOMICILIARES",
+        "teams": 101
+      },
+      {
+        "code": "06",
+        "name": "NASF1 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 1",
+        "teams": 63
+      },
+      {
+        "code": "02",
+        "name": "ESFSB M1 - ESF COM SAUDE BUCAL - M I",
+        "teams": 46
+      },
+      {
+        "code": "16",
+        "name": "EAB1 - EQUIPE DE ATENCAO BASICA TIPO I",
+        "teams": 42
+      },
+      {
+        "code": "05",
+        "name": "EPEN - EQUIPE DE AT. SAUDE SIST. PENITENCIARIO",
+        "teams": 22
+      },
+      {
+        "code": "07",
+        "name": "NASF2 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 2",
+        "teams": 14
+      },
+      {
+        "code": "19",
+        "name": "EAB1SB - EQUIPE DE ATENCAO BASICA TIPO I COM SAUDE BUCAL",
+        "teams": 13
+      },
+      {
+        "code": "36",
+        "name": "ESFTRANS - ESF TRANSITORIA",
+        "teams": 13
+      },
+      {
+        "code": "45",
+        "name": "NASF3 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 3",
+        "teams": 10
+      },
+      {
+        "code": "03",
+        "name": "ESFSB M2 - ESF COM SAUDE BUCAL - M II",
+        "teams": 9
+      },
+      {
+        "code": "33",
+        "name": "ESF4 - ESTRATEGIA DE SAUDE DA FAMILIA TIPO IV",
+        "teams": 8
+      },
+      {
+        "code": "17",
+        "name": "EAB2 - EQUIPE DE ATENCAO BASICA TIPO II",
+        "teams": 7
+      },
+      {
+        "code": "42",
+        "name": "eCR MIII - EQUIPE DOS CONSULTORIOS NA RUA MODALIDADE III",
+        "teams": 6
+      },
+      {
+        "code": "43",
+        "name": "ESB MI - EQUIPE DE SAUDE BUCAL MODALIDADE I",
+        "teams": 4
+      },
+      {
+        "code": "40",
+        "name": "eCR MI - EQUIPE DOS CONSULTORIOS NA RUA MODALIDADE I",
+        "teams": 4
+      },
+      {
+        "code": "41",
+        "name": "eCR MII - EQUIPE DOS CONSULTORIOS NA RUA MODALIDADE II",
+        "teams": 3
+      },
+      {
+        "code": "18",
+        "name": "EAB3 - EQUIPE DE ATENCAO BASICA TIPO III",
+        "teams": 2
+      },
+      {
+        "code": "50",
+        "name": "EABP1 - EQ ATENCAO BASICA PRISIONAL TIPO I",
+        "teams": 2
+      },
+      {
+        "code": "52",
+        "name": "EABP2 - EQ ATENCAO BASICA PRISIONAL TIPO II",
+        "teams": 2
+      },
+      {
+        "code": "51",
+        "name": "EABP1SM - EQ ATENCAO BASICA PRISIONAL TIPO I C SAUDE MENTAL",
+        "teams": 1
+      },
+      {
+        "code": "53",
+        "name": "EABP2SM - EQ ATENCAO BASICA PRISIONAL TIPO II C SAUDE MENTAL",
+        "teams": 1
+      },
+      {
+        "code": "10",
+        "name": "EACSSB M1 - EQ AGENTES COMUNITµRIOS COM SAUDE BUCAL - MI",
+        "teams": 1
+      },
+      {
+        "code": "24",
+        "name": "ESF1 - ESTRATEGIA DE SAUDE DA FAMILIA TIPO I",
+        "teams": 1
+      },
+      {
+        "code": "25",
+        "name": "ESF1SB M1 - ESF TIPO I COM SAUDE BUCAL MODALIDADE I",
+        "teams": 1
+      },
+      {
+        "code": "34",
+        "name": "ESF4SB M1 - ESF TIPO IV COM SAUDE BUCAL MODALIDADE I",
+        "teams": 1
+      },
+      {
+        "code": "37",
+        "name": "ESFTRANSSB M1 - ESF TRANSITORIA COM SAUDE BUCAL MI",
+        "teams": 1
+      },
+      {
+        "code": "38",
+        "name": "ESFTRANSSB M2 - ESF TRANSITORIA COM SAUDE BUCAL MII",
+        "teams": 1
+      }
+    ],
+    "by_state_type": [
+      {
+        "state_code": "11",
+        "state_name": "Rondônia",
+        "team_code": "01",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 2
+      },
+      {
+        "state_code": "11",
+        "state_name": "Rondônia",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 13
+      },
+      {
+        "state_code": "11",
+        "state_name": "Rondônia",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 8
+      },
+      {
+        "state_code": "11",
+        "state_name": "Rondônia",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 6
+      },
+      {
+        "state_code": "11",
+        "state_name": "Rondônia",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 2
+      },
+      {
+        "state_code": "11",
+        "state_name": "Rondônia",
+        "team_code": "47",
+        "team_name": "EAD - EQUIPE DE CUIDADOS DOMICILIARES",
+        "teams": 2
+      },
+      {
+        "state_code": "11",
+        "state_name": "Rondônia",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 502
+      },
+      {
+        "state_code": "11",
+        "state_name": "Rondônia",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 238
+      },
+      {
+        "state_code": "11",
+        "state_name": "Rondônia",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 46
+      },
+      {
+        "state_code": "11",
+        "state_name": "Rondônia",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 1
+      },
+      {
+        "state_code": "11",
+        "state_name": "Rondônia",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 20
+      },
+      {
+        "state_code": "11",
+        "state_name": "Rondônia",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 2
+      },
+      {
+        "state_code": "11",
+        "state_name": "Rondônia",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 25
+      },
+      {
+        "state_code": "12",
+        "state_name": "Acre",
+        "team_code": "01",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 2
+      },
+      {
+        "state_code": "12",
+        "state_name": "Acre",
+        "team_code": "04",
+        "team_name": "EACS - EQUIPE DE AGENTES COMUNITARIOS DE SAUDE",
+        "teams": 1
+      },
+      {
+        "state_code": "12",
+        "state_name": "Acre",
+        "team_code": "06",
+        "team_name": "NASF1 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 1",
+        "teams": 1
+      },
+      {
+        "state_code": "12",
+        "state_name": "Acre",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 12
+      },
+      {
+        "state_code": "12",
+        "state_name": "Acre",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 3
+      },
+      {
+        "state_code": "12",
+        "state_name": "Acre",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 2
+      },
+      {
+        "state_code": "12",
+        "state_name": "Acre",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 274
+      },
+      {
+        "state_code": "12",
+        "state_name": "Acre",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 208
+      },
+      {
+        "state_code": "12",
+        "state_name": "Acre",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 33
+      },
+      {
+        "state_code": "12",
+        "state_name": "Acre",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 2
+      },
+      {
+        "state_code": "12",
+        "state_name": "Acre",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 8
+      },
+      {
+        "state_code": "12",
+        "state_name": "Acre",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 5
+      },
+      {
+        "state_code": "12",
+        "state_name": "Acre",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 34
+      },
+      {
+        "state_code": "13",
+        "state_name": "Amazonas",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 81
+      },
+      {
+        "state_code": "13",
+        "state_name": "Amazonas",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 25
+      },
+      {
+        "state_code": "13",
+        "state_name": "Amazonas",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 12
+      },
+      {
+        "state_code": "13",
+        "state_name": "Amazonas",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 2
+      },
+      {
+        "state_code": "13",
+        "state_name": "Amazonas",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 1152
+      },
+      {
+        "state_code": "13",
+        "state_name": "Amazonas",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 935
+      },
+      {
+        "state_code": "13",
+        "state_name": "Amazonas",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 177
+      },
+      {
+        "state_code": "13",
+        "state_name": "Amazonas",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 14
+      },
+      {
+        "state_code": "13",
+        "state_name": "Amazonas",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 13
+      },
+      {
+        "state_code": "13",
+        "state_name": "Amazonas",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 2
+      },
+      {
+        "state_code": "13",
+        "state_name": "Amazonas",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 155
+      },
+      {
+        "state_code": "14",
+        "state_name": "Roraima",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 27
+      },
+      {
+        "state_code": "14",
+        "state_name": "Roraima",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 2
+      },
+      {
+        "state_code": "14",
+        "state_name": "Roraima",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 257
+      },
+      {
+        "state_code": "14",
+        "state_name": "Roraima",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 148
+      },
+      {
+        "state_code": "14",
+        "state_name": "Roraima",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 23
+      },
+      {
+        "state_code": "14",
+        "state_name": "Roraima",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 2
+      },
+      {
+        "state_code": "14",
+        "state_name": "Roraima",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 6
+      },
+      {
+        "state_code": "14",
+        "state_name": "Roraima",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 3
+      },
+      {
+        "state_code": "15",
+        "state_name": "Pará",
+        "team_code": "04",
+        "team_name": "EACS - EQUIPE DE AGENTES COMUNITARIOS DE SAUDE",
+        "teams": 3
+      },
+      {
+        "state_code": "15",
+        "state_name": "Pará",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 18
+      },
+      {
+        "state_code": "15",
+        "state_name": "Pará",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 57
+      },
+      {
+        "state_code": "15",
+        "state_name": "Pará",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 71
+      },
+      {
+        "state_code": "15",
+        "state_name": "Pará",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 28
+      },
+      {
+        "state_code": "15",
+        "state_name": "Pará",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 2590
+      },
+      {
+        "state_code": "15",
+        "state_name": "Pará",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 1571
+      },
+      {
+        "state_code": "15",
+        "state_name": "Pará",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 257
+      },
+      {
+        "state_code": "15",
+        "state_name": "Pará",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 19
+      },
+      {
+        "state_code": "15",
+        "state_name": "Pará",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 24
+      },
+      {
+        "state_code": "15",
+        "state_name": "Pará",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 6
+      },
+      {
+        "state_code": "15",
+        "state_name": "Pará",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 94
+      },
+      {
+        "state_code": "16",
+        "state_name": "Amapá",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 6
+      },
+      {
+        "state_code": "16",
+        "state_name": "Amapá",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 3
+      },
+      {
+        "state_code": "16",
+        "state_name": "Amapá",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 280
+      },
+      {
+        "state_code": "16",
+        "state_name": "Amapá",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 242
+      },
+      {
+        "state_code": "16",
+        "state_name": "Amapá",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 42
+      },
+      {
+        "state_code": "16",
+        "state_name": "Amapá",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 4
+      },
+      {
+        "state_code": "16",
+        "state_name": "Amapá",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 5
+      },
+      {
+        "state_code": "16",
+        "state_name": "Amapá",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 14
+      },
+      {
+        "state_code": "17",
+        "state_name": "Tocantins",
+        "team_code": "06",
+        "team_name": "NASF1 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 1",
+        "teams": 3
+      },
+      {
+        "state_code": "17",
+        "state_name": "Tocantins",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 8
+      },
+      {
+        "state_code": "17",
+        "state_name": "Tocantins",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 7
+      },
+      {
+        "state_code": "17",
+        "state_name": "Tocantins",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 4
+      },
+      {
+        "state_code": "17",
+        "state_name": "Tocantins",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 2
+      },
+      {
+        "state_code": "17",
+        "state_name": "Tocantins",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 632
+      },
+      {
+        "state_code": "17",
+        "state_name": "Tocantins",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 534
+      },
+      {
+        "state_code": "17",
+        "state_name": "Tocantins",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 172
+      },
+      {
+        "state_code": "17",
+        "state_name": "Tocantins",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 2
+      },
+      {
+        "state_code": "17",
+        "state_name": "Tocantins",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 24
+      },
+      {
+        "state_code": "17",
+        "state_name": "Tocantins",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 3
+      },
+      {
+        "state_code": "17",
+        "state_name": "Tocantins",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 20
+      },
+      {
+        "state_code": "21",
+        "state_name": "Maranhão",
+        "team_code": "01",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 2
+      },
+      {
+        "state_code": "21",
+        "state_name": "Maranhão",
+        "team_code": "02",
+        "team_name": "ESFSB M1 - ESF COM SAUDE BUCAL - M I",
+        "teams": 1
+      },
+      {
+        "state_code": "21",
+        "state_name": "Maranhão",
+        "team_code": "04",
+        "team_name": "EACS - EQUIPE DE AGENTES COMUNITARIOS DE SAUDE",
+        "teams": 1
+      },
+      {
+        "state_code": "21",
+        "state_name": "Maranhão",
+        "team_code": "06",
+        "team_name": "NASF1 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 1",
+        "teams": 1
+      },
+      {
+        "state_code": "21",
+        "state_name": "Maranhão",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 10
+      },
+      {
+        "state_code": "21",
+        "state_name": "Maranhão",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 31
+      },
+      {
+        "state_code": "21",
+        "state_name": "Maranhão",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 37
+      },
+      {
+        "state_code": "21",
+        "state_name": "Maranhão",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 21
+      },
+      {
+        "state_code": "21",
+        "state_name": "Maranhão",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 2746
+      },
+      {
+        "state_code": "21",
+        "state_name": "Maranhão",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 2147
+      },
+      {
+        "state_code": "21",
+        "state_name": "Maranhão",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 404
+      },
+      {
+        "state_code": "21",
+        "state_name": "Maranhão",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 19
+      },
+      {
+        "state_code": "21",
+        "state_name": "Maranhão",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 41
+      },
+      {
+        "state_code": "21",
+        "state_name": "Maranhão",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 22
+      },
+      {
+        "state_code": "21",
+        "state_name": "Maranhão",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 42
+      },
+      {
+        "state_code": "22",
+        "state_name": "Piauí",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 2
+      },
+      {
+        "state_code": "22",
+        "state_name": "Piauí",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 7
+      },
+      {
+        "state_code": "22",
+        "state_name": "Piauí",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 18
+      },
+      {
+        "state_code": "22",
+        "state_name": "Piauí",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 13
+      },
+      {
+        "state_code": "22",
+        "state_name": "Piauí",
+        "team_code": "47",
+        "team_name": "EAD - EQUIPE DE CUIDADOS DOMICILIARES",
+        "teams": 1
+      },
+      {
+        "state_code": "22",
+        "state_name": "Piauí",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 1411
+      },
+      {
+        "state_code": "22",
+        "state_name": "Piauí",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 1358
+      },
+      {
+        "state_code": "22",
+        "state_name": "Piauí",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 317
+      },
+      {
+        "state_code": "22",
+        "state_name": "Piauí",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 7
+      },
+      {
+        "state_code": "22",
+        "state_name": "Piauí",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 13
+      },
+      {
+        "state_code": "22",
+        "state_name": "Piauí",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 10
+      },
+      {
+        "state_code": "22",
+        "state_name": "Piauí",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 8
+      },
+      {
+        "state_code": "23",
+        "state_name": "Ceará",
+        "team_code": "04",
+        "team_name": "EACS - EQUIPE DE AGENTES COMUNITARIOS DE SAUDE",
+        "teams": 2
+      },
+      {
+        "state_code": "23",
+        "state_name": "Ceará",
+        "team_code": "06",
+        "team_name": "NASF1 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 1",
+        "teams": 7
+      },
+      {
+        "state_code": "23",
+        "state_name": "Ceará",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 25
+      },
+      {
+        "state_code": "23",
+        "state_name": "Ceará",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 73
+      },
+      {
+        "state_code": "23",
+        "state_name": "Ceará",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 71
+      },
+      {
+        "state_code": "23",
+        "state_name": "Ceará",
+        "team_code": "24",
+        "team_name": "ESF1 - ESTRATEGIA DE SAUDE DA FAMILIA TIPO I",
+        "teams": 1
+      },
+      {
+        "state_code": "23",
+        "state_name": "Ceará",
+        "team_code": "41",
+        "team_name": "eCR MII - EQUIPE DOS CONSULTORIOS NA RUA MODALIDADE II",
+        "teams": 1
+      },
+      {
+        "state_code": "23",
+        "state_name": "Ceará",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 38
+      },
+      {
+        "state_code": "23",
+        "state_name": "Ceará",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 3191
+      },
+      {
+        "state_code": "23",
+        "state_name": "Ceará",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 2705
+      },
+      {
+        "state_code": "23",
+        "state_name": "Ceará",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 417
+      },
+      {
+        "state_code": "23",
+        "state_name": "Ceará",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 13
+      },
+      {
+        "state_code": "23",
+        "state_name": "Ceará",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 28
+      },
+      {
+        "state_code": "23",
+        "state_name": "Ceará",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 23
+      },
+      {
+        "state_code": "23",
+        "state_name": "Ceará",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 93
+      },
+      {
+        "state_code": "24",
+        "state_name": "Rio Grande do Norte",
+        "team_code": "04",
+        "team_name": "EACS - EQUIPE DE AGENTES COMUNITARIOS DE SAUDE",
+        "teams": 2
+      },
+      {
+        "state_code": "24",
+        "state_name": "Rio Grande do Norte",
+        "team_code": "06",
+        "team_name": "NASF1 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 1",
+        "teams": 6
+      },
+      {
+        "state_code": "24",
+        "state_name": "Rio Grande do Norte",
+        "team_code": "07",
+        "team_name": "NASF2 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 2",
+        "teams": 1
+      },
+      {
+        "state_code": "24",
+        "state_name": "Rio Grande do Norte",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 5
+      },
+      {
+        "state_code": "24",
+        "state_name": "Rio Grande do Norte",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 15
+      },
+      {
+        "state_code": "24",
+        "state_name": "Rio Grande do Norte",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 19
+      },
+      {
+        "state_code": "24",
+        "state_name": "Rio Grande do Norte",
+        "team_code": "36",
+        "team_name": "ESFTRANS - ESF TRANSITORIA",
+        "teams": 1
+      },
+      {
+        "state_code": "24",
+        "state_name": "Rio Grande do Norte",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 15
+      },
+      {
+        "state_code": "24",
+        "state_name": "Rio Grande do Norte",
+        "team_code": "50",
+        "team_name": "EABP1 - EQ ATENCAO BASICA PRISIONAL TIPO I",
+        "teams": 2
+      },
+      {
+        "state_code": "24",
+        "state_name": "Rio Grande do Norte",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 1243
+      },
+      {
+        "state_code": "24",
+        "state_name": "Rio Grande do Norte",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 1180
+      },
+      {
+        "state_code": "24",
+        "state_name": "Rio Grande do Norte",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 237
+      },
+      {
+        "state_code": "24",
+        "state_name": "Rio Grande do Norte",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 7
+      },
+      {
+        "state_code": "24",
+        "state_name": "Rio Grande do Norte",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 22
+      },
+      {
+        "state_code": "24",
+        "state_name": "Rio Grande do Norte",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 3
+      },
+      {
+        "state_code": "24",
+        "state_name": "Rio Grande do Norte",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 49
+      },
+      {
+        "state_code": "25",
+        "state_name": "Paraíba",
+        "team_code": "04",
+        "team_name": "EACS - EQUIPE DE AGENTES COMUNITARIOS DE SAUDE",
+        "teams": 3
+      },
+      {
+        "state_code": "25",
+        "state_name": "Paraíba",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 3
+      },
+      {
+        "state_code": "25",
+        "state_name": "Paraíba",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 20
+      },
+      {
+        "state_code": "25",
+        "state_name": "Paraíba",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 46
+      },
+      {
+        "state_code": "25",
+        "state_name": "Paraíba",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 39
+      },
+      {
+        "state_code": "25",
+        "state_name": "Paraíba",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 1636
+      },
+      {
+        "state_code": "25",
+        "state_name": "Paraíba",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 1594
+      },
+      {
+        "state_code": "25",
+        "state_name": "Paraíba",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 354
+      },
+      {
+        "state_code": "25",
+        "state_name": "Paraíba",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 15
+      },
+      {
+        "state_code": "25",
+        "state_name": "Paraíba",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 34
+      },
+      {
+        "state_code": "25",
+        "state_name": "Paraíba",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 17
+      },
+      {
+        "state_code": "25",
+        "state_name": "Paraíba",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 22
+      },
+      {
+        "state_code": "26",
+        "state_name": "Pernambuco",
+        "team_code": "04",
+        "team_name": "EACS - EQUIPE DE AGENTES COMUNITARIOS DE SAUDE",
+        "teams": 27
+      },
+      {
+        "state_code": "26",
+        "state_name": "Pernambuco",
+        "team_code": "06",
+        "team_name": "NASF1 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 1",
+        "teams": 3
+      },
+      {
+        "state_code": "26",
+        "state_name": "Pernambuco",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 20
+      },
+      {
+        "state_code": "26",
+        "state_name": "Pernambuco",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 54
+      },
+      {
+        "state_code": "26",
+        "state_name": "Pernambuco",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 62
+      },
+      {
+        "state_code": "26",
+        "state_name": "Pernambuco",
+        "team_code": "45",
+        "team_name": "NASF3 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 3",
+        "teams": 1
+      },
+      {
+        "state_code": "26",
+        "state_name": "Pernambuco",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 36
+      },
+      {
+        "state_code": "26",
+        "state_name": "Pernambuco",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 2996
+      },
+      {
+        "state_code": "26",
+        "state_name": "Pernambuco",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 2536
+      },
+      {
+        "state_code": "26",
+        "state_name": "Pernambuco",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 348
+      },
+      {
+        "state_code": "26",
+        "state_name": "Pernambuco",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 25
+      },
+      {
+        "state_code": "26",
+        "state_name": "Pernambuco",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 61
+      },
+      {
+        "state_code": "26",
+        "state_name": "Pernambuco",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 4
+      },
+      {
+        "state_code": "26",
+        "state_name": "Pernambuco",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 133
+      },
+      {
+        "state_code": "27",
+        "state_name": "Alagoas",
+        "team_code": "01",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 3
+      },
+      {
+        "state_code": "27",
+        "state_name": "Alagoas",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 9
+      },
+      {
+        "state_code": "27",
+        "state_name": "Alagoas",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 25
+      },
+      {
+        "state_code": "27",
+        "state_name": "Alagoas",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 43
+      },
+      {
+        "state_code": "27",
+        "state_name": "Alagoas",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 28
+      },
+      {
+        "state_code": "27",
+        "state_name": "Alagoas",
+        "team_code": "47",
+        "team_name": "EAD - EQUIPE DE CUIDADOS DOMICILIARES",
+        "teams": 1
+      },
+      {
+        "state_code": "27",
+        "state_name": "Alagoas",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 1089
+      },
+      {
+        "state_code": "27",
+        "state_name": "Alagoas",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 932
+      },
+      {
+        "state_code": "27",
+        "state_name": "Alagoas",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 142
+      },
+      {
+        "state_code": "27",
+        "state_name": "Alagoas",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 9
+      },
+      {
+        "state_code": "27",
+        "state_name": "Alagoas",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 10
+      },
+      {
+        "state_code": "27",
+        "state_name": "Alagoas",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 8
+      },
+      {
+        "state_code": "27",
+        "state_name": "Alagoas",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 54
+      },
+      {
+        "state_code": "28",
+        "state_name": "Sergipe",
+        "team_code": "06",
+        "team_name": "NASF1 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 1",
+        "teams": 1
+      },
+      {
+        "state_code": "28",
+        "state_name": "Sergipe",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 1
+      },
+      {
+        "state_code": "28",
+        "state_name": "Sergipe",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 16
+      },
+      {
+        "state_code": "28",
+        "state_name": "Sergipe",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 21
+      },
+      {
+        "state_code": "28",
+        "state_name": "Sergipe",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 12
+      },
+      {
+        "state_code": "28",
+        "state_name": "Sergipe",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 772
+      },
+      {
+        "state_code": "28",
+        "state_name": "Sergipe",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 614
+      },
+      {
+        "state_code": "28",
+        "state_name": "Sergipe",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 104
+      },
+      {
+        "state_code": "28",
+        "state_name": "Sergipe",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 3
+      },
+      {
+        "state_code": "28",
+        "state_name": "Sergipe",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 10
+      },
+      {
+        "state_code": "28",
+        "state_name": "Sergipe",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 10
+      },
+      {
+        "state_code": "28",
+        "state_name": "Sergipe",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 27
+      },
+      {
+        "state_code": "29",
+        "state_name": "Bahia",
+        "team_code": "01",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 10
+      },
+      {
+        "state_code": "29",
+        "state_name": "Bahia",
+        "team_code": "02",
+        "team_name": "ESFSB M1 - ESF COM SAUDE BUCAL - M I",
+        "teams": 12
+      },
+      {
+        "state_code": "29",
+        "state_name": "Bahia",
+        "team_code": "04",
+        "team_name": "EACS - EQUIPE DE AGENTES COMUNITARIOS DE SAUDE",
+        "teams": 46
+      },
+      {
+        "state_code": "29",
+        "state_name": "Bahia",
+        "team_code": "05",
+        "team_name": "EPEN - EQUIPE DE AT. SAUDE SIST. PENITENCIARIO",
+        "teams": 5
+      },
+      {
+        "state_code": "29",
+        "state_name": "Bahia",
+        "team_code": "06",
+        "team_name": "NASF1 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 1",
+        "teams": 3
+      },
+      {
+        "state_code": "29",
+        "state_name": "Bahia",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 20
+      },
+      {
+        "state_code": "29",
+        "state_name": "Bahia",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 91
+      },
+      {
+        "state_code": "29",
+        "state_name": "Bahia",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 116
+      },
+      {
+        "state_code": "29",
+        "state_name": "Bahia",
+        "team_code": "42",
+        "team_name": "eCR MIII - EQUIPE DOS CONSULTORIOS NA RUA MODALIDADE III",
+        "teams": 3
+      },
+      {
+        "state_code": "29",
+        "state_name": "Bahia",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 77
+      },
+      {
+        "state_code": "29",
+        "state_name": "Bahia",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 4590
+      },
+      {
+        "state_code": "29",
+        "state_name": "Bahia",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 3985
+      },
+      {
+        "state_code": "29",
+        "state_name": "Bahia",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 633
+      },
+      {
+        "state_code": "29",
+        "state_name": "Bahia",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 34
+      },
+      {
+        "state_code": "29",
+        "state_name": "Bahia",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 48
+      },
+      {
+        "state_code": "29",
+        "state_name": "Bahia",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 58
+      },
+      {
+        "state_code": "29",
+        "state_name": "Bahia",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 311
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "01",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 27
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "02",
+        "team_name": "ESFSB M1 - ESF COM SAUDE BUCAL - M I",
+        "teams": 5
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "03",
+        "team_name": "ESFSB M2 - ESF COM SAUDE BUCAL - M II",
+        "teams": 3
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "04",
+        "team_name": "EACS - EQUIPE DE AGENTES COMUNITARIOS DE SAUDE",
+        "teams": 4
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "05",
+        "team_name": "EPEN - EQUIPE DE AT. SAUDE SIST. PENITENCIARIO",
+        "teams": 3
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "06",
+        "team_name": "NASF1 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 1",
+        "teams": 18
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "07",
+        "team_name": "NASF2 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 2",
+        "teams": 1
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 12
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "16",
+        "team_name": "EAB1 - EQUIPE DE ATENCAO BASICA TIPO I",
+        "teams": 3
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 122
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 106
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "45",
+        "team_name": "NASF3 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 3",
+        "teams": 1
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 53
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "47",
+        "team_name": "EAD - EQUIPE DE CUIDADOS DOMICILIARES",
+        "teams": 3
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "52",
+        "team_name": "EABP2 - EQ ATENCAO BASICA PRISIONAL TIPO II",
+        "teams": 1
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 6732
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 5004
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 1297
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 39
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 194
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 60
+      },
+      {
+        "state_code": "31",
+        "state_name": "Minas Gerais",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 387
+      },
+      {
+        "state_code": "32",
+        "state_name": "Espírito Santo",
+        "team_code": "01",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 6
+      },
+      {
+        "state_code": "32",
+        "state_name": "Espírito Santo",
+        "team_code": "02",
+        "team_name": "ESFSB M1 - ESF COM SAUDE BUCAL - M I",
+        "teams": 7
+      },
+      {
+        "state_code": "32",
+        "state_name": "Espírito Santo",
+        "team_code": "04",
+        "team_name": "EACS - EQUIPE DE AGENTES COMUNITARIOS DE SAUDE",
+        "teams": 3
+      },
+      {
+        "state_code": "32",
+        "state_name": "Espírito Santo",
+        "team_code": "06",
+        "team_name": "NASF1 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 1",
+        "teams": 2
+      },
+      {
+        "state_code": "32",
+        "state_name": "Espírito Santo",
+        "team_code": "07",
+        "team_name": "NASF2 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 2",
+        "teams": 1
+      },
+      {
+        "state_code": "32",
+        "state_name": "Espírito Santo",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 5
+      },
+      {
+        "state_code": "32",
+        "state_name": "Espírito Santo",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 9
+      },
+      {
+        "state_code": "32",
+        "state_name": "Espírito Santo",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 7
+      },
+      {
+        "state_code": "32",
+        "state_name": "Espírito Santo",
+        "team_code": "25",
+        "team_name": "ESF1SB M1 - ESF TIPO I COM SAUDE BUCAL MODALIDADE I",
+        "teams": 1
+      },
+      {
+        "state_code": "32",
+        "state_name": "Espírito Santo",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 2
+      },
+      {
+        "state_code": "32",
+        "state_name": "Espírito Santo",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 1190
+      },
+      {
+        "state_code": "32",
+        "state_name": "Espírito Santo",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 888
+      },
+      {
+        "state_code": "32",
+        "state_name": "Espírito Santo",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 173
+      },
+      {
+        "state_code": "32",
+        "state_name": "Espírito Santo",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 14
+      },
+      {
+        "state_code": "32",
+        "state_name": "Espírito Santo",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 54
+      },
+      {
+        "state_code": "32",
+        "state_name": "Espírito Santo",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 23
+      },
+      {
+        "state_code": "32",
+        "state_name": "Espírito Santo",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 165
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "01",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 45
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "02",
+        "team_name": "ESFSB M1 - ESF COM SAUDE BUCAL - M I",
+        "teams": 8
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "03",
+        "team_name": "ESFSB M2 - ESF COM SAUDE BUCAL - M II",
+        "teams": 6
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "04",
+        "team_name": "EACS - EQUIPE DE AGENTES COMUNITARIOS DE SAUDE",
+        "teams": 32
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "05",
+        "team_name": "EPEN - EQUIPE DE AT. SAUDE SIST. PENITENCIARIO",
+        "teams": 1
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "06",
+        "team_name": "NASF1 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 1",
+        "teams": 2
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "07",
+        "team_name": "NASF2 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 2",
+        "teams": 1
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 2
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "16",
+        "team_name": "EAB1 - EQUIPE DE ATENCAO BASICA TIPO I",
+        "teams": 6
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "19",
+        "team_name": "EAB1SB - EQUIPE DE ATENCAO BASICA TIPO I COM SAUDE BUCAL",
+        "teams": 3
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 102
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 53
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "33",
+        "team_name": "ESF4 - ESTRATEGIA DE SAUDE DA FAMILIA TIPO IV",
+        "teams": 6
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "34",
+        "team_name": "ESF4SB M1 - ESF TIPO IV COM SAUDE BUCAL MODALIDADE I",
+        "teams": 1
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "36",
+        "team_name": "ESFTRANS - ESF TRANSITORIA",
+        "teams": 10
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "37",
+        "team_name": "ESFTRANSSB M1 - ESF TRANSITORIA COM SAUDE BUCAL MI",
+        "teams": 1
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "38",
+        "team_name": "ESFTRANSSB M2 - ESF TRANSITORIA COM SAUDE BUCAL MII",
+        "teams": 1
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "40",
+        "team_name": "eCR MI - EQUIPE DOS CONSULTORIOS NA RUA MODALIDADE I",
+        "teams": 1
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 10
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "47",
+        "team_name": "EAD - EQUIPE DE CUIDADOS DOMICILIARES",
+        "teams": 3
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 3764
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 2051
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 382
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 47
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 74
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 28
+      },
+      {
+        "state_code": "33",
+        "state_name": "Rio de Janeiro",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 496
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "01",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 42
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "02",
+        "team_name": "ESFSB M1 - ESF COM SAUDE BUCAL - M I",
+        "teams": 7
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "04",
+        "team_name": "EACS - EQUIPE DE AGENTES COMUNITARIOS DE SAUDE",
+        "teams": 61
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "05",
+        "team_name": "EPEN - EQUIPE DE AT. SAUDE SIST. PENITENCIARIO",
+        "teams": 12
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "06",
+        "team_name": "NASF1 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 1",
+        "teams": 7
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "07",
+        "team_name": "NASF2 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 2",
+        "teams": 7
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 7
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "16",
+        "team_name": "EAB1 - EQUIPE DE ATENCAO BASICA TIPO I",
+        "teams": 32
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "17",
+        "team_name": "EAB2 - EQUIPE DE ATENCAO BASICA TIPO II",
+        "teams": 6
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "18",
+        "team_name": "EAB3 - EQUIPE DE ATENCAO BASICA TIPO III",
+        "teams": 2
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "19",
+        "team_name": "EAB1SB - EQUIPE DE ATENCAO BASICA TIPO I COM SAUDE BUCAL",
+        "teams": 10
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 271
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 131
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "33",
+        "team_name": "ESF4 - ESTRATEGIA DE SAUDE DA FAMILIA TIPO IV",
+        "teams": 2
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "36",
+        "team_name": "ESFTRANS - ESF TRANSITORIA",
+        "teams": 1
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "40",
+        "team_name": "eCR MI - EQUIPE DOS CONSULTORIOS NA RUA MODALIDADE I",
+        "teams": 2
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "41",
+        "team_name": "eCR MII - EQUIPE DOS CONSULTORIOS NA RUA MODALIDADE II",
+        "teams": 1
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "42",
+        "team_name": "eCR MIII - EQUIPE DOS CONSULTORIOS NA RUA MODALIDADE III",
+        "teams": 3
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "43",
+        "team_name": "ESB MI - EQUIPE DE SAUDE BUCAL MODALIDADE I",
+        "teams": 2
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "45",
+        "team_name": "NASF3 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 3",
+        "teams": 4
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 27
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "47",
+        "team_name": "EAD - EQUIPE DE CUIDADOS DOMICILIARES",
+        "teams": 2
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "52",
+        "team_name": "EABP2 - EQ ATENCAO BASICA PRISIONAL TIPO II",
+        "teams": 1
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 7756
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 5880
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 1301
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 96
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 139
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 46
+      },
+      {
+        "state_code": "35",
+        "state_name": "São Paulo",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 3225
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "01",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 19
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "02",
+        "team_name": "ESFSB M1 - ESF COM SAUDE BUCAL - M I",
+        "teams": 3
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "04",
+        "team_name": "EACS - EQUIPE DE AGENTES COMUNITARIOS DE SAUDE",
+        "teams": 12
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "05",
+        "team_name": "EPEN - EQUIPE DE AT. SAUDE SIST. PENITENCIARIO",
+        "teams": 1
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "06",
+        "team_name": "NASF1 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 1",
+        "teams": 4
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "07",
+        "team_name": "NASF2 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 2",
+        "teams": 2
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 3
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 46
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 27
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "40",
+        "team_name": "eCR MI - EQUIPE DOS CONSULTORIOS NA RUA MODALIDADE I",
+        "teams": 1
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "41",
+        "team_name": "eCR MII - EQUIPE DOS CONSULTORIOS NA RUA MODALIDADE II",
+        "teams": 1
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "45",
+        "team_name": "NASF3 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 3",
+        "teams": 3
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 14
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "47",
+        "team_name": "EAD - EQUIPE DE CUIDADOS DOMICILIARES",
+        "teams": 1
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 3038
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 2465
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 491
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 18
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 52
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 76
+      },
+      {
+        "state_code": "41",
+        "state_name": "Paraná",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 580
+      },
+      {
+        "state_code": "42",
+        "state_name": "Santa Catarina",
+        "team_code": "01",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 2
+      },
+      {
+        "state_code": "42",
+        "state_name": "Santa Catarina",
+        "team_code": "02",
+        "team_name": "ESFSB M1 - ESF COM SAUDE BUCAL - M I",
+        "teams": 2
+      },
+      {
+        "state_code": "42",
+        "state_name": "Santa Catarina",
+        "team_code": "04",
+        "team_name": "EACS - EQUIPE DE AGENTES COMUNITARIOS DE SAUDE",
+        "teams": 4
+      },
+      {
+        "state_code": "42",
+        "state_name": "Santa Catarina",
+        "team_code": "07",
+        "team_name": "NASF2 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 2",
+        "teams": 1
+      },
+      {
+        "state_code": "42",
+        "state_name": "Santa Catarina",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 5
+      },
+      {
+        "state_code": "42",
+        "state_name": "Santa Catarina",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 29
+      },
+      {
+        "state_code": "42",
+        "state_name": "Santa Catarina",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 16
+      },
+      {
+        "state_code": "42",
+        "state_name": "Santa Catarina",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 11
+      },
+      {
+        "state_code": "42",
+        "state_name": "Santa Catarina",
+        "team_code": "47",
+        "team_name": "EAD - EQUIPE DE CUIDADOS DOMICILIARES",
+        "teams": 87
+      },
+      {
+        "state_code": "42",
+        "state_name": "Santa Catarina",
+        "team_code": "53",
+        "team_name": "EABP2SM - EQ ATENCAO BASICA PRISIONAL TIPO II C SAUDE MENTAL",
+        "teams": 1
+      },
+      {
+        "state_code": "42",
+        "state_name": "Santa Catarina",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 2602
+      },
+      {
+        "state_code": "42",
+        "state_name": "Santa Catarina",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 1756
+      },
+      {
+        "state_code": "42",
+        "state_name": "Santa Catarina",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 648
+      },
+      {
+        "state_code": "42",
+        "state_name": "Santa Catarina",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 11
+      },
+      {
+        "state_code": "42",
+        "state_name": "Santa Catarina",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 41
+      },
+      {
+        "state_code": "42",
+        "state_name": "Santa Catarina",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 13
+      },
+      {
+        "state_code": "42",
+        "state_name": "Santa Catarina",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 203
+      },
+      {
+        "state_code": "43",
+        "state_name": "Rio Grande do Sul",
+        "team_code": "01",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 1
+      },
+      {
+        "state_code": "43",
+        "state_name": "Rio Grande do Sul",
+        "team_code": "02",
+        "team_name": "ESFSB M1 - ESF COM SAUDE BUCAL - M I",
+        "teams": 1
+      },
+      {
+        "state_code": "43",
+        "state_name": "Rio Grande do Sul",
+        "team_code": "04",
+        "team_name": "EACS - EQUIPE DE AGENTES COMUNITARIOS DE SAUDE",
+        "teams": 23
+      },
+      {
+        "state_code": "43",
+        "state_name": "Rio Grande do Sul",
+        "team_code": "06",
+        "team_name": "NASF1 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 1",
+        "teams": 3
+      },
+      {
+        "state_code": "43",
+        "state_name": "Rio Grande do Sul",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 11
+      },
+      {
+        "state_code": "43",
+        "state_name": "Rio Grande do Sul",
+        "team_code": "10",
+        "team_name": "EACSSB M1 - EQ AGENTES COMUNITµRIOS COM SAUDE BUCAL - MI",
+        "teams": 1
+      },
+      {
+        "state_code": "43",
+        "state_name": "Rio Grande do Sul",
+        "team_code": "17",
+        "team_name": "EAB2 - EQUIPE DE ATENCAO BASICA TIPO II",
+        "teams": 1
+      },
+      {
+        "state_code": "43",
+        "state_name": "Rio Grande do Sul",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 54
+      },
+      {
+        "state_code": "43",
+        "state_name": "Rio Grande do Sul",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 18
+      },
+      {
+        "state_code": "43",
+        "state_name": "Rio Grande do Sul",
+        "team_code": "36",
+        "team_name": "ESFTRANS - ESF TRANSITORIA",
+        "teams": 1
+      },
+      {
+        "state_code": "43",
+        "state_name": "Rio Grande do Sul",
+        "team_code": "43",
+        "team_name": "ESB MI - EQUIPE DE SAUDE BUCAL MODALIDADE I",
+        "teams": 2
+      },
+      {
+        "state_code": "43",
+        "state_name": "Rio Grande do Sul",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 23
+      },
+      {
+        "state_code": "43",
+        "state_name": "Rio Grande do Sul",
+        "team_code": "51",
+        "team_name": "EABP1SM - EQ ATENCAO BASICA PRISIONAL TIPO I C SAUDE MENTAL",
+        "teams": 1
+      },
+      {
+        "state_code": "43",
+        "state_name": "Rio Grande do Sul",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 2768
+      },
+      {
+        "state_code": "43",
+        "state_name": "Rio Grande do Sul",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 2023
+      },
+      {
+        "state_code": "43",
+        "state_name": "Rio Grande do Sul",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 593
+      },
+      {
+        "state_code": "43",
+        "state_name": "Rio Grande do Sul",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 25
+      },
+      {
+        "state_code": "43",
+        "state_name": "Rio Grande do Sul",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 98
+      },
+      {
+        "state_code": "43",
+        "state_name": "Rio Grande do Sul",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 85
+      },
+      {
+        "state_code": "43",
+        "state_name": "Rio Grande do Sul",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 760
+      },
+      {
+        "state_code": "50",
+        "state_name": "Mato Grosso do Sul",
+        "team_code": "01",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 1
+      },
+      {
+        "state_code": "50",
+        "state_name": "Mato Grosso do Sul",
+        "team_code": "04",
+        "team_name": "EACS - EQUIPE DE AGENTES COMUNITARIOS DE SAUDE",
+        "teams": 8
+      },
+      {
+        "state_code": "50",
+        "state_name": "Mato Grosso do Sul",
+        "team_code": "06",
+        "team_name": "NASF1 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 1",
+        "teams": 1
+      },
+      {
+        "state_code": "50",
+        "state_name": "Mato Grosso do Sul",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 26
+      },
+      {
+        "state_code": "50",
+        "state_name": "Mato Grosso do Sul",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 11
+      },
+      {
+        "state_code": "50",
+        "state_name": "Mato Grosso do Sul",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 9
+      },
+      {
+        "state_code": "50",
+        "state_name": "Mato Grosso do Sul",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 3
+      },
+      {
+        "state_code": "50",
+        "state_name": "Mato Grosso do Sul",
+        "team_code": "47",
+        "team_name": "EAD - EQUIPE DE CUIDADOS DOMICILIARES",
+        "teams": 1
+      },
+      {
+        "state_code": "50",
+        "state_name": "Mato Grosso do Sul",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 793
+      },
+      {
+        "state_code": "50",
+        "state_name": "Mato Grosso do Sul",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 714
+      },
+      {
+        "state_code": "50",
+        "state_name": "Mato Grosso do Sul",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 109
+      },
+      {
+        "state_code": "50",
+        "state_name": "Mato Grosso do Sul",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 5
+      },
+      {
+        "state_code": "50",
+        "state_name": "Mato Grosso do Sul",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 73
+      },
+      {
+        "state_code": "50",
+        "state_name": "Mato Grosso do Sul",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 7
+      },
+      {
+        "state_code": "50",
+        "state_name": "Mato Grosso do Sul",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 48
+      },
+      {
+        "state_code": "51",
+        "state_name": "Mato Grosso",
+        "team_code": "04",
+        "team_name": "EACS - EQUIPE DE AGENTES COMUNITARIOS DE SAUDE",
+        "teams": 2
+      },
+      {
+        "state_code": "51",
+        "state_name": "Mato Grosso",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 22
+      },
+      {
+        "state_code": "51",
+        "state_name": "Mato Grosso",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 12
+      },
+      {
+        "state_code": "51",
+        "state_name": "Mato Grosso",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 11
+      },
+      {
+        "state_code": "51",
+        "state_name": "Mato Grosso",
+        "team_code": "45",
+        "team_name": "NASF3 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 3",
+        "teams": 1
+      },
+      {
+        "state_code": "51",
+        "state_name": "Mato Grosso",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 4
+      },
+      {
+        "state_code": "51",
+        "state_name": "Mato Grosso",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 1102
+      },
+      {
+        "state_code": "51",
+        "state_name": "Mato Grosso",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 833
+      },
+      {
+        "state_code": "51",
+        "state_name": "Mato Grosso",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 143
+      },
+      {
+        "state_code": "51",
+        "state_name": "Mato Grosso",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 6
+      },
+      {
+        "state_code": "51",
+        "state_name": "Mato Grosso",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 34
+      },
+      {
+        "state_code": "51",
+        "state_name": "Mato Grosso",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 2
+      },
+      {
+        "state_code": "51",
+        "state_name": "Mato Grosso",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 67
+      },
+      {
+        "state_code": "52",
+        "state_name": "Goiás",
+        "team_code": "04",
+        "team_name": "EACS - EQUIPE DE AGENTES COMUNITARIOS DE SAUDE",
+        "teams": 2
+      },
+      {
+        "state_code": "52",
+        "state_name": "Goiás",
+        "team_code": "06",
+        "team_name": "NASF1 - NUCLEO DE APOIO A SAUDE DA FAMILIA-NASF MODALIDADE 1",
+        "teams": 1
+      },
+      {
+        "state_code": "52",
+        "state_name": "Goiás",
+        "team_code": "08",
+        "team_name": "EMSI - EQ MULTIDISC AT BASICA SAUDE INDIGENA",
+        "teams": 2
+      },
+      {
+        "state_code": "52",
+        "state_name": "Goiás",
+        "team_code": "16",
+        "team_name": "EAB1 - EQUIPE DE ATENCAO BASICA TIPO I",
+        "teams": 1
+      },
+      {
+        "state_code": "52",
+        "state_name": "Goiás",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 49
+      },
+      {
+        "state_code": "52",
+        "state_name": "Goiás",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 61
+      },
+      {
+        "state_code": "52",
+        "state_name": "Goiás",
+        "team_code": "46",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO II",
+        "teams": 36
+      },
+      {
+        "state_code": "52",
+        "state_name": "Goiás",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 1825
+      },
+      {
+        "state_code": "52",
+        "state_name": "Goiás",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 1512
+      },
+      {
+        "state_code": "52",
+        "state_name": "Goiás",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 296
+      },
+      {
+        "state_code": "52",
+        "state_name": "Goiás",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 16
+      },
+      {
+        "state_code": "52",
+        "state_name": "Goiás",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 83
+      },
+      {
+        "state_code": "52",
+        "state_name": "Goiás",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 56
+      },
+      {
+        "state_code": "52",
+        "state_name": "Goiás",
+        "team_code": "76",
+        "team_name": "EAP - EQUIPE DE ATENCAO PRIMARIA",
+        "teams": 208
+      },
+      {
+        "state_code": "53",
+        "state_name": "Distrito Federal",
+        "team_code": "01",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 2
+      },
+      {
+        "state_code": "53",
+        "state_name": "Distrito Federal",
+        "team_code": "22",
+        "team_name": "EMAD - EQUIPE MULTIDISCIPLINAR DE ATENCAO DOMICILIAR TIPO I",
+        "teams": 18
+      },
+      {
+        "state_code": "53",
+        "state_name": "Distrito Federal",
+        "team_code": "23",
+        "team_name": "EMAP - EQUIPE MULTIDISCIPLINAR DE APOIO",
+        "teams": 10
+      },
+      {
+        "state_code": "53",
+        "state_name": "Distrito Federal",
+        "team_code": "70",
+        "team_name": "ESF - EQUIPE DE SAUDE DA FAMILIA",
+        "teams": 654
+      },
+      {
+        "state_code": "53",
+        "state_name": "Distrito Federal",
+        "team_code": "71",
+        "team_name": "ESB - EQUIPE DE SAUDE BUCAL",
+        "teams": 351
+      },
+      {
+        "state_code": "53",
+        "state_name": "Distrito Federal",
+        "team_code": "72",
+        "team_name": "ENASF-AB - EQ NUCLEO AMPLIADO SAUDE DA FAMILIA AT. PRIMARIA",
+        "teams": 63
+      },
+      {
+        "state_code": "53",
+        "state_name": "Distrito Federal",
+        "team_code": "73",
+        "team_name": "ECR - EQUIPE DOS CONSULTORIOS NA RUA",
+        "teams": 9
+      },
+      {
+        "state_code": "53",
+        "state_name": "Distrito Federal",
+        "team_code": "74",
+        "team_name": "EABP - EQUIPE DE ATENCAO PRIMARIA PRISIONAL",
+        "teams": 30
+      },
+      {
+        "state_code": "53",
+        "state_name": "Distrito Federal",
+        "team_code": "75",
+        "team_name": "EMAESM - EQ MULTIPROF ATENCAO ESPECIALIZADA SAUDE MENTAL",
+        "teams": 8
+      }
+    ]
+  },
   "metadata": {
-    "run_id": "20261017T134919Z-1da18197d811",
-    "generated_at": "2026-10-17T13:49:19Z",
-    "source_last_modified": "Sat, 17 Oct 2026 05:49:02 GMT",
+    "run_id": "20261018T020550Z-1da18197d811",
+    "generated_at": "2026-10-18T02:05:50Z",
+    "source_last_modified": "arquivo local",
     "source_sha256": "1da18197d811c171a981d8222e679e15361f32a240af6a37a6327c5b5938eed3",
-    "population_source_sha256": "17389fa5c36be0efa240441fe4011080d9a27b338befb3c8049c4a81da8be946"
+    "population_source_sha256": "17389fa5c36be0efa240441fe4011080d9a27b338befb3c8049c4a81da8be946",
+    "teams_source_sha256": "d87aa953c487c91d9e9b5e69b297d41ee494dfa9edc3f31a13f15c7785de73b5"
   }
 }

@@ -1,15 +1,15 @@
 {
   "status": "concluído",
-  "run_id": "20261017T134919Z-1da18197d811",
-  "generated_at": "2026-10-17T13:49:19Z",
+  "run_id": "20261018T020550Z-1da18197d811",
+  "generated_at": "2026-10-18T02:05:50Z",
   "process": "cnes-audit",
-  "code_version": "b49cca3",
+  "code_version": "working-tree",
   "source": {
     "catalog_url": "https://dadosabertos.saude.gov.br/dataset/cnes-cadastro-nacional-de-estabelecimentos-de-saude",
     "resource_url": "https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/CNES/cnes_estabelecimentos_csv.zip",
-    "obtained_at": "2026-10-17T13:49:19Z",
-    "last_modified": "Sat, 17 Oct 2026 05:49:02 GMT",
-    "etag": "9022a62f6bea2d5f8b2efa1c23f85051-7",
+    "obtained_at": "2026-10-18T02:05:50Z",
+    "last_modified": "arquivo local",
+    "etag": "não informado",
     "sha256": "1da18197d811c171a981d8222e679e15361f32a240af6a37a6327c5b5938eed3",
     "archive_bytes": 56620328,
     "entry_name": "cnes_estabelecimentos.csv",
@@ -18,8 +18,8 @@
   "population_source": {
     "catalog_url": "https://www.ibge.gov.br/estatisticas/sociais/populacao/9103-estimativas-de-populacao.html",
     "resource_url": "https://apisidra.ibge.gov.br/values/t/6579/n3/all/v/9324/p/last%201?formato=json",
-    "obtained_at": "2026-10-17T13:49:19Z",
-    "last_modified": "não informado",
+    "obtained_at": "2026-10-18T02:05:50Z",
+    "last_modified": "arquivo local",
     "etag": "não informado",
     "sha256": "17389fa5c36be0efa240441fe4011080d9a27b338befb3c8049c4a81da8be946",
     "reference_year": 2026,
@@ -29,9 +29,9 @@
   "beds_source": {
     "catalog_url": "https://dadosabertos.saude.gov.br/dataset/hospitais-e-leitos",
     "resource_url": "https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/Leitos_SUS/Leitos_csv_2026.zip",
-    "obtained_at": "2026-10-17T13:49:19Z",
-    "last_modified": "Mon, 21 Sep 2026 02:20:59 GMT",
-    "etag": "2348a6e6c5119596b7ac7a4cba605ad4",
+    "obtained_at": "2026-10-18T02:05:50Z",
+    "last_modified": "arquivo local",
+    "etag": "não informado",
     "sha256": "dd503f45f1909101806edce9b606ea01aa48a9022a4436e204fe094952b392df",
     "archive_bytes": 4365216,
     "competence": "202608",
@@ -39,8 +39,21 @@
     "rows_selected": 7220,
     "states": 27
   },
+  "teams_source": {
+    "catalog_url": "https://datasus.saude.gov.br/cnes-equipes-de-saude/",
+    "resource_url": "http://tabnet.datasus.gov.br/cgi/tabcgi.exe?cnes/cnv/equipebr.def",
+    "obtained_at": "2026-10-18T02:05:50Z",
+    "last_modified": "não informado",
+    "etag": "não informado",
+    "sha256": "d87aa953c487c91d9e9b5e69b297d41ee494dfa9edc3f31a13f15c7785de73b5",
+    "response_bytes": 8498,
+    "competence": "202609",
+    "states": 27,
+    "team_types": 40,
+    "total_teams": 124459
+  },
   "contract": {
-    "version": "3.0",
+    "version": "4.0",
     "publication_level": "somente contagens agregadas",
     "raw_data_published": false
   },
@@ -51,7 +64,10 @@
     "beds_national": 523117,
     "beds_by_state": 523117,
     "sus_beds_national": 354435,
-    "sus_beds_by_state": 354435
+    "sus_beds_by_state": 354435,
+    "teams_national": 124459,
+    "teams_by_state": 124459,
+    "teams_by_type": 124459
   },
   "checks": [
     {
@@ -141,6 +157,7 @@
     "Ausência cadastral não comprova ausência de serviço ou estrutura.",
     "A taxa por população mede presença cadastral relativa, não capacidade assistencial.",
     "Leitos cadastrados não informam ocupação ou disponibilidade em tempo real.",
+    "Equipes cadastradas não representam quantidade de profissionais, atendimentos ou cobertura efetiva.",
     "Os tipos de unidade são exibidos por código até a incorporação de tabela oficial versionada."
   ]
 }

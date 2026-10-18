@@ -15,6 +15,7 @@ class PipelineTest(unittest.TestCase):
             root = Path(temporary_directory)
             source = root / "source.zip"
             beds_source = root / "beds.zip"
+            teams_source = root / "teams.html"
             population_source = root / "population.json"
             output = root / "site" / "data"
             header = ";".join(REQUIRED_COLUMNS)
@@ -49,6 +50,20 @@ class PipelineTest(unittest.TestCase):
             ]
             with ZipFile(beds_source, "w") as archive:
                 archive.writestr("Leitos_2026.csv", "\n".join([bed_header, *bed_rows]))
+            team_rows = [
+                f'"{code} {name}";2;1;3'
+                for code, name in UF_NAMES.items()
+            ]
+            teams_source.write_bytes(
+                (
+                    "<html><body><pre>\n"
+                    '"Unidade da Federa&ccedil;&atilde;o";'
+                    '"70 ESF - EQUIPE DE SAUDE DA FAMILIA";'
+                    '"71 ESB - EQUIPE DE SAUDE BUCAL";"Total"\n'
+                    + "\n".join(team_rows)
+                    + '\n"Total";54;27;81\n</pre></body></html>'
+                ).encode("latin-1")
+            )
             population_source.write_text(
                 json.dumps(
                     [
@@ -77,15 +92,19 @@ class PipelineTest(unittest.TestCase):
             build_public_artifacts(
                 source_path=source,
                 beds_path=beds_source,
+                teams_path=teams_source,
                 population_path=population_source,
                 output_directory=output,
                 source_url="https://example.test/source.zip",
                 beds_url="https://example.test/beds.zip",
+                teams_url="https://example.test/teams",
                 population_url="https://example.test/population.json",
                 obtained_at="2026-10-03T12:00:00Z",
                 source_last_modified="2026-10-03T06:00:00Z",
                 beds_last_modified="2026-09-20T20:20:00Z",
+                teams_last_modified="não informado",
                 population_last_modified="2026-08-28T12:00:00Z",
+                teams_competence="202609",
                 code_version="test-version",
             )
 
@@ -107,6 +126,10 @@ class PipelineTest(unittest.TestCase):
             self.assertEqual(dashboard["beds"]["summary"]["sus_beds"], 162)
             self.assertEqual(dashboard["beds"]["by_state"][0]["beds_per_100k"], 1.0)
             self.assertEqual(audit["beds_source"]["rows_selected"], 27)
+            self.assertEqual(dashboard["teams"]["summary"]["competence"], "202609")
+            self.assertEqual(dashboard["teams"]["summary"]["total_teams"], 81)
+            self.assertEqual(dashboard["teams"]["by_state"][0]["teams_per_100k"], 0.3)
+            self.assertEqual(audit["teams_source"]["states"], 27)
             for prohibited in (
                 "nu_telefone",
                 "no_email",
