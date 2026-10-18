@@ -105,6 +105,7 @@ def render_traceability(
     include_population: bool = False,
     include_beds: bool = False,
     include_teams: bool = False,
+    include_services: bool = False,
 ) -> None:
     with st.expander("Fontes e rastreabilidade"):
         trace_first, trace_second = st.columns(2)
@@ -143,6 +144,19 @@ def render_traceability(
             st.link_button(
                 "Consultar equipes no TabNet",
                 audit["teams_source"]["catalog_url"],
+            )
+        if include_services:
+            st.write(
+                "**SHA-256 da consulta de serviços:** "
+                f"`{audit['services_source']['sha256']}`"
+            )
+            st.write(
+                "**Registros reconciliados:** "
+                f"{format_integer(audit['services_source']['total_service_records'])}"
+            )
+            st.link_button(
+                "Consultar serviços no TabNet",
+                audit["services_source"]["catalog_url"],
             )
 
 
@@ -698,6 +712,226 @@ def render_team_panel(dashboard: dict, audit: dict) -> None:
     render_traceability(audit, include_population=True, include_teams=True)
 
 
+def service_table(states: list[dict]) -> pd.DataFrame:
+    return pd.DataFrame(states).rename(
+        columns={
+            "name": "UF",
+            "service_records": "Registros de serviço/classificação",
+            "population": "População estimada",
+            "service_records_per_100k": "Registros por 100 mil habitantes",
+        }
+    )
+
+
+def render_service_panel(dashboard: dict, audit: dict) -> None:
+    summary = dashboard["services"]["summary"]
+    states = service_table(dashboard["services"]["by_state"])
+    state_classifications = pd.DataFrame(
+        dashboard["services"]["by_state_classification"]
+    )
+    competence = str(summary["competence"])
+    competence_label = f"{competence[4:]}/{competence[:4]}"
+
+    st.markdown('<p class="eyebrow">Parte 5 · Serviços cadastrados</p>', unsafe_allow_html=True)
+    st.title("Serviços de saúde registrados no CNES")
+    st.markdown(
+        '<p class="deck">Um recorte da diversidade de serviços informados ao CNES e de como '
+        "esses registros se distribuem entre as unidades federativas.</p>",
+        unsafe_allow_html=True,
+    )
+    render_source_facts(
+        [
+            ("Competência dos serviços", competence_label),
+            ("Fonte principal", "CNES Serviços + IBGE"),
+            ("Painel atualizado", format_timestamp(dashboard["metadata"]["generated_at"])),
+        ]
+    )
+
+    st.subheader("O que este painel responde")
+    st.write(
+        "A comparação mostra onde há maior concentração proporcional de registros e quais "
+        "classificações aparecem com mais frequência no recorte escolhido. Ela serve como ponto "
+        "de partida para investigar a organização cadastral da rede, sem transformar cadastro "
+        "em evidência de atendimento."
+    )
+    render_definition_grid(
+        [
+            (
+                "Registros de serviço/classificação",
+                "Quantidade informada pelo TabNet para cada combinação de serviço e classificação.",
+            ),
+            (
+                "Registros por 100 mil habitantes",
+                "Relação entre esses registros e a estimativa populacional do IBGE.",
+            ),
+            (
+                "Classificação",
+                "Detalhamento mantido com o código e a descrição publicados pelo CNES.",
+            ),
+        ]
+    )
+    st.info(
+        "O cadastro indica que uma classificação foi informada ao CNES. "
+        "Ele não comprova atendimento realizado, disponibilidade operacional, "
+        "capacidade instalada ou produção."
+    )
+
+    st.subheader("Compare as UFs")
+    filter_states, filter_scope = st.columns([2, 1])
+    with filter_states:
+        selected_ufs = st.multiselect(
+            "UFs para comparar (vazio = Brasil completo)",
+            states["UF"].tolist(),
+            placeholder="Todas as UFs",
+            key="service_state_filter",
+        )
+    with filter_scope:
+        comparison_scope = st.selectbox(
+            "Recorte da comparação",
+            ["Todas as UFs selecionadas", "10 maiores taxas", "10 menores taxas"],
+            key="service_scope_filter",
+        )
+
+    if not selected_ufs:
+        selected_ufs = states["UF"].tolist()
+    comparison = states.loc[states["UF"].isin(selected_ufs)]
+    if comparison_scope == "10 maiores taxas":
+        comparison = comparison.nlargest(10, "Registros por 100 mil habitantes")
+    elif comparison_scope == "10 menores taxas":
+        comparison = comparison.nsmallest(10, "Registros por 100 mil habitantes")
+
+    displayed_ufs = comparison["UF"].tolist()
+    selected_classifications = state_classifications.loc[
+        state_classifications["state_name"].isin(displayed_ufs)
+    ]
+    classification_totals = (
+        selected_classifications.groupby(
+            [
+                "classification_code",
+                "service_code",
+                "service_name",
+                "classification_name",
+            ],
+            as_index=False,
+        )["service_records"]
+        .sum()
+        .sort_values("service_records", ascending=False)
+    )
+    selected_records = int(comparison["Registros de serviço/classificação"].sum())
+    selected_population = int(comparison["População estimada"].sum())
+    selected_rate = selected_records / selected_population * 100_000
+
+    metric_a, metric_b, metric_c, metric_d = st.columns(4)
+    metric_a.metric("Registros", format_integer(selected_records))
+    metric_b.metric("Registros por 100 mil", format_rate(selected_rate))
+    metric_c.metric("UFs na comparação", len(comparison))
+    metric_d.metric("Classificações presentes", len(classification_totals))
+    st.caption(
+        "Os indicadores acompanham as UFs exibidas. A taxa usa os totais do recorte e não a "
+        "média simples das taxas estaduais."
+    )
+
+    state_chart = (
+        alt.Chart(comparison)
+        .mark_bar(color="#2B716F")
+        .encode(
+            x=alt.X(
+                "Registros por 100 mil habitantes:Q",
+                title="Registros por 100 mil habitantes",
+            ),
+            y=alt.Y(
+                "UF:N",
+                sort=alt.SortField(
+                    field="Registros por 100 mil habitantes",
+                    order="descending",
+                ),
+                title=None,
+            ),
+            tooltip=[
+                alt.Tooltip("UF:N"),
+                alt.Tooltip(
+                    "Registros de serviço/classificação:Q",
+                    title="Registros",
+                    format=",.0f",
+                ),
+                alt.Tooltip("População estimada:Q", format=",.0f"),
+                alt.Tooltip(
+                    "Registros por 100 mil habitantes:Q",
+                    title="Registros por 100 mil",
+                    format=".0f",
+                ),
+            ],
+        )
+        .properties(height=max(280, len(comparison) * 25))
+    )
+    classification_chart_data = classification_totals.head(12).copy()
+    classification_chart_data["Classificação"] = classification_chart_data.apply(
+        lambda row: f'{row["classification_code"]} · {row["classification_name"]}',
+        axis=1,
+    )
+    classification_chart = (
+        alt.Chart(classification_chart_data)
+        .mark_bar(color="#6B8478")
+        .encode(
+            x=alt.X("service_records:Q", title="Registros"),
+            y=alt.Y(
+                "Classificação:N",
+                sort=alt.SortField(field="service_records", order="descending"),
+                title=None,
+                axis=alt.Axis(labelLimit=300),
+            ),
+            tooltip=[
+                alt.Tooltip("classification_code:N", title="Código"),
+                alt.Tooltip("service_name:N", title="Serviço"),
+                alt.Tooltip("classification_name:N", title="Classificação"),
+                alt.Tooltip("service_records:Q", title="Registros", format=",.0f"),
+            ],
+        )
+        .properties(height=max(340, len(classification_chart_data) * 31))
+    )
+
+    state_tab, classification_tab, data_tab = st.tabs(
+        ["Comparação por UF", "Classificações mais registradas", "Dados da seleção"]
+    )
+    with state_tab:
+        st.altair_chart(state_chart, width="stretch")
+    with classification_tab:
+        st.caption(
+            "Cada linha mantém a classificação publicada no TabNet. Os totais podem incluir "
+            "mais de um registro associado ao mesmo estabelecimento."
+        )
+        st.altair_chart(classification_chart, width="stretch")
+    with data_tab:
+        st.dataframe(
+            comparison[
+                [
+                    "UF",
+                    "Registros de serviço/classificação",
+                    "População estimada",
+                    "Registros por 100 mil habitantes",
+                ]
+            ].sort_values("Registros por 100 mil habitantes", ascending=False),
+            width="stretch",
+            hide_index=True,
+            column_config={
+                "Registros de serviço/classificação": st.column_config.NumberColumn(
+                    format="localized"
+                ),
+                "População estimada": st.column_config.NumberColumn(format="localized"),
+                "Registros por 100 mil habitantes": st.column_config.NumberColumn(
+                    format="%.0f"
+                ),
+            },
+        )
+
+    st.caption(
+        f"Serviços e classificações do CNES na competência {competence_label} e população "
+        f'estimada pelo IBGE para {dashboard["summary"]["population_reference_year"]}. '
+        "As referências temporais permanecem identificadas porque as fontes têm ciclos próprios."
+    )
+    render_traceability(audit, include_population=True, include_services=True)
+
+
 def render_quality_panel(dashboard: dict, audit: dict) -> None:
     summary = dashboard["summary"]
     checks = dashboard["checks"]
@@ -913,6 +1147,9 @@ def render() -> None:
     def team_page_content() -> None:
         render_team_panel(dashboard, audit)
 
+    def service_page_content() -> None:
+        render_service_panel(dashboard, audit)
+
     quality_page = st.Page(
         quality_page_content,
         title="1 · Qualidade cadastral",
@@ -934,8 +1171,21 @@ def render() -> None:
         title="4 · Equipes de saúde",
         icon=":material/groups:",
     )
+    service_page = st.Page(
+        service_page_content,
+        title="5 · Serviços cadastrados",
+        icon=":material/medical_services:",
+    )
     navigation = st.navigation(
-        {"CNES em Evidência": [quality_page, population_page, bed_page, team_page]},
+        {
+            "CNES em Evidência": [
+                quality_page,
+                population_page,
+                bed_page,
+                team_page,
+                service_page,
+            ]
+        },
         position="sidebar",
     )
     navigation.run()

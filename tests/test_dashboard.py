@@ -116,6 +116,7 @@ class DashboardContractTest(unittest.TestCase):
         self.assertIn("CNES Estabelecimentos + IBGE", self.source)
         self.assertIn("CNES Leitos + IBGE", self.source)
         self.assertIn("CNES Equipes + IBGE", self.source)
+        self.assertIn("CNES Serviços + IBGE", self.source)
         self.assertIn("Painel atualizado", self.source)
         self.assertNotIn("Arquivo informado pela fonte", self.source)
         self.assertNotIn("arquivo local", self.source)
@@ -171,6 +172,13 @@ class DashboardContractTest(unittest.TestCase):
         self.assertIn('"2 · Presença por população"', self.source)
         self.assertIn('"3 · Capacidade hospitalar"', self.source)
         self.assertIn('"4 · Equipes de saúde"', self.source)
+        self.assertIn('"5 · Serviços cadastrados"', self.source)
+
+    def test_fifth_part_explains_service_records_without_claiming_delivery(self):
+        self.assertIn("Parte 5 · Serviços cadastrados", self.source)
+        self.assertIn("Registros de serviço/classificação", self.source)
+        self.assertIn("não comprova atendimento realizado", self.source)
+        self.assertIn("Competência dos serviços", self.source)
 
     def test_fourth_part_explains_teams_without_claiming_workforce_or_coverage(self):
         self.assertIn("Parte 4 · Equipes de saúde", self.source)

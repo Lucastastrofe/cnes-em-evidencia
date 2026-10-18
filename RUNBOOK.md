@@ -12,13 +12,13 @@ python -m pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
 
-O segundo comando baixa o cadastro do CNES, a estimativa populacional mais recente do IBGE, o arquivo anual de leitos e a consulta nacional de equipes do TabNet para `data/work`. O processamento valida as quatro fontes, seleciona as competências mais recentes de leitos e equipes, integra por UF e substitui os dois JSON de `data/published` de forma atômica.
+O segundo comando baixa o cadastro do CNES, a estimativa populacional mais recente do IBGE, o arquivo anual de leitos e as consultas nacionais de equipes e serviços do TabNet para `data/work`. O processamento valida as cinco fontes, seleciona as competências mais recentes, integra por UF e substitui os dois JSON de `data/published` de forma atômica.
 
 Para reproduzir uma fotografia já baixada:
 
 ```powershell
 $env:PYTHONPATH = "src"
-python -m cnes_audit.cli --input caminho/cnes.zip --population-input caminho/populacao.json --beds-input caminho/leitos.zip --teams-input caminho/equipes.html --teams-competence 202609
+python -m cnes_audit.cli --input caminho/cnes.zip --population-input caminho/populacao.json --beds-input caminho/leitos.zip --teams-input caminho/equipes.html --teams-competence 202609 --services-input caminho/servicos.html --services-competence 202609
 ```
 
 ## Publicação no Streamlit Community Cloud
@@ -39,6 +39,7 @@ Depois disso, o fluxo roda diariamente a partir das 09:17 UTC e registra cada ve
 - metadados separados do CNES e do IBGE, incluindo hashes e ano populacional usado;
 - metadados da fonte de leitos, incluindo hash, competência e linhas selecionadas;
 - metadados da consulta de equipes, incluindo hash, competência e totais reconciliados;
+- metadados da consulta de serviços, incluindo hash, competência e totais reconciliados;
 - logs do Streamlit Community Cloud para diagnóstico do aplicativo.
 
 ## Falhas esperadas
@@ -62,6 +63,8 @@ O processamento interrompe a publicação quando o ZIP não contém um único CS
 ### A reconciliação falhou
 
 Quando a consulta de equipes não informa competência, altera o formato, omite alguma UF ou apresenta totais diferentes entre estados, tipos e Brasil, a publicação é interrompida. Confirme o formulário nacional de Equipes de Saúde antes de alterar o contrato.
+
+Quando a consulta de serviços não informa competência, altera o formato, omite alguma UF ou apresenta totais diferentes entre UFs, classificações e Brasil, a publicação é interrompida. Confirme o formulário nacional de Serviço/Classificação antes de alterar o contrato.
 
 Nenhum artefato novo deve ser promovido. Preserve o ZIP da execução com acesso restrito durante a investigação e não o anexe a issues públicas.
 
