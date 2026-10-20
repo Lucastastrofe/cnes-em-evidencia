@@ -1,24 +1,24 @@
 {
   "status": "concluído",
-  "run_id": "20261019T163141Z-1da18197d811",
-  "generated_at": "2026-10-19T16:31:41Z",
+  "run_id": "20261020T142139Z-eb91b6a5a401",
+  "generated_at": "2026-10-20T14:21:39Z",
   "process": "cnes-audit",
-  "code_version": "bf838bcfa22ae8ed63950c77ad049e61ce3a3fbd",
+  "code_version": "fddf72784fe8339ca68b1650aca018337f02ebe0",
   "source": {
     "catalog_url": "https://dadosabertos.saude.gov.br/dataset/cnes-cadastro-nacional-de-estabelecimentos-de-saude",
     "resource_url": "https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/CNES/cnes_estabelecimentos_csv.zip",
-    "obtained_at": "2026-10-19T16:31:41Z",
-    "last_modified": "Sat, 17 Oct 2026 05:49:02 GMT",
-    "etag": "9022a62f6bea2d5f8b2efa1c23f85051-7",
-    "sha256": "1da18197d811c171a981d8222e679e15361f32a240af6a37a6327c5b5938eed3",
-    "archive_bytes": 56620328,
+    "obtained_at": "2026-10-20T14:21:39Z",
+    "last_modified": "Tue, 20 Oct 2026 06:47:48 GMT",
+    "etag": "8515c286a260e43c33beadc058ceb954-7",
+    "sha256": "eb91b6a5a4013b3558a5e49d1938e23aa61920fc4af43a830898d305d3e63174",
+    "archive_bytes": 56652699,
     "entry_name": "cnes_estabelecimentos.csv",
-    "entry_bytes": 231843479
+    "entry_bytes": 231968064
   },
   "population_source": {
     "catalog_url": "https://www.ibge.gov.br/estatisticas/sociais/populacao/9103-estimativas-de-populacao.html",
     "resource_url": "https://apisidra.ibge.gov.br/values/t/6579/n3/all/v/9324/p/last%201?formato=json",
-    "obtained_at": "2026-10-19T16:31:41Z",
+    "obtained_at": "2026-10-20T14:21:39Z",
     "last_modified": "não informado",
     "etag": "não informado",
     "sha256": "17389fa5c36be0efa240441fe4011080d9a27b338befb3c8049c4a81da8be946",
@@ -29,20 +29,20 @@
   "beds_source": {
     "catalog_url": "https://dadosabertos.saude.gov.br/dataset/hospitais-e-leitos",
     "resource_url": "https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/Leitos_SUS/Leitos_csv_2026.zip",
-    "obtained_at": "2026-10-19T16:31:41Z",
-    "last_modified": "Mon, 21 Sep 2026 02:20:59 GMT",
-    "etag": "2348a6e6c5119596b7ac7a4cba605ad4",
-    "sha256": "dd503f45f1909101806edce9b606ea01aa48a9022a4436e204fe094952b392df",
-    "archive_bytes": 4365216,
-    "competence": "202608",
-    "rows_read": 57608,
-    "rows_selected": 7220,
+    "obtained_at": "2026-10-20T14:21:39Z",
+    "last_modified": "Tue, 20 Oct 2026 13:24:37 GMT",
+    "etag": "68ba332cf2b10b2770dcfb65c62e87e2",
+    "sha256": "5242aff1de8488caa465dfe40dbfefb0c006ffc06798b78a81ba1152df1d38e9",
+    "archive_bytes": 4914199,
+    "competence": "202609",
+    "rows_read": 64838,
+    "rows_selected": 7230,
     "states": 27
   },
   "teams_source": {
     "catalog_url": "https://datasus.saude.gov.br/cnes-equipes-de-saude/",
     "resource_url": "http://tabnet.datasus.gov.br/cgi/tabcgi.exe?cnes/cnv/equipebr.def",
-    "obtained_at": "2026-10-19T16:31:41Z",
+    "obtained_at": "2026-10-20T14:21:39Z",
     "last_modified": "não informado",
     "etag": "não informado",
     "sha256": "d87aa953c487c91d9e9b5e69b297d41ee494dfa9edc3f31a13f15c7785de73b5",
@@ -55,7 +55,7 @@
   "services_source": {
     "catalog_url": "https://datasus.saude.gov.br/cnes-estabelecimentos/",
     "resource_url": "http://tabnet.datasus.gov.br/cgi/tabcgi.exe?cnes/cnv/servc2br.def",
-    "obtained_at": "2026-10-19T16:31:41Z",
+    "obtained_at": "2026-10-20T14:21:39Z",
     "last_modified": "não informado",
     "etag": "não informado",
     "sha256": "ee3b93da03d84db1b4bc04a6f1f3f92af3bb7710772d1a3a92c104d266430d19",
@@ -71,13 +71,13 @@
     "raw_data_published": false
   },
   "reconciliation": {
-    "rows_read": 640126,
-    "rows_aggregated": 640126,
+    "rows_read": 640475,
+    "rows_aggregated": 640475,
     "difference": 0,
-    "beds_national": 523117,
-    "beds_by_state": 523117,
-    "sus_beds_national": 354435,
-    "sus_beds_by_state": 354435,
+    "beds_national": 524000,
+    "beds_by_state": 524000,
+    "sus_beds_national": 354841,
+    "sus_beds_by_state": 354841,
     "teams_national": 124459,
     "teams_by_state": 124459,
     "teams_by_type": 124459,
@@ -92,7 +92,7 @@
       "dimension": "completude",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 640126,
+      "evaluated": 640475,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -102,7 +102,7 @@
       "dimension": "unicidade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 640126,
+      "evaluated": 640475,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -112,7 +112,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 640126,
+      "evaluated": 640475,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -122,7 +122,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 640126,
+      "evaluated": 640475,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -132,9 +132,9 @@
       "dimension": "completude",
       "severity": "observação",
       "status": "observação",
-      "evaluated": 640126,
-      "failures": 59159,
-      "failure_rate": 0.092418
+      "evaluated": 640475,
+      "failures": 59155,
+      "failure_rate": 0.092361
     },
     {
       "id": "coordinates_out_of_range",
@@ -142,7 +142,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 640126,
+      "evaluated": 640475,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -152,7 +152,7 @@
       "dimension": "completude",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 640126,
+      "evaluated": 640475,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -162,7 +162,7 @@
       "dimension": "completude",
       "severity": "observação",
       "status": "aprovado",
-      "evaluated": 640126,
+      "evaluated": 640475,
       "failures": 0,
       "failure_rate": 0.0
     }

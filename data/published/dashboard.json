@@ -1,6 +1,6 @@
 {
   "summary": {
-    "total_records": 640126,
+    "total_records": 640475,
     "states_with_records": 27,
     "checks_run": 8,
     "checks_with_findings": 1,
@@ -14,7 +14,7 @@
       "dimension": "completude",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 640126,
+      "evaluated": 640475,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -24,7 +24,7 @@
       "dimension": "unicidade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 640126,
+      "evaluated": 640475,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -34,7 +34,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 640126,
+      "evaluated": 640475,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -44,7 +44,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 640126,
+      "evaluated": 640475,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -54,9 +54,9 @@
       "dimension": "completude",
       "severity": "observação",
       "status": "observação",
-      "evaluated": 640126,
-      "failures": 59159,
-      "failure_rate": 0.092418
+      "evaluated": 640475,
+      "failures": 59155,
+      "failure_rate": 0.092361
     },
     {
       "id": "coordinates_out_of_range",
@@ -64,7 +64,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 640126,
+      "evaluated": 640475,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -74,7 +74,7 @@
       "dimension": "completude",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 640126,
+      "evaluated": 640475,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -84,7 +84,7 @@
       "dimension": "completude",
       "severity": "observação",
       "status": "aprovado",
-      "evaluated": 640126,
+      "evaluated": 640475,
       "failures": 0,
       "failure_rate": 0.0
     }
@@ -93,138 +93,138 @@
     {
       "code": "35",
       "name": "São Paulo",
-      "records": 154526,
-      "issues": 18513,
+      "records": 154659,
+      "issues": 18510,
       "population": 46179008,
-      "establishments_per_100k": 334.62
+      "establishments_per_100k": 334.91
     },
     {
       "code": "31",
       "name": "Minas Gerais",
-      "records": 79020,
+      "records": 79053,
       "issues": 5099,
       "population": 21460311,
-      "establishments_per_100k": 368.21
+      "establishments_per_100k": 368.37
     },
     {
       "code": "33",
       "name": "Rio de Janeiro",
-      "records": 58706,
+      "records": 58718,
       "issues": 8281,
       "population": 17225410,
-      "establishments_per_100k": 340.81
+      "establishments_per_100k": 340.88
     },
     {
       "code": "43",
       "name": "Rio Grande do Sul",
-      "records": 50991,
+      "records": 51008,
       "issues": 2587,
       "population": 11233317,
-      "establishments_per_100k": 453.93
+      "establishments_per_100k": 454.08
     },
     {
       "code": "41",
       "name": "Paraná",
-      "records": 44008,
+      "records": 44037,
       "issues": 3052,
       "population": 11952456,
-      "establishments_per_100k": 368.19
+      "establishments_per_100k": 368.43
     },
     {
       "code": "42",
       "name": "Santa Catarina",
-      "records": 36419,
+      "records": 36450,
       "issues": 2055,
       "population": 8312759,
-      "establishments_per_100k": 438.11
+      "establishments_per_100k": 438.48
     },
     {
       "code": "29",
       "name": "Bahia",
-      "records": 30172,
+      "records": 30174,
       "issues": 2582,
       "population": 14889472,
-      "establishments_per_100k": 202.64
+      "establishments_per_100k": 202.65
     },
     {
       "code": "23",
       "name": "Ceará",
-      "records": 19386,
+      "records": 19387,
       "issues": 917,
       "population": 9302211,
-      "establishments_per_100k": 208.4
+      "establishments_per_100k": 208.41
     },
     {
       "code": "52",
       "name": "Goiás",
-      "records": 18742,
+      "records": 18758,
       "issues": 717,
       "population": 7495033,
-      "establishments_per_100k": 250.06
+      "establishments_per_100k": 250.27
     },
     {
       "code": "26",
       "name": "Pernambuco",
-      "records": 18305,
+      "records": 18316,
       "issues": 2233,
       "population": 9583176,
-      "establishments_per_100k": 191.01
+      "establishments_per_100k": 191.13
     },
     {
       "code": "51",
       "name": "Mato Grosso",
-      "records": 14040,
+      "records": 14044,
       "issues": 674,
       "population": 3950330,
-      "establishments_per_100k": 355.41
+      "establishments_per_100k": 355.51
     },
     {
       "code": "32",
       "name": "Espírito Santo",
-      "records": 13301,
+      "records": 13306,
       "issues": 1508,
       "population": 4150692,
-      "establishments_per_100k": 320.45
+      "establishments_per_100k": 320.57
     },
     {
       "code": "15",
       "name": "Pará",
-      "records": 12810,
+      "records": 12818,
       "issues": 1574,
       "population": 8756324,
-      "establishments_per_100k": 146.29
+      "establishments_per_100k": 146.39
     },
     {
       "code": "53",
       "name": "Distrito Federal",
-      "records": 12653,
-      "issues": 4041,
+      "records": 12664,
+      "issues": 4040,
       "population": 3009996,
-      "establishments_per_100k": 420.37
+      "establishments_per_100k": 420.73
     },
     {
       "code": "25",
       "name": "Paraíba",
-      "records": 10787,
+      "records": 10789,
       "issues": 633,
       "population": 4182828,
-      "establishments_per_100k": 257.89
+      "establishments_per_100k": 257.94
     },
     {
       "code": "50",
       "name": "Mato Grosso do Sul",
-      "records": 9643,
+      "records": 9650,
       "issues": 575,
       "population": 2946317,
-      "establishments_per_100k": 327.29
+      "establishments_per_100k": 327.53
     },
     {
       "code": "21",
       "name": "Maranhão",
-      "records": 9533,
+      "records": 9536,
       "issues": 515,
       "population": 7024557,
-      "establishments_per_100k": 135.71
+      "establishments_per_100k": 135.75
     },
     {
       "code": "24",
@@ -237,18 +237,18 @@
     {
       "code": "11",
       "name": "Rondônia",
-      "records": 7420,
+      "records": 7433,
       "issues": 551,
       "population": 1757338,
-      "establishments_per_100k": 422.23
+      "establishments_per_100k": 422.97
     },
     {
       "code": "22",
       "name": "Piauí",
-      "records": 6486,
+      "records": 6491,
       "issues": 823,
       "population": 3392617,
-      "establishments_per_100k": 191.18
+      "establishments_per_100k": 191.33
     },
     {
       "code": "28",
@@ -269,26 +269,26 @@
     {
       "code": "13",
       "name": "Amazonas",
-      "records": 4602,
+      "records": 4603,
       "issues": 435,
       "population": 4360926,
-      "establishments_per_100k": 105.53
+      "establishments_per_100k": 105.55
     },
     {
       "code": "17",
       "name": "Tocantins",
-      "records": 3643,
+      "records": 3644,
       "issues": 98,
       "population": 1595994,
-      "establishments_per_100k": 228.26
+      "establishments_per_100k": 228.32
     },
     {
       "code": "12",
       "name": "Acre",
-      "records": 2104,
+      "records": 2107,
       "issues": 193,
       "population": 887794,
-      "establishments_per_100k": 236.99
+      "establishments_per_100k": 237.33
     },
     {
       "code": "14",
@@ -301,67 +301,67 @@
     {
       "code": "16",
       "name": "Amapá",
-      "records": 1352,
+      "records": 1353,
       "issues": 90,
       "population": 809953,
-      "establishments_per_100k": 166.92
+      "establishments_per_100k": 167.05
     }
   ],
   "by_unit_type": [
     {
       "code": "22",
       "label": "Tipo 22",
-      "records": 310910
+      "records": 311071
     },
     {
       "code": "36",
       "label": "Tipo 36",
-      "records": 116869
+      "records": 116961
     },
     {
       "code": "2",
       "label": "Tipo 2",
-      "records": 48016
+      "records": 48024
     },
     {
       "code": "39",
       "label": "Tipo 39",
-      "records": 42993
+      "records": 43001
     },
     {
       "code": "43",
       "label": "Tipo 43",
-      "records": 32880
+      "records": 32920
     },
     {
       "code": "4",
       "label": "Tipo 4",
-      "records": 16134
+      "records": 16147
     },
     {
       "code": "1",
       "label": "Tipo 1",
-      "records": 10571
+      "records": 10568
     },
     {
       "code": "42",
       "label": "Tipo 42",
-      "records": 7204
+      "records": 7206
     },
     {
       "code": "5",
       "label": "Tipo 5",
-      "records": 6937
+      "records": 6938
     },
     {
       "code": "68",
       "label": "Tipo 68",
-      "records": 6694
+      "records": 6693
     },
     {
       "code": "50",
       "label": "Tipo 50",
-      "records": 4566
+      "records": 4570
     },
     {
       "code": "74",
@@ -371,22 +371,22 @@
     {
       "code": "70",
       "label": "Tipo 70",
-      "records": 3890
+      "records": 3891
     },
     {
       "code": "40",
       "label": "Tipo 40",
-      "records": 3761
+      "records": 3766
     },
     {
       "code": "77",
       "label": "Tipo 77",
-      "records": 2692
+      "records": 2697
     },
     {
       "code": "84",
       "label": "Tipo 84",
-      "records": 2558
+      "records": 2560
     },
     {
       "code": "73",
@@ -411,27 +411,27 @@
     {
       "code": "7",
       "label": "Tipo 7",
-      "records": 1499
+      "records": 1500
     },
     {
       "code": "71",
       "label": "Tipo 71",
-      "records": 1392
+      "records": 1393
     },
     {
       "code": "85",
       "label": "Tipo 85",
-      "records": 1290
+      "records": 1289
     },
     {
       "code": "62",
       "label": "Tipo 62",
-      "records": 1282
+      "records": 1281
     },
     {
       "code": "83",
       "label": "Tipo 83",
-      "records": 1237
+      "records": 1241
     },
     {
       "code": "80",
@@ -451,7 +451,7 @@
     {
       "code": "75",
       "label": "Tipo 75",
-      "records": 559
+      "records": 562
     },
     {
       "code": "20",
@@ -461,7 +461,7 @@
     {
       "code": "16",
       "label": "Tipo 16",
-      "records": 360
+      "records": 364
     },
     {
       "code": "76",
@@ -513,17 +513,17 @@
     {
       "code": "M",
       "label": "Municipal",
-      "records": 613856
+      "records": 614192
     },
     {
       "code": "E",
       "label": "Estadual",
-      "records": 22828
+      "records": 22840
     },
     {
       "code": "D",
       "label": "Dupla",
-      "records": 3340
+      "records": 3341
     },
     {
       "code": "S",
@@ -533,14 +533,14 @@
   ],
   "beds": {
     "summary": {
-      "competence": "202608",
-      "rows_selected": 7220,
-      "total_beds": 523117,
-      "sus_beds": 354435,
-      "uti_beds": 64063,
-      "uti_sus_beds": 32096,
-      "beds_per_100k": 244.21,
-      "sus_beds_per_100k": 165.46
+      "competence": "202609",
+      "rows_selected": 7230,
+      "total_beds": 524000,
+      "sus_beds": 354841,
+      "uti_beds": 64141,
+      "uti_sus_beds": 32103,
+      "beds_per_100k": 244.62,
+      "sus_beds_per_100k": 165.65
     },
     "by_state": [
       {
@@ -557,288 +557,288 @@
       {
         "code": "27",
         "name": "Alagoas",
-        "beds": 7701,
-        "sus_beds": 6173,
-        "uti_beds": 694,
+        "beds": 7757,
+        "sus_beds": 6207,
+        "uti_beds": 718,
         "uti_sus_beds": 492,
         "population": 3221128,
-        "beds_per_100k": 239.08,
-        "sus_beds_per_100k": 191.64
+        "beds_per_100k": 240.82,
+        "sus_beds_per_100k": 192.7
       },
       {
         "code": "16",
         "name": "Amapá",
-        "beds": 1995,
-        "sus_beds": 1646,
+        "beds": 1960,
+        "sus_beds": 1621,
         "uti_beds": 223,
         "uti_sus_beds": 79,
         "population": 809953,
-        "beds_per_100k": 246.31,
-        "sus_beds_per_100k": 203.22
+        "beds_per_100k": 241.99,
+        "sus_beds_per_100k": 200.14
       },
       {
         "code": "13",
         "name": "Amazonas",
-        "beds": 7531,
-        "sus_beds": 6166,
-        "uti_beds": 800,
+        "beds": 7679,
+        "sus_beds": 6204,
+        "uti_beds": 826,
         "uti_sus_beds": 441,
         "population": 4360926,
-        "beds_per_100k": 172.69,
-        "sus_beds_per_100k": 141.39
+        "beds_per_100k": 176.09,
+        "sus_beds_per_100k": 142.26
       },
       {
         "code": "29",
         "name": "Bahia",
-        "beds": 34587,
-        "sus_beds": 27122,
+        "beds": 34550,
+        "sus_beds": 27088,
         "uti_beds": 3437,
         "uti_sus_beds": 1704,
         "population": 14889472,
-        "beds_per_100k": 232.29,
-        "sus_beds_per_100k": 182.16
+        "beds_per_100k": 232.04,
+        "sus_beds_per_100k": 181.93
       },
       {
         "code": "23",
         "name": "Ceará",
-        "beds": 22405,
-        "sus_beds": 17634,
-        "uti_beds": 1933,
+        "beds": 22241,
+        "sus_beds": 17597,
+        "uti_beds": 1963,
         "uti_sus_beds": 1225,
         "population": 9302211,
-        "beds_per_100k": 240.86,
-        "sus_beds_per_100k": 189.57
+        "beds_per_100k": 239.09,
+        "sus_beds_per_100k": 189.17
       },
       {
         "code": "53",
         "name": "Distrito Federal",
-        "beds": 10274,
-        "sus_beds": 5547,
-        "uti_beds": 2150,
+        "beds": 10488,
+        "sus_beds": 5666,
+        "uti_beds": 2111,
         "uti_sus_beds": 660,
         "population": 3009996,
-        "beds_per_100k": 341.33,
-        "sus_beds_per_100k": 184.29
+        "beds_per_100k": 348.44,
+        "sus_beds_per_100k": 188.24
       },
       {
         "code": "32",
         "name": "Espírito Santo",
-        "beds": 10253,
-        "sus_beds": 6730,
-        "uti_beds": 1731,
+        "beds": 10172,
+        "sus_beds": 6720,
+        "uti_beds": 1693,
         "uti_sus_beds": 933,
         "population": 4150692,
-        "beds_per_100k": 247.02,
-        "sus_beds_per_100k": 162.14
+        "beds_per_100k": 245.07,
+        "sus_beds_per_100k": 161.9
       },
       {
         "code": "52",
         "name": "Goiás",
-        "beds": 19674,
-        "sus_beds": 12982,
+        "beds": 19695,
+        "sus_beds": 12983,
         "uti_beds": 2168,
         "uti_sus_beds": 1068,
         "population": 7495033,
-        "beds_per_100k": 262.49,
-        "sus_beds_per_100k": 173.21
+        "beds_per_100k": 262.77,
+        "sus_beds_per_100k": 173.22
       },
       {
         "code": "21",
         "name": "Maranhão",
-        "beds": 16651,
-        "sus_beds": 14366,
-        "uti_beds": 1088,
+        "beds": 16649,
+        "sus_beds": 14364,
+        "uti_beds": 1078,
         "uti_sus_beds": 808,
         "population": 7024557,
-        "beds_per_100k": 237.04,
-        "sus_beds_per_100k": 204.51
+        "beds_per_100k": 237.01,
+        "sus_beds_per_100k": 204.48
       },
       {
         "code": "51",
         "name": "Mato Grosso",
-        "beds": 9517,
-        "sus_beds": 6936,
-        "uti_beds": 1366,
+        "beds": 9515,
+        "sus_beds": 6982,
+        "uti_beds": 1364,
         "uti_sus_beds": 488,
         "population": 3950330,
-        "beds_per_100k": 240.92,
-        "sus_beds_per_100k": 175.58
+        "beds_per_100k": 240.87,
+        "sus_beds_per_100k": 176.74
       },
       {
         "code": "50",
         "name": "Mato Grosso do Sul",
-        "beds": 6623,
-        "sus_beds": 4541,
+        "beds": 6681,
+        "sus_beds": 4594,
         "uti_beds": 800,
         "uti_sus_beds": 461,
         "population": 2946317,
-        "beds_per_100k": 224.79,
-        "sus_beds_per_100k": 154.12
+        "beds_per_100k": 226.76,
+        "sus_beds_per_100k": 155.92
       },
       {
         "code": "31",
         "name": "Minas Gerais",
-        "beds": 49743,
-        "sus_beds": 33103,
-        "uti_beds": 6146,
-        "uti_sus_beds": 3677,
+        "beds": 50227,
+        "sus_beds": 33107,
+        "uti_beds": 6226,
+        "uti_sus_beds": 3669,
         "population": 21460311,
-        "beds_per_100k": 231.79,
-        "sus_beds_per_100k": 154.25
+        "beds_per_100k": 234.05,
+        "sus_beds_per_100k": 154.27
       },
       {
         "code": "41",
         "name": "Paraná",
-        "beds": 30953,
-        "sus_beds": 21815,
+        "beds": 30980,
+        "sus_beds": 21856,
         "uti_beds": 3691,
         "uti_sus_beds": 2311,
         "population": 11952456,
-        "beds_per_100k": 258.97,
-        "sus_beds_per_100k": 182.51
+        "beds_per_100k": 259.19,
+        "sus_beds_per_100k": 182.86
       },
       {
         "code": "25",
         "name": "Paraíba",
-        "beds": 11010,
-        "sus_beds": 8309,
-        "uti_beds": 1079,
+        "beds": 10995,
+        "sus_beds": 8311,
+        "uti_beds": 1057,
         "uti_sus_beds": 624,
         "population": 4182828,
-        "beds_per_100k": 263.22,
-        "sus_beds_per_100k": 198.65
+        "beds_per_100k": 262.86,
+        "sus_beds_per_100k": 198.69
       },
       {
         "code": "15",
         "name": "Pará",
-        "beds": 17500,
-        "sus_beds": 13001,
-        "uti_beds": 1716,
+        "beds": 17638,
+        "sus_beds": 12993,
+        "uti_beds": 1713,
         "uti_sus_beds": 1005,
         "population": 8756324,
-        "beds_per_100k": 199.86,
-        "sus_beds_per_100k": 148.48
+        "beds_per_100k": 201.43,
+        "sus_beds_per_100k": 148.38
       },
       {
         "code": "26",
         "name": "Pernambuco",
-        "beds": 25518,
-        "sus_beds": 17667,
-        "uti_beds": 2934,
+        "beds": 25508,
+        "sus_beds": 17639,
+        "uti_beds": 2926,
         "uti_sus_beds": 1440,
         "population": 9583176,
-        "beds_per_100k": 266.28,
-        "sus_beds_per_100k": 184.35
+        "beds_per_100k": 266.17,
+        "sus_beds_per_100k": 184.06
       },
       {
         "code": "22",
         "name": "Piauí",
-        "beds": 7861,
-        "sus_beds": 6438,
+        "beds": 7874,
+        "sus_beds": 6451,
         "uti_beds": 501,
         "uti_sus_beds": 334,
         "population": 3392617,
-        "beds_per_100k": 231.71,
-        "sus_beds_per_100k": 189.77
+        "beds_per_100k": 232.09,
+        "sus_beds_per_100k": 190.15
       },
       {
         "code": "24",
         "name": "Rio Grande do Norte",
-        "beds": 8510,
-        "sus_beds": 6754,
-        "uti_beds": 882,
+        "beds": 8494,
+        "sus_beds": 6762,
+        "uti_beds": 875,
         "uti_sus_beds": 467,
         "population": 3463737,
-        "beds_per_100k": 245.69,
-        "sus_beds_per_100k": 194.99
+        "beds_per_100k": 245.23,
+        "sus_beds_per_100k": 195.22
       },
       {
         "code": "43",
         "name": "Rio Grande do Sul",
-        "beds": 33443,
-        "sus_beds": 23005,
-        "uti_beds": 3035,
+        "beds": 33397,
+        "sus_beds": 22953,
+        "uti_beds": 3033,
         "uti_sus_beds": 1880,
         "population": 11233317,
-        "beds_per_100k": 297.71,
-        "sus_beds_per_100k": 204.79
+        "beds_per_100k": 297.3,
+        "sus_beds_per_100k": 204.33
       },
       {
         "code": "33",
         "name": "Rio de Janeiro",
-        "beds": 43967,
-        "sus_beds": 24444,
-        "uti_beds": 7964,
-        "uti_sus_beds": 2377,
+        "beds": 43892,
+        "sus_beds": 24385,
+        "uti_beds": 7981,
+        "uti_sus_beds": 2402,
         "population": 17225410,
-        "beds_per_100k": 255.25,
-        "sus_beds_per_100k": 141.91
+        "beds_per_100k": 254.81,
+        "sus_beds_per_100k": 141.56
       },
       {
         "code": "11",
         "name": "Rondônia",
-        "beds": 6076,
-        "sus_beds": 4892,
-        "uti_beds": 676,
+        "beds": 6107,
+        "sus_beds": 4951,
+        "uti_beds": 666,
         "uti_sus_beds": 300,
         "population": 1757338,
-        "beds_per_100k": 345.75,
-        "sus_beds_per_100k": 278.38
+        "beds_per_100k": 347.51,
+        "sus_beds_per_100k": 281.73
       },
       {
         "code": "14",
         "name": "Roraima",
-        "beds": 1648,
-        "sus_beds": 1525,
+        "beds": 1686,
+        "sus_beds": 1548,
         "uti_beds": 107,
         "uti_sus_beds": 90,
         "population": 761012,
-        "beds_per_100k": 216.55,
-        "sus_beds_per_100k": 200.39
+        "beds_per_100k": 221.55,
+        "sus_beds_per_100k": 203.41
       },
       {
         "code": "42",
         "name": "Santa Catarina",
-        "beds": 18564,
-        "sus_beds": 13422,
-        "uti_beds": 1957,
+        "beds": 18601,
+        "sus_beds": 13412,
+        "uti_beds": 1964,
         "uti_sus_beds": 1334,
         "population": 8312759,
-        "beds_per_100k": 223.32,
-        "sus_beds_per_100k": 161.46
+        "beds_per_100k": 223.76,
+        "sus_beds_per_100k": 161.34
       },
       {
         "code": "28",
         "name": "Sergipe",
-        "beds": 4375,
-        "sus_beds": 3214,
+        "beds": 4369,
+        "sus_beds": 3208,
         "uti_beds": 570,
         "uti_sus_beds": 290,
         "population": 2307255,
-        "beds_per_100k": 189.62,
-        "sus_beds_per_100k": 139.3
+        "beds_per_100k": 189.36,
+        "sus_beds_per_100k": 139.04
       },
       {
         "code": "35",
         "name": "São Paulo",
-        "beds": 110607,
-        "sus_beds": 62181,
-        "uti_beds": 15728,
-        "uti_sus_beds": 7325,
+        "beds": 110713,
+        "sus_beds": 62439,
+        "uti_beds": 15763,
+        "uti_sus_beds": 7315,
         "population": 46179008,
-        "beds_per_100k": 239.52,
-        "sus_beds_per_100k": 134.65
+        "beds_per_100k": 239.75,
+        "sus_beds_per_100k": 135.21
       },
       {
         "code": "17",
         "name": "Tocantins",
-        "beds": 4284,
-        "sus_beds": 3187,
+        "beds": 4285,
+        "sus_beds": 3165,
         "uti_beds": 577,
         "uti_sus_beds": 202,
         "population": 1595994,
-        "beds_per_100k": 268.42,
-        "sus_beds_per_100k": 199.69
+        "beds_per_100k": 268.48,
+        "sus_beds_per_100k": 198.31
       }
     ]
   },
@@ -77018,10 +77018,10 @@
     ]
   },
   "metadata": {
-    "run_id": "20261019T163141Z-1da18197d811",
-    "generated_at": "2026-10-19T16:31:41Z",
-    "source_last_modified": "Sat, 17 Oct 2026 05:49:02 GMT",
-    "source_sha256": "1da18197d811c171a981d8222e679e15361f32a240af6a37a6327c5b5938eed3",
+    "run_id": "20261020T142139Z-eb91b6a5a401",
+    "generated_at": "2026-10-20T14:21:39Z",
+    "source_last_modified": "Tue, 20 Oct 2026 06:47:48 GMT",
+    "source_sha256": "eb91b6a5a4013b3558a5e49d1938e23aa61920fc4af43a830898d305d3e63174",
     "population_source_sha256": "17389fa5c36be0efa240441fe4011080d9a27b338befb3c8049c4a81da8be946",
     "teams_source_sha256": "d87aa953c487c91d9e9b5e69b297d41ee494dfa9edc3f31a13f15c7785de73b5",
     "services_source_sha256": "ee3b93da03d84db1b4bc04a6f1f3f92af3bb7710772d1a3a92c104d266430d19"
