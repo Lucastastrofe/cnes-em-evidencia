@@ -1,6 +1,6 @@
 {
   "summary": {
-    "total_records": 641377,
+    "total_records": 641416,
     "states_with_records": 27,
     "checks_run": 8,
     "checks_with_findings": 1,
@@ -14,7 +14,7 @@
       "dimension": "completude",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 641377,
+      "evaluated": 641416,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -24,7 +24,7 @@
       "dimension": "unicidade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 641377,
+      "evaluated": 641416,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -34,7 +34,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 641377,
+      "evaluated": 641416,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -44,7 +44,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 641377,
+      "evaluated": 641416,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -54,9 +54,9 @@
       "dimension": "completude",
       "severity": "observação",
       "status": "observação",
-      "evaluated": 641377,
+      "evaluated": 641416,
       "failures": 59143,
-      "failure_rate": 0.092213
+      "failure_rate": 0.092207
     },
     {
       "id": "coordinates_out_of_range",
@@ -64,7 +64,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 641377,
+      "evaluated": 641416,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -74,7 +74,7 @@
       "dimension": "completude",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 641377,
+      "evaluated": 641416,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -84,7 +84,7 @@
       "dimension": "completude",
       "severity": "observação",
       "status": "aprovado",
-      "evaluated": 641377,
+      "evaluated": 641416,
       "failures": 0,
       "failure_rate": 0.0
     }
@@ -93,58 +93,58 @@
     {
       "code": "35",
       "name": "São Paulo",
-      "records": 154773,
+      "records": 154777,
       "issues": 18501,
       "population": 46179008,
-      "establishments_per_100k": 335.16
+      "establishments_per_100k": 335.17
     },
     {
       "code": "31",
       "name": "Minas Gerais",
-      "records": 79183,
+      "records": 79195,
       "issues": 5099,
       "population": 21460311,
-      "establishments_per_100k": 368.97
+      "establishments_per_100k": 369.03
     },
     {
       "code": "33",
       "name": "Rio de Janeiro",
-      "records": 58771,
+      "records": 58773,
       "issues": 8280,
       "population": 17225410,
-      "establishments_per_100k": 341.19
+      "establishments_per_100k": 341.2
     },
     {
       "code": "43",
       "name": "Rio Grande do Sul",
-      "records": 51142,
+      "records": 51145,
       "issues": 2587,
       "population": 11233317,
-      "establishments_per_100k": 455.27
+      "establishments_per_100k": 455.3
     },
     {
       "code": "41",
       "name": "Paraná",
-      "records": 44105,
+      "records": 44113,
       "issues": 3052,
       "population": 11952456,
-      "establishments_per_100k": 369.0
+      "establishments_per_100k": 369.07
     },
     {
       "code": "42",
       "name": "Santa Catarina",
-      "records": 36524,
+      "records": 36527,
       "issues": 2055,
       "population": 8312759,
-      "establishments_per_100k": 439.37
+      "establishments_per_100k": 439.41
     },
     {
       "code": "29",
       "name": "Bahia",
-      "records": 30214,
+      "records": 30215,
       "issues": 2582,
       "population": 14889472,
-      "establishments_per_100k": 202.92
+      "establishments_per_100k": 202.93
     },
     {
       "code": "23",
@@ -157,26 +157,26 @@
     {
       "code": "52",
       "name": "Goiás",
-      "records": 18792,
+      "records": 18793,
       "issues": 717,
       "population": 7495033,
-      "establishments_per_100k": 250.73
+      "establishments_per_100k": 250.74
     },
     {
       "code": "26",
       "name": "Pernambuco",
-      "records": 18343,
+      "records": 18344,
       "issues": 2233,
       "population": 9583176,
-      "establishments_per_100k": 191.41
+      "establishments_per_100k": 191.42
     },
     {
       "code": "51",
       "name": "Mato Grosso",
-      "records": 14075,
+      "records": 14076,
       "issues": 674,
       "population": 3950330,
-      "establishments_per_100k": 356.3
+      "establishments_per_100k": 356.32
     },
     {
       "code": "32",
@@ -245,10 +245,10 @@
     {
       "code": "22",
       "name": "Piauí",
-      "records": 6497,
+      "records": 6499,
       "issues": 823,
       "population": 3392617,
-      "establishments_per_100k": 191.5
+      "establishments_per_100k": 191.56
     },
     {
       "code": "28",
@@ -261,10 +261,10 @@
     {
       "code": "27",
       "name": "Alagoas",
-      "records": 5597,
+      "records": 5598,
       "issues": 391,
       "population": 3221128,
-      "establishments_per_100k": 173.76
+      "establishments_per_100k": 173.79
     },
     {
       "code": "13",
@@ -311,32 +311,32 @@
     {
       "code": "22",
       "label": "Tipo 22",
-      "records": 311434
+      "records": 311448
     },
     {
       "code": "36",
       "label": "Tipo 36",
-      "records": 117318
+      "records": 117324
     },
     {
       "code": "2",
       "label": "Tipo 2",
-      "records": 48034
+      "records": 48035
     },
     {
       "code": "39",
       "label": "Tipo 39",
-      "records": 43048
+      "records": 43051
     },
     {
       "code": "43",
       "label": "Tipo 43",
-      "records": 33040
+      "records": 33044
     },
     {
       "code": "4",
       "label": "Tipo 4",
-      "records": 16165
+      "records": 16170
     },
     {
       "code": "1",
@@ -346,7 +346,7 @@
     {
       "code": "42",
       "label": "Tipo 42",
-      "records": 7220
+      "records": 7222
     },
     {
       "code": "5",
@@ -371,12 +371,12 @@
     {
       "code": "70",
       "label": "Tipo 70",
-      "records": 3890
+      "records": 3892
     },
     {
       "code": "40",
       "label": "Tipo 40",
-      "records": 3800
+      "records": 3801
     },
     {
       "code": "77",
@@ -386,7 +386,7 @@
     {
       "code": "84",
       "label": "Tipo 84",
-      "records": 2566
+      "records": 2568
     },
     {
       "code": "73",
@@ -431,7 +431,7 @@
     {
       "code": "83",
       "label": "Tipo 83",
-      "records": 1250
+      "records": 1251
     },
     {
       "code": "80",
@@ -451,7 +451,7 @@
     {
       "code": "75",
       "label": "Tipo 75",
-      "records": 569
+      "records": 570
     },
     {
       "code": "20",
@@ -466,7 +466,7 @@
     {
       "code": "16",
       "label": "Tipo 16",
-      "records": 243
+      "records": 239
     },
     {
       "code": "32",
@@ -491,7 +491,7 @@
     {
       "code": "78",
       "label": "Tipo 78",
-      "records": 96
+      "records": 97
     },
     {
       "code": "79",
@@ -513,12 +513,12 @@
     {
       "code": "M",
       "label": "Municipal",
-      "records": 615068
+      "records": 615105
     },
     {
       "code": "E",
       "label": "Estadual",
-      "records": 22872
+      "records": 22874
     },
     {
       "code": "D",
@@ -77018,10 +77018,10 @@
     ]
   },
   "metadata": {
-    "run_id": "20261027T152517Z-2662c7bd0b73",
-    "generated_at": "2026-10-27T15:25:17Z",
-    "source_last_modified": "Tue, 27 Oct 2026 12:01:50 GMT",
-    "source_sha256": "2662c7bd0b73a6f5120ab6a9a862c6be7fec82e34c11e81a83aa96af1e309af5",
+    "run_id": "20261028T160825Z-c5ce086ab1c1",
+    "generated_at": "2026-10-28T16:08:25Z",
+    "source_last_modified": "Wed, 28 Oct 2026 06:23:06 GMT",
+    "source_sha256": "c5ce086ab1c195c8090c51437d2ee9a730dc7ae425273f02dad2911219d8d064",
     "population_source_sha256": "17389fa5c36be0efa240441fe4011080d9a27b338befb3c8049c4a81da8be946",
     "teams_source_sha256": "d87aa953c487c91d9e9b5e69b297d41ee494dfa9edc3f31a13f15c7785de73b5",
     "services_source_sha256": "ee3b93da03d84db1b4bc04a6f1f3f92af3bb7710772d1a3a92c104d266430d19"
