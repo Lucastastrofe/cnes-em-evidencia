@@ -1,6 +1,6 @@
 {
   "summary": {
-    "total_records": 641416,
+    "total_records": 641483,
     "states_with_records": 27,
     "checks_run": 8,
     "checks_with_findings": 1,
@@ -14,7 +14,7 @@
       "dimension": "completude",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 641416,
+      "evaluated": 641483,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -24,7 +24,7 @@
       "dimension": "unicidade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 641416,
+      "evaluated": 641483,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -34,7 +34,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 641416,
+      "evaluated": 641483,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -44,7 +44,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 641416,
+      "evaluated": 641483,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -54,9 +54,9 @@
       "dimension": "completude",
       "severity": "observação",
       "status": "observação",
-      "evaluated": 641416,
+      "evaluated": 641483,
       "failures": 59143,
-      "failure_rate": 0.092207
+      "failure_rate": 0.092197
     },
     {
       "id": "coordinates_out_of_range",
@@ -64,7 +64,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 641416,
+      "evaluated": 641483,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -74,7 +74,7 @@
       "dimension": "completude",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 641416,
+      "evaluated": 641483,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -84,7 +84,7 @@
       "dimension": "completude",
       "severity": "observação",
       "status": "aprovado",
-      "evaluated": 641416,
+      "evaluated": 641483,
       "failures": 0,
       "failure_rate": 0.0
     }
@@ -93,18 +93,18 @@
     {
       "code": "35",
       "name": "São Paulo",
-      "records": 154777,
+      "records": 154789,
       "issues": 18501,
       "population": 46179008,
-      "establishments_per_100k": 335.17
+      "establishments_per_100k": 335.19
     },
     {
       "code": "31",
       "name": "Minas Gerais",
-      "records": 79195,
+      "records": 79201,
       "issues": 5099,
       "population": 21460311,
-      "establishments_per_100k": 369.03
+      "establishments_per_100k": 369.06
     },
     {
       "code": "33",
@@ -117,26 +117,26 @@
     {
       "code": "43",
       "name": "Rio Grande do Sul",
-      "records": 51145,
+      "records": 51153,
       "issues": 2587,
       "population": 11233317,
-      "establishments_per_100k": 455.3
+      "establishments_per_100k": 455.37
     },
     {
       "code": "41",
       "name": "Paraná",
-      "records": 44113,
+      "records": 44139,
       "issues": 3052,
       "population": 11952456,
-      "establishments_per_100k": 369.07
+      "establishments_per_100k": 369.29
     },
     {
       "code": "42",
       "name": "Santa Catarina",
-      "records": 36527,
+      "records": 36530,
       "issues": 2055,
       "population": 8312759,
-      "establishments_per_100k": 439.41
+      "establishments_per_100k": 439.44
     },
     {
       "code": "29",
@@ -149,18 +149,18 @@
     {
       "code": "23",
       "name": "Ceará",
-      "records": 19400,
+      "records": 19408,
       "issues": 916,
       "population": 9302211,
-      "establishments_per_100k": 208.55
+      "establishments_per_100k": 208.64
     },
     {
       "code": "52",
       "name": "Goiás",
-      "records": 18793,
+      "records": 18795,
       "issues": 717,
       "population": 7495033,
-      "establishments_per_100k": 250.74
+      "establishments_per_100k": 250.77
     },
     {
       "code": "26",
@@ -189,10 +189,10 @@
     {
       "code": "15",
       "name": "Pará",
-      "records": 12839,
+      "records": 12840,
       "issues": 1574,
       "population": 8756324,
-      "establishments_per_100k": 146.63
+      "establishments_per_100k": 146.64
     },
     {
       "code": "53",
@@ -261,10 +261,10 @@
     {
       "code": "27",
       "name": "Alagoas",
-      "records": 5598,
+      "records": 5599,
       "issues": 391,
       "population": 3221128,
-      "establishments_per_100k": 173.79
+      "establishments_per_100k": 173.82
     },
     {
       "code": "13",
@@ -311,37 +311,37 @@
     {
       "code": "22",
       "label": "Tipo 22",
-      "records": 311448
+      "records": 311494
     },
     {
       "code": "36",
       "label": "Tipo 36",
-      "records": 117324
+      "records": 117333
     },
     {
       "code": "2",
       "label": "Tipo 2",
-      "records": 48035
+      "records": 48037
     },
     {
       "code": "39",
       "label": "Tipo 39",
-      "records": 43051
+      "records": 43060
     },
     {
       "code": "43",
       "label": "Tipo 43",
-      "records": 33044
+      "records": 33049
     },
     {
       "code": "4",
       "label": "Tipo 4",
-      "records": 16170
+      "records": 16171
     },
     {
       "code": "1",
       "label": "Tipo 1",
-      "records": 10573
+      "records": 10572
     },
     {
       "code": "42",
@@ -391,7 +391,7 @@
     {
       "code": "73",
       "label": "Tipo 73",
-      "records": 2076
+      "records": 2077
     },
     {
       "code": "60",
@@ -426,7 +426,7 @@
     {
       "code": "62",
       "label": "Tipo 62",
-      "records": 1280
+      "records": 1281
     },
     {
       "code": "83",
@@ -466,7 +466,7 @@
     {
       "code": "16",
       "label": "Tipo 16",
-      "records": 239
+      "records": 234
     },
     {
       "code": "32",
@@ -476,7 +476,7 @@
     {
       "code": "82",
       "label": "Tipo 82",
-      "records": 142
+      "records": 141
     },
     {
       "code": "21",
@@ -513,7 +513,7 @@
     {
       "code": "M",
       "label": "Municipal",
-      "records": 615105
+      "records": 615172
     },
     {
       "code": "E",
@@ -77018,10 +77018,10 @@
     ]
   },
   "metadata": {
-    "run_id": "20261028T160825Z-c5ce086ab1c1",
-    "generated_at": "2026-10-28T16:08:25Z",
-    "source_last_modified": "Wed, 28 Oct 2026 06:23:06 GMT",
-    "source_sha256": "c5ce086ab1c195c8090c51437d2ee9a730dc7ae425273f02dad2911219d8d064",
+    "run_id": "20261029T161407Z-39871a4b080f",
+    "generated_at": "2026-10-29T16:14:07Z",
+    "source_last_modified": "Thu, 29 Oct 2026 06:17:10 GMT",
+    "source_sha256": "39871a4b080f38aa1daa48a6f2b7e02f44375f50a193ff03fd06c3cd92612c6d",
     "population_source_sha256": "17389fa5c36be0efa240441fe4011080d9a27b338befb3c8049c4a81da8be946",
     "teams_source_sha256": "d87aa953c487c91d9e9b5e69b297d41ee494dfa9edc3f31a13f15c7785de73b5",
     "services_source_sha256": "ee3b93da03d84db1b4bc04a6f1f3f92af3bb7710772d1a3a92c104d266430d19"
