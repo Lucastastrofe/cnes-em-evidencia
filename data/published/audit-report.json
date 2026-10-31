@@ -1,24 +1,24 @@
 {
   "status": "concluído",
-  "run_id": "20261030T155946Z-3c82e3562d1e",
-  "generated_at": "2026-10-30T15:59:46Z",
+  "run_id": "20261031T152318Z-5e945e27139c",
+  "generated_at": "2026-10-31T15:23:18Z",
   "process": "cnes-audit",
-  "code_version": "2968f142a7a90bbd106c445f9fe347d36ef04c47",
+  "code_version": "8cdfc6878b4461461442b5f6669349cb107f77f0",
   "source": {
     "catalog_url": "https://dadosabertos.saude.gov.br/dataset/cnes-cadastro-nacional-de-estabelecimentos-de-saude",
     "resource_url": "https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/CNES/cnes_estabelecimentos_csv.zip",
-    "obtained_at": "2026-10-30T15:59:46Z",
-    "last_modified": "Fri, 30 Oct 2026 06:39:37 GMT",
-    "etag": "fdba85cb51ed36bd9069028cd2a4467b-7",
-    "sha256": "3c82e3562d1e064b1481f41e6369a2641d1f3d96b9018597709c5dbfaca0dea3",
-    "archive_bytes": 56770309,
+    "obtained_at": "2026-10-31T15:23:18Z",
+    "last_modified": "Sat, 31 Oct 2026 06:50:54 GMT",
+    "etag": "edea274d97ead9b83616d80a81c40a45-7",
+    "sha256": "5e945e27139c7317a2c1968e5c64b5b2bfb2df95672cb5d9c12026e15ccc99c3",
+    "archive_bytes": 56780126,
     "entry_name": "cnes_estabelecimentos.csv",
-    "entry_bytes": 232401618
+    "entry_bytes": 232438457
   },
   "population_source": {
     "catalog_url": "https://www.ibge.gov.br/estatisticas/sociais/populacao/9103-estimativas-de-populacao.html",
     "resource_url": "https://apisidra.ibge.gov.br/values/t/6579/n3/all/v/9324/p/last%201?formato=json",
-    "obtained_at": "2026-10-30T15:59:46Z",
+    "obtained_at": "2026-10-31T15:23:18Z",
     "last_modified": "não informado",
     "etag": "não informado",
     "sha256": "17389fa5c36be0efa240441fe4011080d9a27b338befb3c8049c4a81da8be946",
@@ -29,7 +29,7 @@
   "beds_source": {
     "catalog_url": "https://dadosabertos.saude.gov.br/dataset/hospitais-e-leitos",
     "resource_url": "https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/Leitos_SUS/Leitos_csv_2026.zip",
-    "obtained_at": "2026-10-30T15:59:46Z",
+    "obtained_at": "2026-10-31T15:23:18Z",
     "last_modified": "Wed, 21 Oct 2026 02:23:24 GMT",
     "etag": "9e2095aa65a8d43fff65c002f3e3dad2",
     "sha256": "9e36112332b486a265890ad5327e0c7ba86a5d4ed000ece455f12838739d9157",
@@ -42,7 +42,7 @@
   "teams_source": {
     "catalog_url": "https://datasus.saude.gov.br/cnes-equipes-de-saude/",
     "resource_url": "http://tabnet.datasus.gov.br/cgi/tabcgi.exe?cnes/cnv/equipebr.def",
-    "obtained_at": "2026-10-30T15:59:46Z",
+    "obtained_at": "2026-10-31T15:23:18Z",
     "last_modified": "não informado",
     "etag": "não informado",
     "sha256": "d87aa953c487c91d9e9b5e69b297d41ee494dfa9edc3f31a13f15c7785de73b5",
@@ -55,7 +55,7 @@
   "services_source": {
     "catalog_url": "https://datasus.saude.gov.br/cnes-estabelecimentos/",
     "resource_url": "http://tabnet.datasus.gov.br/cgi/tabcgi.exe?cnes/cnv/servc2br.def",
-    "obtained_at": "2026-10-30T15:59:46Z",
+    "obtained_at": "2026-10-31T15:23:18Z",
     "last_modified": "não informado",
     "etag": "não informado",
     "sha256": "ee3b93da03d84db1b4bc04a6f1f3f92af3bb7710772d1a3a92c104d266430d19",
@@ -71,8 +71,8 @@
     "raw_data_published": false
   },
   "reconciliation": {
-    "rows_read": 641687,
-    "rows_aggregated": 641687,
+    "rows_read": 641791,
+    "rows_aggregated": 641791,
     "difference": 0,
     "beds_national": 524000,
     "beds_by_state": 524000,
@@ -92,7 +92,7 @@
       "dimension": "completude",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 641687,
+      "evaluated": 641791,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -102,7 +102,7 @@
       "dimension": "unicidade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 641687,
+      "evaluated": 641791,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -112,7 +112,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 641687,
+      "evaluated": 641791,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -122,7 +122,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 641687,
+      "evaluated": 641791,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -132,9 +132,9 @@
       "dimension": "completude",
       "severity": "observação",
       "status": "observação",
-      "evaluated": 641687,
-      "failures": 59135,
-      "failure_rate": 0.092156
+      "evaluated": 641791,
+      "failures": 59134,
+      "failure_rate": 0.092139
     },
     {
       "id": "coordinates_out_of_range",
@@ -142,7 +142,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 641687,
+      "evaluated": 641791,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -152,7 +152,7 @@
       "dimension": "completude",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 641687,
+      "evaluated": 641791,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -162,7 +162,7 @@
       "dimension": "completude",
       "severity": "observação",
       "status": "aprovado",
-      "evaluated": 641687,
+      "evaluated": 641791,
       "failures": 0,
       "failure_rate": 0.0
     }
