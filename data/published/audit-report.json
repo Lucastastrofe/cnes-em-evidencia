@@ -1,13 +1,13 @@
 {
   "status": "concluído",
-  "run_id": "20261031T152318Z-5e945e27139c",
-  "generated_at": "2026-10-31T15:23:18Z",
+  "run_id": "20261101T160622Z-5e945e27139c",
+  "generated_at": "2026-11-01T16:06:22Z",
   "process": "cnes-audit",
-  "code_version": "8cdfc6878b4461461442b5f6669349cb107f77f0",
+  "code_version": "3087714acb1e456c21ca6f8b6aea70cc4484717e",
   "source": {
     "catalog_url": "https://dadosabertos.saude.gov.br/dataset/cnes-cadastro-nacional-de-estabelecimentos-de-saude",
     "resource_url": "https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/CNES/cnes_estabelecimentos_csv.zip",
-    "obtained_at": "2026-10-31T15:23:18Z",
+    "obtained_at": "2026-11-01T16:06:22Z",
     "last_modified": "Sat, 31 Oct 2026 06:50:54 GMT",
     "etag": "edea274d97ead9b83616d80a81c40a45-7",
     "sha256": "5e945e27139c7317a2c1968e5c64b5b2bfb2df95672cb5d9c12026e15ccc99c3",
@@ -18,7 +18,7 @@
   "population_source": {
     "catalog_url": "https://www.ibge.gov.br/estatisticas/sociais/populacao/9103-estimativas-de-populacao.html",
     "resource_url": "https://apisidra.ibge.gov.br/values/t/6579/n3/all/v/9324/p/last%201?formato=json",
-    "obtained_at": "2026-10-31T15:23:18Z",
+    "obtained_at": "2026-11-01T16:06:22Z",
     "last_modified": "não informado",
     "etag": "não informado",
     "sha256": "17389fa5c36be0efa240441fe4011080d9a27b338befb3c8049c4a81da8be946",
@@ -29,7 +29,7 @@
   "beds_source": {
     "catalog_url": "https://dadosabertos.saude.gov.br/dataset/hospitais-e-leitos",
     "resource_url": "https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/Leitos_SUS/Leitos_csv_2026.zip",
-    "obtained_at": "2026-10-31T15:23:18Z",
+    "obtained_at": "2026-11-01T16:06:22Z",
     "last_modified": "Wed, 21 Oct 2026 02:23:24 GMT",
     "etag": "9e2095aa65a8d43fff65c002f3e3dad2",
     "sha256": "9e36112332b486a265890ad5327e0c7ba86a5d4ed000ece455f12838739d9157",
@@ -42,7 +42,7 @@
   "teams_source": {
     "catalog_url": "https://datasus.saude.gov.br/cnes-equipes-de-saude/",
     "resource_url": "http://tabnet.datasus.gov.br/cgi/tabcgi.exe?cnes/cnv/equipebr.def",
-    "obtained_at": "2026-10-31T15:23:18Z",
+    "obtained_at": "2026-11-01T16:06:22Z",
     "last_modified": "não informado",
     "etag": "não informado",
     "sha256": "d87aa953c487c91d9e9b5e69b297d41ee494dfa9edc3f31a13f15c7785de73b5",
@@ -55,7 +55,7 @@
   "services_source": {
     "catalog_url": "https://datasus.saude.gov.br/cnes-estabelecimentos/",
     "resource_url": "http://tabnet.datasus.gov.br/cgi/tabcgi.exe?cnes/cnv/servc2br.def",
-    "obtained_at": "2026-10-31T15:23:18Z",
+    "obtained_at": "2026-11-01T16:06:22Z",
     "last_modified": "não informado",
     "etag": "não informado",
     "sha256": "ee3b93da03d84db1b4bc04a6f1f3f92af3bb7710772d1a3a92c104d266430d19",
