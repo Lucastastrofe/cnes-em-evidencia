@@ -54,6 +54,31 @@ def format_rate(value: float) -> str:
     return f"{value:,.0f}".replace(",", ".")
 
 
+def style_chart(chart):
+    return (
+        chart.configure_view(stroke=None)
+        .configure_axis(
+            domain=False,
+            gridColor="#E3E9E5",
+            gridOpacity=0.75,
+            labelColor="#43534D",
+            labelFontSize=12,
+            tickColor="#BAC6C0",
+            titleColor="#2B3934",
+            titleFontSize=13,
+            titleFontWeight=600,
+            titlePadding=12,
+        )
+        .configure_legend(
+            labelColor="#43534D",
+            labelFontSize=12,
+            titleColor="#2B3934",
+            titleFontSize=12,
+            symbolStrokeWidth=3,
+        )
+    )
+
+
 def render_source_facts(items: list[tuple[str, str]]) -> None:
     facts = "".join(
         f'<div class="source-fact"><span>{label}</span><strong>{value}</strong></div>'
@@ -67,17 +92,31 @@ def render_definition_grid(items: list[tuple[str, str]]) -> None:
         f'<div class="definition"><strong>{title}</strong><p>{description}</p></div>'
         for title, description in items
     )
-    st.markdown(f'<div class="definition-grid">{definitions}</div>', unsafe_allow_html=True)
+    with st.expander("Como ler esta etapa"):
+        st.markdown(
+            f'<div class="definition-grid">{definitions}</div>',
+            unsafe_allow_html=True,
+        )
 
 
 def render_panel_question(title: str, description: str, accent: str) -> None:
     st.markdown(
         (
-            f'<section class="question-block" style="--panel-accent: {accent}">'
-            '<span>Pergunta central</span>'
+            f'<section class="analysis-intro" style="--panel-accent: {accent}">'
+            '<span>O que esta etapa responde</span>'
             f'<h2>{title}</h2>'
             f'<p>{description}</p>'
             "</section>"
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def render_scope_note(description: str) -> None:
+    st.markdown(
+        (
+            '<div class="scope-alert"><strong>Limite de leitura</strong>'
+            f"<p>{description}</p></div>"
         ),
         unsafe_allow_html=True,
     )
@@ -218,7 +257,7 @@ def render_population_panel(dashboard: dict, audit: dict) -> None:
         ]
     )
 
-    st.info(
+    render_scope_note(
         "Uma taxa maior não significa, por si só, melhor oferta ou acesso à saúde. O indicador "
         "mostra presença cadastral relativa e orienta onde aprofundar a análise."
     )
@@ -332,41 +371,17 @@ def render_population_panel(dashboard: dict, audit: dict) -> None:
         relationship_chart += labels
     relationship_chart = relationship_chart.properties(height=430)
 
-    ranking_bars = (
-        alt.Chart(comparison)
-        .mark_bar(color="#2F6F83", cornerRadiusEnd=4, opacity=0.86)
-        .encode(
-            x=alt.X(
-                "Cadastros por 100 mil habitantes:Q",
-                title="Cadastros por 100 mil habitantes",
-            ),
-            y=alt.Y(
-                "UF:N",
-                sort=alt.SortField(
-                    field="Cadastros por 100 mil habitantes",
-                    order="descending",
-                ),
-                title=None,
-            ),
-            tooltip=[
-                alt.Tooltip("UF:N"),
-                alt.Tooltip("Cadastros por 100 mil habitantes:Q", format=".0f"),
-            ],
-        )
-    )
-    ranking_chart = ranking_bars.properties(height=max(280, len(comparison) * 24))
+    relationship_chart = style_chart(relationship_chart)
 
-    relationship_tab, ranking_tab, rate_table_tab = st.tabs(
-        ["População × cadastros", "Ranking por taxa", "Dados da seleção"]
+    relationship_tab, rate_table_tab = st.tabs(
+        ["Relação entre população e cadastros", "Ranking e valores"]
     )
     with relationship_tab:
         st.caption(
             "A linha tracejada representa a taxa ponderada do recorte. Pontos acima dela têm "
             "mais cadastros por habitante; pontos abaixo têm menos."
         )
-        st.altair_chart(relationship_chart, width="stretch")
-    with ranking_tab:
-        st.altair_chart(ranking_chart, width="stretch")
+        st.altair_chart(relationship_chart, width="stretch", theme=None)
     with rate_table_tab:
         st.dataframe(
             comparison[
@@ -457,7 +472,7 @@ def render_bed_panel(dashboard: dict, audit: dict) -> None:
         ]
     )
 
-    st.info(
+    render_scope_note(
         "O cadastro descreve capacidade instalada e não informa ocupação ou disponibilidade em tempo real. "
         "Uma taxa maior também não comprova acesso, suficiência ou qualidade."
     )
@@ -546,8 +561,9 @@ def render_bed_panel(dashboard: dict, audit: dict) -> None:
                 ),
                 legend=alt.Legend(
                     labelLimit=0,
-                    orient="top",
-                    direction="horizontal",
+                    orient="bottom",
+                    direction="vertical",
+                    columns=1,
                     title="Composição do total",
                 ),
             ),
@@ -561,7 +577,7 @@ def render_bed_panel(dashboard: dict, audit: dict) -> None:
             ],
         )
     )
-    labels = alt.Chart(chart_source).mark_text(align="right", dx=-6, color="#183A39").encode(
+    labels = alt.Chart(chart_source).mark_text(align="left", dx=7, color="#183A39").encode(
         x=alt.X("Total:Q", stack=None),
         y=alt.Y(
             "UF:N",
@@ -570,14 +586,16 @@ def render_bed_panel(dashboard: dict, audit: dict) -> None:
         ),
         text=alt.Text("Percentual SUS:N"),
     )
-    capacity_chart = (bars + labels).properties(height=max(280, len(comparison) * 28))
+    capacity_chart = style_chart(
+        (bars + labels).properties(height=max(300, len(comparison) * 29))
+    )
     chart_tab, table_tab = st.tabs(["Comparação visual", "Dados da seleção"])
     with chart_tab:
         st.caption(
             "Cada barra representa o total da UF. Verde escuro: leitos destinados ao SUS. "
-            "Verde claro: demais leitos cadastrados. O número na barra mostra a parcela SUS."
+            "Verde claro: demais leitos cadastrados. O percentual ao lado mostra a parcela SUS."
         )
-        st.altair_chart(capacity_chart, width="stretch")
+        st.altair_chart(capacity_chart, width="stretch", theme=None)
     with table_tab:
         st.dataframe(
             comparison[
@@ -686,7 +704,7 @@ def render_bed_history_panel(dashboard: dict, audit: dict) -> None:
             ),
         ]
     )
-    st.info(
+    render_scope_note(
         "A série descreve mudanças no cadastro. Ela não informa ocupação, disponibilidade em "
         "tempo real, demanda, acesso ou qualidade da assistência."
     )
@@ -792,30 +810,61 @@ def render_bed_history_panel(dashboard: dict, audit: dict) -> None:
     color = alt.Color(
         "UF:N",
         title="UF" if selected_ufs else None,
-        legend=alt.Legend(orient="top") if selected_ufs else None,
+        legend=alt.Legend(orient="top", columns=5) if selected_ufs else None,
+        scale=alt.Scale(range=["#176B52", "#2F6F83", "#955A43", "#596A91", "#B77A2F"]),
     )
-    history_chart = (
+    history_lines = (
         alt.Chart(comparison)
-        .mark_line(point=True, strokeWidth=3)
+        .mark_line(point=alt.OverlayMarkDef(size=55, filled=True), strokeWidth=2.8)
         .encode(
             x=alt.X(
-                "Data:T",
+                "Competência:O",
                 title="Competência",
-                axis=alt.Axis(format="%m/%Y", labelAngle=0),
+                sort=alt.SortField(field="Data", order="ascending"),
+                axis=alt.Axis(labelAngle=-35),
             ),
-            y=alt.Y("Valor exibido:Q", title=value_column, axis=alt.Axis(format=".0f")),
+            y=alt.Y(
+                "Valor exibido:Q",
+                title=value_column,
+                axis=alt.Axis(format=".0f"),
+                scale=alt.Scale(zero=False, padding=18),
+            ),
             color=color,
+            order=alt.Order("Data:T"),
             tooltip=[
                 alt.Tooltip("Competência:N"),
                 alt.Tooltip("UF:N"),
                 alt.Tooltip("Valor exibido:Q", title=value_column, format=",.0f"),
             ],
         )
-        .properties(height=430)
     )
+    latest_rows = comparison.loc[comparison["Data"] == comparison["Data"].max()].copy()
+    latest_rows["Rótulo final"] = latest_rows.apply(
+        lambda row: (
+            f'{row["UF"]} · {format_integer(int(row["Valor exibido"]))}'
+            if selected_ufs
+            else format_integer(int(row["Valor exibido"]))
+        ),
+        axis=1,
+    )
+    latest_labels = (
+        alt.Chart(latest_rows)
+        .mark_text(align="right", dx=-8, fontSize=12, fontWeight=600)
+        .encode(
+            x=alt.X(
+                "Competência:O",
+                sort=alt.SortField(field="Data", order="ascending"),
+            ),
+            y=alt.Y("Valor exibido:Q"),
+            color=color,
+            text=alt.Text("Rótulo final:N"),
+        )
+    )
+    history_chart = style_chart((history_lines + latest_labels).properties(height=430))
     chart_tab, data_tab = st.tabs(["Evolução", "Dados da série"])
     with chart_tab:
-        st.altair_chart(history_chart, width="stretch")
+        st.caption("A escala vertical acompanha a faixa observada para tornar as mudanças mensais legíveis.")
+        st.altair_chart(history_chart, width="stretch", theme=None)
     with data_tab:
         table = comparison[["Competência", "UF", count_column, rate_column]].copy()
         table[count_column] = table[count_column].round().astype(int)
@@ -895,7 +944,7 @@ def render_team_panel(dashboard: dict, audit: dict) -> None:
             ),
         ]
     )
-    st.info(
+    render_scope_note(
         "O total reúne registros de equipes ativas e não representa quantidade de profissionais, "
         "atendimentos realizados, cobertura efetiva ou qualidade da assistência."
     )
@@ -947,22 +996,29 @@ def render_team_panel(dashboard: dict, audit: dict) -> None:
         "e da população do recorte, sem média simples entre estados."
     )
 
-    state_chart = (
-        alt.Chart(comparison)
-        .mark_circle(color="#596A91", size=110)
+    state_chart_source = comparison.copy()
+    state_chart_source["Início"] = 0
+    state_order = state_chart_source.sort_values(
+        "Equipes por 100 mil habitantes", ascending=False
+    )["UF"].tolist()
+    state_rules = (
+        alt.Chart(state_chart_source)
+        .mark_rule(color="#C8D0DD", strokeWidth=3)
+        .encode(
+            x=alt.X("Início:Q", title="Equipes por 100 mil habitantes"),
+            x2=alt.X2("Equipes por 100 mil habitantes:Q"),
+            y=alt.Y("UF:N", sort=state_order, title=None),
+        )
+    )
+    state_points = (
+        alt.Chart(state_chart_source)
+        .mark_point(color="#596A91", filled=True, size=105)
         .encode(
             x=alt.X(
                 "Equipes por 100 mil habitantes:Q",
                 title="Equipes por 100 mil habitantes",
             ),
-            y=alt.Y(
-                "UF:N",
-                sort=alt.SortField(
-                    field="Equipes por 100 mil habitantes",
-                    order="descending",
-                ),
-                title=None,
-            ),
+            y=alt.Y("UF:N", sort=state_order, title=None),
             tooltip=[
                 alt.Tooltip("UF:N"),
                 alt.Tooltip("Equipes cadastradas:Q", format=",.0f"),
@@ -970,24 +1026,48 @@ def render_team_panel(dashboard: dict, audit: dict) -> None:
                 alt.Tooltip("Equipes por 100 mil habitantes:Q", format=".0f"),
             ],
         )
-        .properties(height=max(280, len(comparison) * 25))
     )
-    type_chart_data = type_totals.head(12).copy()
+    state_chart = style_chart(
+        (state_rules + state_points).properties(height=max(300, len(comparison) * 26))
+    )
+    type_chart_data = type_totals.head(10).copy()
+    if len(type_totals) > 10:
+        remaining = pd.DataFrame(
+            [
+                {
+                    "team_code": "—",
+                    "team_name": f"Demais {len(type_totals) - 10} tipos",
+                    "teams": int(type_totals.iloc[10:]["teams"].sum()),
+                }
+            ]
+        )
+        type_chart_data = pd.concat([type_chart_data, remaining], ignore_index=True)
     type_chart_data["Participação"] = (
         type_chart_data["teams"] / selected_teams if selected_teams else 0
     )
     type_chart_data["Tipo"] = type_chart_data.apply(
-        lambda row: f'{row["team_code"]} · {row["team_name"].split(" - ", 1)[0]}',
+        lambda row: (
+            row["team_name"]
+            if row["team_code"] == "—"
+            else f'{row["team_code"]} · {row["team_name"].split(" - ", 1)[0]}'
+        ),
         axis=1,
     )
-    type_chart = (
+    type_chart_data["Rótulo"] = type_chart_data.apply(
+        lambda row: (
+            f'{format_integer(int(row["teams"]))} · {format_percent(row["Participação"])}'
+        ),
+        axis=1,
+    )
+    type_order = type_chart_data.sort_values("teams", ascending=False)["Tipo"].tolist()
+    type_bars = (
         alt.Chart(type_chart_data)
         .mark_bar(color="#596A91", cornerRadiusEnd=4)
         .encode(
             x=alt.X("teams:Q", title="Equipes cadastradas"),
             y=alt.Y(
                 "Tipo:N",
-                sort=alt.SortField(field="teams", order="descending"),
+                sort=type_order,
                 title=None,
             ),
             tooltip=[
@@ -997,7 +1077,21 @@ def render_team_panel(dashboard: dict, audit: dict) -> None:
                 alt.Tooltip("Participação:Q", title="Participação no recorte", format=".1%"),
             ],
         )
-        .properties(height=max(340, len(type_chart_data) * 34))
+    )
+    type_labels = (
+        alt.Chart(type_chart_data)
+        .mark_text(align="left", dx=7, color="#34403C", fontSize=11)
+        .encode(
+            x=alt.X("teams:Q"),
+            y=alt.Y(
+                "Tipo:N",
+                sort=type_order,
+            ),
+            text=alt.Text("Rótulo:N"),
+        )
+    )
+    type_chart = style_chart(
+        (type_bars + type_labels).properties(height=max(350, len(type_chart_data) * 36))
     )
 
     type_tab, state_tab, data_tab = st.tabs(
@@ -1008,13 +1102,13 @@ def render_team_panel(dashboard: dict, audit: dict) -> None:
             "Os tipos aparecem exatamente como publicados no TabNet. Categorias históricas e "
             "atuais continuam separadas para não alterar o significado da fonte."
         )
-        st.altair_chart(type_chart, width="stretch")
+        st.altair_chart(type_chart, width="stretch", theme=None)
     with state_tab:
         st.caption(
             "Cada ponto representa uma UF. A posição mostra os registros de equipes em relação "
             "à população estimada."
         )
-        st.altair_chart(state_chart, width="stretch")
+        st.altair_chart(state_chart, width="stretch", theme=None)
     with data_tab:
         st.dataframe(
             comparison[
@@ -1099,7 +1193,7 @@ def render_service_panel(dashboard: dict, audit: dict) -> None:
             ),
         ]
     )
-    st.info(
+    render_scope_note(
         "O cadastro indica que uma classificação foi informada ao CNES. "
         "Ele não comprova atendimento realizado, disponibilidade operacional, "
         "capacidade instalada ou produção."
@@ -1192,21 +1286,48 @@ def render_service_panel(dashboard: dict, audit: dict) -> None:
         "Ausência de registro não comprova ausência do serviço."
     )
 
-    classification_bars = (
-        alt.Chart(classification_comparison)
-        .mark_bar(color="#955A43", cornerRadiusEnd=4, opacity=0.88)
+    classification_chart_data = classification_comparison.copy()
+    classification_chart_data["Início"] = 0
+    classification_chart_data["Posição"] = classification_chart_data[
+        "Registros por 100 mil habitantes"
+    ].apply(
+        lambda value: "Acima da taxa nacional"
+        if value >= selected_rate
+        else "Abaixo da taxa nacional"
+    )
+    classification_order = classification_chart_data.sort_values(
+        "Registros por 100 mil habitantes", ascending=False
+    )["UF"].tolist()
+    classification_rules = (
+        alt.Chart(classification_chart_data)
+        .mark_rule(color="#E1D2CB", strokeWidth=3)
+        .encode(
+            x=alt.X(
+                "Início:Q",
+                title="Registros da classificação por 100 mil habitantes",
+            ),
+            x2=alt.X2("Registros por 100 mil habitantes:Q"),
+            y=alt.Y("UF:N", sort=classification_order, title=None),
+        )
+    )
+    classification_points = (
+        alt.Chart(classification_chart_data)
+        .mark_point(filled=True, size=105)
         .encode(
             x=alt.X(
                 "Registros por 100 mil habitantes:Q",
                 title="Registros da classificação por 100 mil habitantes",
             ),
-            y=alt.Y(
-                "UF:N",
-                sort=alt.SortField(
-                    field="Registros por 100 mil habitantes",
-                    order="descending",
+            y=alt.Y("UF:N", sort=classification_order, title=None),
+            color=alt.Color(
+                "Posição:N",
+                scale=alt.Scale(
+                    domain=["Acima da taxa nacional", "Abaixo da taxa nacional"],
+                    range=["#955A43", "#C8A99A"],
                 ),
-                title=None,
+                legend=alt.Legend(
+                    orient="bottom", direction="vertical", columns=1, title=None
+                ),
             ),
             tooltip=[
                 alt.Tooltip("UF:N"),
@@ -1216,30 +1337,15 @@ def render_service_panel(dashboard: dict, audit: dict) -> None:
             ],
         )
     )
-    classification_state_chart = classification_bars.properties(
-        height=max(300, len(classification_comparison) * 25)
+    national_reference = (
+        alt.Chart(pd.DataFrame({"Taxa nacional": [selected_rate]}))
+        .mark_rule(color="#603927", strokeDash=[6, 4], strokeWidth=2)
+        .encode(x=alt.X("Taxa nacional:Q"))
     )
-
-    overview_data = classification_totals.head(12).copy()
-    overview_chart = (
-        alt.Chart(overview_data)
-        .mark_bar(color="#955A43", cornerRadiusEnd=4)
-        .encode(
-            x=alt.X("service_records:Q", title="Registros"),
-            y=alt.Y(
-                "Opção:N",
-                sort=alt.SortField(field="service_records", order="descending"),
-                title=None,
-                axis=alt.Axis(labelLimit=320),
-            ),
-            tooltip=[
-                alt.Tooltip("classification_code:N", title="Código"),
-                alt.Tooltip("service_name:N", title="Serviço"),
-                alt.Tooltip("classification_name:N", title="Classificação"),
-                alt.Tooltip("service_records:Q", title="Registros", format=",.0f"),
-            ],
+    classification_state_chart = style_chart(
+        (classification_rules + classification_points + national_reference).properties(
+            height=max(320, len(classification_comparison) * 26)
         )
-        .properties(height=max(340, len(overview_data) * 31))
     )
 
     location_tab, overview_tab, data_tab = st.tabs(
@@ -1250,13 +1356,29 @@ def render_service_panel(dashboard: dict, audit: dict) -> None:
             "O gráfico usa somente a classificação escolhida. Os valores são proporcionais à "
             "população para permitir comparação entre estados de tamanhos diferentes."
         )
-        st.altair_chart(classification_state_chart, width="stretch")
+        st.caption("A linha tracejada marca a taxa nacional da classificação selecionada.")
+        st.altair_chart(classification_state_chart, width="stretch", theme=None)
     with overview_tab:
         st.caption(
             "As doze classificações com mais registros ajudam a dimensionar a fonte, mas não "
             "substituem a análise individual de cada categoria."
         )
-        st.altair_chart(overview_chart, width="stretch")
+        overview_data = classification_totals.head(12).copy()
+        st.dataframe(
+            overview_data[
+                ["classification_code", "service_name", "classification_name", "service_records"]
+            ].rename(
+                columns={
+                    "classification_code": "Código",
+                    "service_name": "Serviço",
+                    "classification_name": "Classificação",
+                    "service_records": "Registros",
+                }
+            ),
+            width="stretch",
+            hide_index=True,
+            column_config={"Registros": st.column_config.NumberColumn(format="localized")},
+        )
     with data_tab:
         table = classification_states.copy()
         table["Registros por 100 mil habitantes"] = (
@@ -1349,11 +1471,66 @@ def render_quality_panel(dashboard: dict, audit: dict) -> None:
         detail_b.metric("Ocorrências", format_integer(int(detail["Ocorrências"])))
         detail_c.metric("Taxa de ocorrências", format_percent(detail["Taxa de ocorrências"]))
 
-    chart_tab, table_tab = st.tabs(["Distribuição por UF", "Tabela completa"])
+    states["Início"] = 0
+    states["Leitura"] = states["Taxa de ocorrências"].apply(
+        lambda value: "Acima da taxa nacional"
+        if value >= missing_location["failure_rate"]
+        else "Abaixo da taxa nacional"
+    )
+    quality_order = states.sort_values("Taxa de ocorrências", ascending=False)["UF"].tolist()
+    quality_rules = (
+        alt.Chart(states)
+        .mark_rule(color="#E2D2C4", strokeWidth=3)
+        .encode(
+            x=alt.X("Início:Q", title="Registros sem o par completo de coordenadas"),
+            x2=alt.X2("Taxa de ocorrências:Q"),
+            y=alt.Y("UF:N", sort=quality_order, title=None),
+        )
+    )
+    quality_points = (
+        alt.Chart(states)
+        .mark_point(filled=True, size=105)
+        .encode(
+            x=alt.X(
+                "Taxa de ocorrências:Q",
+                title="Registros sem o par completo de coordenadas",
+                axis=alt.Axis(format=".0%"),
+            ),
+            y=alt.Y("UF:N", sort=quality_order, title=None),
+            color=alt.Color(
+                "Leitura:N",
+                scale=alt.Scale(
+                    domain=["Acima da taxa nacional", "Abaixo da taxa nacional"],
+                    range=["#8B4A1D", "#D3AD8E"],
+                ),
+                legend=alt.Legend(
+                    orient="bottom", direction="vertical", columns=1, title=None
+                ),
+            ),
+            tooltip=[
+                alt.Tooltip("UF:N"),
+                alt.Tooltip("Registros:Q", format=",.0f"),
+                alt.Tooltip("Ocorrências:Q", format=",.0f"),
+                alt.Tooltip("Taxa de ocorrências:Q", format=".1%"),
+            ],
+        )
+    )
+    quality_reference = (
+        alt.Chart(pd.DataFrame({"Taxa nacional": [missing_location["failure_rate"]]}))
+        .mark_rule(color="#5E3217", strokeDash=[6, 4], strokeWidth=2)
+        .encode(x=alt.X("Taxa nacional:Q"))
+    )
+    quality_chart = style_chart(
+        (quality_rules + quality_points + quality_reference).properties(height=620)
+    )
+
+    chart_tab, table_tab = st.tabs(["Impacto geográfico por UF", "Tabela completa"])
     with chart_tab:
-        top_states = states.nlargest(10, "Registros").set_index("UF")
-        st.bar_chart(top_states["Registros"], horizontal=True, color="#176B52")
-        st.caption("Dez UFs com maior quantidade de registros na fonte mais recente verificada.")
+        st.caption(
+            "Cada ponto mostra a parcela de registros sem latitude e longitude completas. "
+            "A linha tracejada representa a taxa nacional."
+        )
+        st.altair_chart(quality_chart, width="stretch", theme=None)
     with table_tab:
         quality_states = states[["UF", "Registros", "Ocorrências", "Taxa de ocorrências"]]
         st.dataframe(
@@ -1395,10 +1572,61 @@ def render_quality_panel(dashboard: dict, audit: dict) -> None:
 
     st.subheader("Tipo de gestão")
     management_rows = dashboard["by_management"]
-    management = pd.DataFrame(management_rows).set_index("label")
+    management = pd.DataFrame(management_rows)
+    management["Participação"] = management["records"] / summary["total_records"]
+    management["Rótulo"] = management.apply(
+        lambda row: (
+            f'{format_integer(int(row["records"]))} · {format_percent(row["Participação"])}'
+        ),
+        axis=1,
+    )
+    management["Situação"] = management["code"].map(
+        lambda code: "Sem informação" if code == "S" else "Gestão informada"
+    )
+    management_order = management.sort_values("records", ascending=False)["label"].tolist()
+    management_bars = (
+        alt.Chart(management)
+        .mark_bar(cornerRadiusEnd=3)
+        .encode(
+            x=alt.X("records:Q", title="Registros"),
+            y=alt.Y(
+                "label:N",
+                sort=management_order,
+                title=None,
+            ),
+            color=alt.Color(
+                "Situação:N",
+                scale=alt.Scale(
+                    domain=["Gestão informada", "Sem informação"],
+                    range=["#2B716F", "#B26A3B"],
+                ),
+                legend=None,
+            ),
+            tooltip=[
+                alt.Tooltip("label:N", title="Tipo de gestão"),
+                alt.Tooltip("records:Q", title="Registros", format=",.0f"),
+                alt.Tooltip("Participação:Q", format=".3%"),
+            ],
+        )
+    )
+    management_labels = (
+        alt.Chart(management)
+        .mark_text(align="left", dx=7, color="#34403C", fontSize=11)
+        .encode(
+            x=alt.X("records:Q"),
+            y=alt.Y(
+                "label:N",
+                sort=management_order,
+            ),
+            text=alt.Text("Rótulo:N"),
+        )
+    )
+    management_distribution = style_chart(
+        (management_bars + management_labels).properties(height=220)
+    )
     management_chart, management_note = st.columns([3, 1])
     with management_chart:
-        st.bar_chart(management["records"], horizontal=True, color="#2B716F")
+        st.altair_chart(management_distribution, width="stretch", theme=None)
     with management_note:
         unknown_management = management_without_information(
             management_rows, summary["total_records"]
@@ -1432,40 +1660,45 @@ def render() -> None:
         :root {
             --ink: #17231f;
             --muted: #586760;
-            --line: #d7dfda;
-            --surface: #f7f9f7;
+            --line: #cfd8d3;
+            --surface: #f5f4ef;
             --green: #176b52;
             --green-dark: #124c3c;
             --green-soft: #eaf3ee;
             --amber: #8b4a1d;
             --amber-soft: #fbf2e8;
         }
-        .stApp {background: #fcfdfc;}
-        .block-container {max-width: 1160px; padding-top: 3rem; padding-bottom: 5rem;}
+        .stApp {background: #fbfaf6;}
+        .block-container {max-width: 1240px; padding-top: 3.4rem; padding-bottom: 5rem;}
         h1, h2, h3 {color: var(--ink); letter-spacing: -0.025em;}
-        h1 {font-size: clamp(2.25rem, 5vw, 3.65rem); line-height: 1.02; margin-bottom: 0.75rem;}
-        h2, h3 {margin-top: 2.4rem;}
+        h1 {font-size: clamp(2.35rem, 5vw, 4rem); line-height: 1; margin-bottom: 0.85rem; max-width: 930px;}
+        h2, h3 {margin-top: 2.7rem;}
         .eyebrow {color: var(--green); font-size: 0.72rem; font-weight: 750; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.65rem;}
         .deck {color: var(--muted); font-size: 1.12rem; line-height: 1.55; max-width: 780px; margin: 0 0 1.25rem;}
-        .question-block {border-left: 4px solid var(--panel-accent); background: var(--surface); padding: 1.15rem 1.3rem; margin: 2rem 0 1.4rem;}
-        .question-block span {color: var(--panel-accent); display: block; font-size: 0.68rem; font-weight: 750; letter-spacing: 0.12em; text-transform: uppercase;}
-        .question-block h2 {font-size: 1.45rem; line-height: 1.25; margin: 0.35rem 0 0.45rem;}
-        .question-block p {color: var(--muted); line-height: 1.55; margin: 0; max-width: 860px;}
-        .source-grid {display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); margin: 1.25rem 0 2.25rem;}
-        .source-fact {background: var(--surface); padding: 0.85rem 1rem; min-height: 76px;}
+        .analysis-intro {border-top: 2px solid var(--panel-accent); border-bottom: 1px solid var(--line); padding: 1.2rem 0 1.35rem; margin: 2.2rem 0 1rem; display: grid; grid-template-columns: minmax(150px,.34fr) minmax(0,1fr); column-gap: 2rem;}
+        .analysis-intro span {color: var(--panel-accent); display: block; font-size: 0.68rem; font-weight: 750; letter-spacing: 0.12em; text-transform: uppercase; padding-top: .3rem;}
+        .analysis-intro h2 {font-size: 1.55rem; line-height: 1.22; margin: 0;}
+        .analysis-intro p {color: var(--muted); line-height: 1.55; margin: 0.6rem 0 0; max-width: 860px; grid-column: 2;}
+        .source-grid {display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 1.4rem 0 2.4rem;}
+        .source-fact {padding: 0.9rem 1rem 0.9rem 0; min-height: 72px;}
+        .source-fact + .source-fact {border-left: 1px solid var(--line); padding-left: 1rem;}
         .source-fact span {display: block; color: var(--muted); font-size: 0.72rem; letter-spacing: 0.04em; margin-bottom: 0.3rem;}
         .source-fact strong {color: var(--ink); font-size: 0.92rem; font-weight: 650;}
-        .definition-grid {display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: 1.2rem 0 1.35rem;}
-        .definition {border: 1px solid var(--line); border-radius: 0.45rem; padding: 1.05rem 1.1rem; background: var(--surface);}
+        .definition-grid {display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.3rem; margin: 0.4rem 0 0.7rem;}
+        .definition {border-top: 2px solid var(--line); padding: 0.85rem 0 0;}
         .definition strong {display: block; color: var(--ink); margin-bottom: 0.45rem;}
         .definition p {color: var(--muted); font-size: 0.88rem; line-height: 1.55; margin: 0;}
-        [data-testid="stMetric"] {border-top: 2px solid var(--green-dark); padding: 0.85rem 0.15rem 0;}
+        .scope-alert {border-left: 3px solid var(--amber); margin: 1.1rem 0 1.8rem; padding: .2rem 0 .2rem 1rem; max-width: 980px;}
+        .scope-alert strong {color: var(--amber); display: block; font-size: .72rem; letter-spacing: .09em; text-transform: uppercase; margin-bottom: .25rem;}
+        .scope-alert p {color: var(--muted); line-height: 1.55; margin: 0;}
+        [data-testid="stMetric"] {border-top: 2px solid var(--green-dark); padding: 0.9rem 0.15rem 0;}
         [data-testid="stMetricLabel"] {color: var(--muted);}
         [data-testid="stMetricValue"] {color: var(--ink); font-size: clamp(1.75rem, 3vw, 2.2rem); letter-spacing: -0.035em;}
         [data-testid="stSidebar"] {background: #f3f6f4; border-right: 1px solid var(--line);}
         [data-testid="stSidebarNav"] a {border-radius: 0.35rem; margin: 0.25rem 0; min-height: 44px;}
         [data-testid="stSidebarNav"] a:hover {background: #e4eee8;}
-        [data-testid="stTabs"] button {min-height: 44px;}
+        [data-testid="stTabs"] button {min-height: 44px; font-weight: 650;}
+        [data-testid="stExpander"] {border: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; margin: 1rem 0 1.2rem;}
         [data-testid="stDataFrame"] {border: 1px solid var(--line); border-radius: 0.35rem; overflow: hidden;}
         .verdict {background: var(--green-soft); border-left: 4px solid var(--green); padding: 1.05rem 1.2rem; margin: 1.5rem 0 2rem;}
         .verdict strong {display: block; color: var(--ink); font-size: 1.2rem; margin: 0.2rem 0;}
@@ -1478,6 +1711,9 @@ def render() -> None:
         @media (max-width: 640px) {
             .block-container {padding-top: 3.25rem;}
             .source-grid, .definition-grid {grid-template-columns: 1fr;}
+            .source-fact + .source-fact {border-left: 0; border-top: 1px solid var(--line); padding-left: 0;}
+            .analysis-intro {grid-template-columns: 1fr; gap: .45rem;}
+            .analysis-intro p {grid-column: 1;}
             .finding-grid {grid-template-columns: 1fr; gap: 0.65rem;}
         }
         </style>

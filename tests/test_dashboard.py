@@ -42,7 +42,10 @@ class DashboardContractTest(unittest.TestCase):
         }
         self.assertIn("set_page_config", calls)
         self.assertIn("metric", calls)
-        self.assertIn("bar_chart", calls)
+        self.assertIn("altair_chart", calls)
+        self.assertIn("mark_line", calls)
+        self.assertIn("mark_point", calls)
+        self.assertIn("mark_bar", calls)
         self.assertIn("dataframe", calls)
         self.assertIn("selectbox", calls)
 
@@ -217,12 +220,20 @@ class DashboardContractTest(unittest.TestCase):
         self.assertIn("não é a média simples", self.source)
 
     def test_each_analytical_part_has_its_own_primary_reading(self):
-        self.assertIn("População × cadastros", self.source)
+        self.assertIn("Relação entre população e cadastros", self.source)
         self.assertIn("Quanto da capacidade cadastrada está destinada ao SUS?", self.source)
         self.assertIn("Composição por tipo", self.source)
         self.assertIn("Classificação do serviço", self.source)
         self.assertIn("Onde aparece", self.source)
         self.assertIn("O cadastro de leitos mudou entre uma competência", self.source)
+
+    def test_primary_charts_match_the_analytical_relationship(self):
+        self.assertIn("Impacto geográfico por UF", self.source)
+        self.assertIn('mark_circle(size=150', self.source)
+        self.assertIn('stack="zero"', self.source)
+        self.assertIn('Demais {len(type_totals) - 10} tipos', self.source)
+        self.assertIn("A linha tracejada marca a taxa nacional", self.source)
+        self.assertIn("A escala vertical acompanha a faixa observada", self.source)
 
     def test_bed_counts_and_rates_are_displayed_without_fractional_units(self):
         self.assertIn('.round().astype(int)', self.source)
