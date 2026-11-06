@@ -107,6 +107,10 @@ Quais problemas de completude, unicidade e validade aparecem no cadastro naciona
 28. O painel permite escolher indicador, escala e até cinco UFs sem exibir unidades fracionárias.
 29. O denominador populacional usado nas taxas permanece identificado e constante ao longo da série.
 30. A interface informa que variação cadastral não mede ocupação, disponibilidade, demanda, acesso ou qualidade assistencial.
+31. Cada etapa usa uma evidência visual adequada à pergunta: taxa por UF, relação entre medidas, composição, distribuição categórica ou evolução temporal.
+32. Contagens de estabelecimentos, equipes, serviços e leitos são exibidas como números inteiros; percentuais e taxas permanecem identificados pela unidade.
+33. A leitura principal, a unidade, a referência e o limite de interpretação continuam visíveis em desktop e em tela estreita, sem depender de hover.
+34. O painel evita repetir o mesmo gráfico e a mesma estrutura de cartões em todas as etapas; definições detalhadas ficam disponíveis sob demanda.
 
 ## Restrições e riscos
 
@@ -145,4 +149,4 @@ Fato verificado: o TabNet do CNES disponibilizou a competência 09/2026 para ser
 
 ## Situação em 2026-11-06
 
-Fato verificado localmente: as oito competências de 01/2026 a 08/2026 do arquivo anual de leitos passaram pelos mesmos controles de cobertura, unicidade e consistência. Foram reconciliadas 57.608 linhas mensais. O total nacional foi de 521.602 leitos em janeiro e 523.117 em agosto, com oscilações entre os meses. A sexta parte passou a publicar essa série em recortes de Brasil e UF, mantendo a população estimada de 2026 como denominador das taxas. A publicação externa ainda depende de commit e execução do fluxo no GitHub.
+Fato verificado: as nove competências de 01/2026 a 09/2026 do arquivo anual de leitos passaram pelos mesmos controles de cobertura, unicidade e consistência. Foram lidas 64.838 linhas mensais. O total nacional foi de 521.602 leitos em janeiro e 524.000 em setembro, com oscilações entre os meses. A sexta parte publica essa série em recortes de Brasil e UF, mantendo a população estimada de 2026 como denominador das taxas. A execução pública de 06/11/2026 concluiu com sucesso.

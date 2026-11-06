@@ -14,7 +14,7 @@ A quarta parte consulta a competência 09/2026 de Equipes de Saúde no TabNet. F
 
 A quinta parte consulta a competência 09/2026 de serviço/classificação no TabNet. Foram reconciliados 1.060.015 registros nas 27 UFs e em 342 classificações, o equivalente a 494,84 registros por 100 mil habitantes. O resultado pode incluir várias classificações do mesmo estabelecimento e não informa atendimento realizado, disponibilidade, capacidade ou produção.
 
-A sexta parte compara as oito competências disponíveis no arquivo anual de leitos, de 01/2026 a 08/2026. O total nacional passou de 521.602 para 523.117 leitos cadastrados no período. O painel permite acompanhar Brasil ou até cinco UFs, alternando entre total, parcela SUS, UTI e UTI SUS, em quantidade ou por 100 mil habitantes. As variações descrevem o cadastro e não permitem concluir melhora ou piora assistencial.
+A sexta parte compara as nove competências disponíveis no arquivo anual de leitos, de 01/2026 a 09/2026. O total nacional passou de 521.602 para 524.000 leitos cadastrados no período. O painel permite acompanhar Brasil ou até cinco UFs, alternando entre total, parcela SUS, UTI e UTI SUS, em quantidade ou por 100 mil habitantes. As variações descrevem o cadastro e não permitem concluir melhora ou piora assistencial.
 
 Esses resultados descrevem o arquivo processado. Eles não medem qualidade assistencial, conformidade sanitária ou disponibilidade atual de serviços.
 
