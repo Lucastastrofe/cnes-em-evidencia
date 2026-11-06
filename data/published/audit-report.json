@@ -1,25 +1,25 @@
 {
   "status": "concluído",
-  "run_id": "20261105T172744Z-3f0d150ba73f",
-  "generated_at": "2026-11-05T17:27:44Z",
+  "run_id": "20261106T134316Z-1da18197d811",
+  "generated_at": "2026-11-06T13:43:16Z",
   "process": "cnes-audit",
-  "code_version": "8bb223d4f4e47e23b20372c36c17b8a7208e0137",
+  "code_version": "9315bc8",
   "source": {
     "catalog_url": "https://dadosabertos.saude.gov.br/dataset/cnes-cadastro-nacional-de-estabelecimentos-de-saude",
     "resource_url": "https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/CNES/cnes_estabelecimentos_csv.zip",
-    "obtained_at": "2026-11-05T17:27:44Z",
-    "last_modified": "Thu, 05 Nov 2026 06:18:12 GMT",
-    "etag": "fdf07e872ce7ee0bd8328ccb8bc4b7b4-7",
-    "sha256": "3f0d150ba73f5619ed48caef1fe396bd9a366d267b1195394e75548bec1cfddd",
-    "archive_bytes": 56822698,
+    "obtained_at": "2026-11-06T13:43:16Z",
+    "last_modified": "arquivo local",
+    "etag": "não informado",
+    "sha256": "1da18197d811c171a981d8222e679e15361f32a240af6a37a6327c5b5938eed3",
+    "archive_bytes": 56620328,
     "entry_name": "cnes_estabelecimentos.csv",
-    "entry_bytes": 232579605
+    "entry_bytes": 231843479
   },
   "population_source": {
     "catalog_url": "https://www.ibge.gov.br/estatisticas/sociais/populacao/9103-estimativas-de-populacao.html",
     "resource_url": "https://apisidra.ibge.gov.br/values/t/6579/n3/all/v/9324/p/last%201?formato=json",
-    "obtained_at": "2026-11-05T17:27:44Z",
-    "last_modified": "não informado",
+    "obtained_at": "2026-11-06T13:43:16Z",
+    "last_modified": "arquivo local",
     "etag": "não informado",
     "sha256": "17389fa5c36be0efa240441fe4011080d9a27b338befb3c8049c4a81da8be946",
     "reference_year": 2026,
@@ -29,21 +29,23 @@
   "beds_source": {
     "catalog_url": "https://dadosabertos.saude.gov.br/dataset/hospitais-e-leitos",
     "resource_url": "https://s3.sa-east-1.amazonaws.com/ckan.saude.gov.br/Leitos_SUS/Leitos_csv_2026.zip",
-    "obtained_at": "2026-11-05T17:27:44Z",
-    "last_modified": "Wed, 21 Oct 2026 02:23:24 GMT",
-    "etag": "9e2095aa65a8d43fff65c002f3e3dad2",
-    "sha256": "9e36112332b486a265890ad5327e0c7ba86a5d4ed000ece455f12838739d9157",
-    "archive_bytes": 4914199,
-    "competence": "202609",
-    "rows_read": 64838,
-    "rows_selected": 7230,
+    "obtained_at": "2026-11-06T13:43:16Z",
+    "last_modified": "arquivo local",
+    "etag": "não informado",
+    "sha256": "dd503f45f1909101806edce9b606ea01aa48a9022a4436e204fe094952b392df",
+    "archive_bytes": 4365216,
+    "competence": "202608",
+    "first_competence": "202601",
+    "competences": 8,
+    "rows_read": 57608,
+    "rows_selected": 7220,
     "states": 27
   },
   "teams_source": {
     "catalog_url": "https://datasus.saude.gov.br/cnes-equipes-de-saude/",
     "resource_url": "http://tabnet.datasus.gov.br/cgi/tabcgi.exe?cnes/cnv/equipebr.def",
-    "obtained_at": "2026-11-05T17:27:44Z",
-    "last_modified": "não informado",
+    "obtained_at": "2026-11-06T13:43:16Z",
+    "last_modified": "arquivo local",
     "etag": "não informado",
     "sha256": "d87aa953c487c91d9e9b5e69b297d41ee494dfa9edc3f31a13f15c7785de73b5",
     "response_bytes": 8498,
@@ -55,8 +57,8 @@
   "services_source": {
     "catalog_url": "https://datasus.saude.gov.br/cnes-estabelecimentos/",
     "resource_url": "http://tabnet.datasus.gov.br/cgi/tabcgi.exe?cnes/cnv/servc2br.def",
-    "obtained_at": "2026-11-05T17:27:44Z",
-    "last_modified": "não informado",
+    "obtained_at": "2026-11-06T13:43:16Z",
+    "last_modified": "arquivo local",
     "etag": "não informado",
     "sha256": "ee3b93da03d84db1b4bc04a6f1f3f92af3bb7710772d1a3a92c104d266430d19",
     "response_bytes": 59805,
@@ -66,18 +68,20 @@
     "total_service_records": 1060015
   },
   "contract": {
-    "version": "5.0",
+    "version": "6.0",
     "publication_level": "somente contagens agregadas",
     "raw_data_published": false
   },
   "reconciliation": {
-    "rows_read": 642187,
-    "rows_aggregated": 642187,
+    "rows_read": 640126,
+    "rows_aggregated": 640126,
     "difference": 0,
-    "beds_national": 524000,
-    "beds_by_state": 524000,
-    "sus_beds_national": 354841,
-    "sus_beds_by_state": 354841,
+    "beds_national": 523117,
+    "beds_by_state": 523117,
+    "sus_beds_national": 354435,
+    "sus_beds_by_state": 354435,
+    "bed_history_competences": 8,
+    "bed_history_rows": 57608,
     "teams_national": 124459,
     "teams_by_state": 124459,
     "teams_by_type": 124459,
@@ -92,7 +96,7 @@
       "dimension": "completude",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 642187,
+      "evaluated": 640126,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -102,7 +106,7 @@
       "dimension": "unicidade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 642187,
+      "evaluated": 640126,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -112,7 +116,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 642187,
+      "evaluated": 640126,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -122,7 +126,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 642187,
+      "evaluated": 640126,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -132,9 +136,9 @@
       "dimension": "completude",
       "severity": "observação",
       "status": "observação",
-      "evaluated": 642187,
-      "failures": 59128,
-      "failure_rate": 0.092073
+      "evaluated": 640126,
+      "failures": 59159,
+      "failure_rate": 0.092418
     },
     {
       "id": "coordinates_out_of_range",
@@ -142,7 +146,7 @@
       "dimension": "validade",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 642187,
+      "evaluated": 640126,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -152,7 +156,7 @@
       "dimension": "completude",
       "severity": "alerta",
       "status": "aprovado",
-      "evaluated": 642187,
+      "evaluated": 640126,
       "failures": 0,
       "failure_rate": 0.0
     },
@@ -162,7 +166,7 @@
       "dimension": "completude",
       "severity": "observação",
       "status": "aprovado",
-      "evaluated": 642187,
+      "evaluated": 640126,
       "failures": 0,
       "failure_rate": 0.0
     }
@@ -173,6 +177,7 @@
     "Ausência cadastral não comprova ausência de serviço ou estrutura.",
     "A taxa por população mede presença cadastral relativa, não capacidade assistencial.",
     "Leitos cadastrados não informam ocupação ou disponibilidade em tempo real.",
+    "A série mensal de leitos usa a mesma estimativa populacional anual em todas as competências e não mede variação de demanda ou ocupação.",
     "Equipes cadastradas não representam quantidade de profissionais, atendimentos ou cobertura efetiva.",
     "Serviços cadastrados não comprovam atendimento realizado, disponibilidade operacional ou produção.",
     "Os tipos de unidade são exibidos por código até a incorporação de tabela oficial versionada."
