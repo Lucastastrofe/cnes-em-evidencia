@@ -28,7 +28,7 @@ O JSON bruto do SIDRA permanece apenas em `data/work`. O artefato público mant�
 - Responsável pela publicação: Ministério da Saúde.
 - Catálogo: <https://dadosabertos.saude.gov.br/dataset/hospitais-e-leitos>.
 - Recurso: arquivo CSV compactado do ano corrente, organizado por competência mensal.
-- Recorte publicado: maior competência válida encontrada no arquivo.
+- Recorte publicado: todas as competências válidas do arquivo anual, além da maior competência como fotografia corrente.
 - Unidade: leitos cadastrados.
 
 O ZIP bruto permanece apenas em `data/work`. O processamento lê somente `COMP`, `UF`, `CNES`, `LEITOS_EXISTENTES`, `LEITOS_SUS`, `UTI_TOTAL_EXIST` e `UTI_TOTAL_SUS`. Nomes, endereços, contatos e linhas de estabelecimentos não entram nos artefatos públicos.
@@ -85,3 +85,5 @@ Na terceira parte, `leitos existentes por 100 mil habitantes` e `leitos SUS por 
 Na quarta parte, `equipes por 100 mil habitantes` usa os registros ativos da competência mais recente do TabNet e a estimativa anual do IBGE. O total descreve registros de equipes, não profissionais únicos, atendimentos, cobertura populacional ou qualidade da assistência. Categorias históricas e atuais permanecem separadas conforme a fonte; o projeto não cria equivalências sem uma regra oficial versionada.
 
 Na quinta parte, `registros de serviço/classificação por 100 mil habitantes` usa as contagens da competência mais recente do TabNet e a estimativa anual do IBGE. O indicador permite comparar presença cadastral relativa. Ele não mede atendimentos, disponibilidade operacional, capacidade instalada, produção, acesso ou suficiência. Os códigos e descrições permanecem como publicados pela fonte.
+
+Na sexta parte, cada ponto mensal usa apenas os registros da própria competência. Os meses não são somados entre si. A estimativa populacional de 2026 permanece constante no denominador para que a mudança da taxa reflita somente a variação do numerador cadastral. Uma diferença entre meses pode decorrer de abertura, fechamento, correção ou atualização de registros; isoladamente, ela não demonstra ganho ou perda assistencial. A série não informa ocupação, disponibilidade em tempo real, demanda, acesso ou qualidade.

@@ -56,13 +56,23 @@ Quais problemas de completude, unicidade e validade aparecem no cadastro naciona
 - publicar somente agregados por UF e classificação, com hash e competência da consulta;
 - deixar explícito que cadastro não comprova atendimento, disponibilidade, capacidade ou produção.
 
+## Escopo do sexto incremento
+
+- processar todas as competências mensais válidas do arquivo anual de leitos;
+- validar cobertura das 27 UFs e unicidade do CNES separadamente em cada competência;
+- reconciliar, por competência, leitos existentes, leitos SUS, UTI e UTI SUS;
+- integrar cada ponto mensal à mesma estimativa populacional anual já validada pelo projeto;
+- permitir a leitura nacional e a comparação de até cinco UFs, em quantidade ou por 100 mil habitantes;
+- publicar apenas agregados mensais, sem registros de estabelecimentos;
+- distinguir variação cadastral de mudança assistencial, ocupação ou disponibilidade.
+
 ## Fora de escopo
 
 - avaliar qualidade assistencial ou desempenho de estabelecimentos;
 - identificar profissionais, pacientes ou outras pessoas naturais;
 - publicar registros individuais, contatos, endereços, CNPJ ou coordenadas;
 - criar uma nota composta de qualidade com pesos arbitrários;
-- manter histórico longitudinal antes de haver execuções suficientes para comparação.
+- criar série longitudinal para fontes que ainda não oferecem competências retroativas comparáveis;
 - explicar as diferenças entre UFs por causalidade ou avaliar suficiência da rede.
 
 ## Critérios de aceite
@@ -91,6 +101,12 @@ Quais problemas de completude, unicidade e validade aparecem no cadastro naciona
 22. O total nacional de serviços reconcilia com as 27 UFs e com todas as classificações publicadas.
 23. O painel permite comparar UFs e recalcula totais, taxa e classificações para o recorte selecionado.
 24. A publicação de serviços mantém apenas contagens agregadas e as descrições oficiais das categorias.
+25. Cada competência da série de leitos contém as 27 UFs e não aceita CNES repetido dentro do mesmo mês.
+26. Leitos SUS não podem superar leitos existentes, e UTI SUS não pode superar UTI, em nenhuma competência.
+27. Os totais mensais do Brasil reconciliam com a soma das UFs para os quatro indicadores publicados.
+28. O painel permite escolher indicador, escala e até cinco UFs sem exibir unidades fracionárias.
+29. O denominador populacional usado nas taxas permanece identificado e constante ao longo da série.
+30. A interface informa que variação cadastral não mede ocupação, disponibilidade, demanda, acesso ou qualidade assistencial.
 
 ## Restrições e riscos
 
@@ -126,3 +142,7 @@ Fato verificado localmente: o arquivo oficial `Leitos_csv_2026.zip` continha 57.
 Fato verificado localmente: o TabNet do CNES disponibilizou a competência 09/2026 para equipes de saúde. A consulta agregada reconciliou 124.459 registros de equipes nas 27 UFs e em 40 tipos com quantidade maior que zero. A taxa nacional calculada foi de 58,10 registros de equipes por 100 mil habitantes. O resultado descreve registros ativos na competência e não quantidade de profissionais, atendimentos ou cobertura assistencial.
 
 Fato verificado: o TabNet do CNES disponibilizou a competência 09/2026 para serviço/classificação. A consulta nacional reconciliou 1.060.015 registros nas 27 UFs e em 342 classificações, o equivalente a 494,84 registros por 100 mil habitantes. O resultado admite múltiplas classificações por estabelecimento e não representa estabelecimentos únicos ou atendimentos realizados.
+
+## Situação em 2026-11-06
+
+Fato verificado localmente: as oito competências de 01/2026 a 08/2026 do arquivo anual de leitos passaram pelos mesmos controles de cobertura, unicidade e consistência. Foram reconciliadas 57.608 linhas mensais. O total nacional foi de 521.602 leitos em janeiro e 523.117 em agosto, com oscilações entre os meses. A sexta parte passou a publicar essa série em recortes de Brasil e UF, mantendo a população estimada de 2026 como denominador das taxas. A publicação externa ainda depende de commit e execução do fluxo no GitHub.

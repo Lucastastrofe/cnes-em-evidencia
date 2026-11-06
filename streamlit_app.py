@@ -37,6 +37,11 @@ def format_integer(value: int) -> str:
     return f"{value:,}".replace(",", ".")
 
 
+def format_signed_integer(value: int) -> str:
+    sign = "+" if value > 0 else ""
+    return f"{sign}{format_integer(value)}"
+
+
 def format_percent(value: float) -> str:
     return f"{value * 100:.1f}%".replace(".", ",")
 
@@ -513,6 +518,236 @@ def render_bed_panel(dashboard: dict, audit: dict) -> None:
         f"Leitos do CNES na competência {competence_label} e população estimada pelo IBGE para "
         f'{dashboard["summary"]["population_reference_year"]}. A diferença de períodos permanece '
         "visível porque as duas fontes têm ciclos de atualização distintos."
+    )
+    render_traceability(audit, include_population=True, include_beds=True)
+
+
+def bed_history_table(rows: list[dict], scope_label: str | None = None) -> pd.DataFrame:
+    frame = pd.DataFrame(rows).rename(
+        columns={
+            "competence": "Competência bruta",
+            "name": "UF",
+            "beds": "Leitos existentes",
+            "sus_beds": "Leitos destinados ao SUS",
+            "uti_beds": "Leitos de UTI",
+            "uti_sus_beds": "Leitos de UTI SUS",
+            "population": "População estimada",
+            "beds_per_100k": "Leitos por 100 mil habitantes",
+            "sus_beds_per_100k": "Leitos SUS por 100 mil habitantes",
+            "uti_beds_per_100k": "Leitos de UTI por 100 mil habitantes",
+            "uti_sus_beds_per_100k": "Leitos de UTI SUS por 100 mil habitantes",
+        }
+    )
+    frame["Competência"] = frame["Competência bruta"].map(
+        lambda value: f"{str(value)[4:]}/{str(value)[:4]}"
+    )
+    frame["Data"] = pd.to_datetime(frame["Competência bruta"], format="%Y%m")
+    if "UF" not in frame.columns:
+        frame["UF"] = scope_label or "Brasil"
+    return frame
+
+
+def render_bed_history_panel(dashboard: dict, audit: dict) -> None:
+    history = dashboard["bed_history"]
+    summary = history["summary"]
+    national = bed_history_table(history["national"], scope_label="Brasil")
+    states = bed_history_table(history["by_state"])
+    first_competence = str(summary["first_competence"])
+    latest_competence = str(summary["latest_competence"])
+    first_label = f"{first_competence[4:]}/{first_competence[:4]}"
+    latest_label = f"{latest_competence[4:]}/{latest_competence[:4]}"
+
+    st.markdown('<p class="eyebrow">Parte 6 · Evolução mensal</p>', unsafe_allow_html=True)
+    st.title("Evolução dos leitos cadastrados")
+    st.markdown(
+        '<p class="deck">Uma série por competência para acompanhar mudanças no cadastro de '
+        "leitos sem somar meses do mesmo estabelecimento.</p>",
+        unsafe_allow_html=True,
+    )
+    render_source_facts(
+        [
+            ("Período comparável", f"{first_label} a {latest_label}"),
+            ("Fonte principal", "CNES Leitos + IBGE"),
+            (
+                "População de referência",
+                str(summary["population_reference_year"]),
+            ),
+            (
+                "Painel atualizado",
+                format_timestamp(dashboard["metadata"]["generated_at"]),
+            ),
+        ]
+    )
+
+    st.subheader("O que este painel responde")
+    st.write(
+        "A série mostra como a capacidade hospitalar cadastrada mudou entre competências "
+        "mensais do mesmo arquivo anual. Ela permite acompanhar o Brasil e comparar até cinco "
+        "UFs, mantendo total, parcela SUS e leitos de UTI como medidas separadas."
+    )
+    render_definition_grid(
+        [
+            (
+                "Competência mensal",
+                "Cada ponto usa somente os registros daquele mês, sem acumular competências.",
+            ),
+            (
+                "Variação cadastral",
+                "Diferença entre competências. Pode refletir abertura, fechamento, correção ou atualização.",
+            ),
+            (
+                "Taxa por população",
+                "Relação com a estimativa anual do IBGE, mantida constante em toda a série exibida.",
+            ),
+        ]
+    )
+    st.info(
+        "A série descreve mudanças no cadastro. Ela não informa ocupação, disponibilidade em "
+        "tempo real, demanda, acesso ou qualidade da assistência."
+    )
+
+    metric_options = {
+        "Leitos existentes": {
+            "count": "Leitos existentes",
+            "rate": "Leitos por 100 mil habitantes",
+        },
+        "Leitos destinados ao SUS": {
+            "count": "Leitos destinados ao SUS",
+            "rate": "Leitos SUS por 100 mil habitantes",
+        },
+        "Leitos de UTI": {
+            "count": "Leitos de UTI",
+            "rate": "Leitos de UTI por 100 mil habitantes",
+        },
+        "Leitos de UTI SUS": {
+            "count": "Leitos de UTI SUS",
+            "rate": "Leitos de UTI SUS por 100 mil habitantes",
+        },
+    }
+    filter_metric, filter_scale = st.columns([2, 1])
+    with filter_metric:
+        selected_metric = st.selectbox(
+            "Indicador",
+            list(metric_options),
+            key="bed_history_metric",
+        )
+    with filter_scale:
+        selected_scale = st.selectbox(
+            "Escala",
+            ["Quantidade cadastrada", "Por 100 mil habitantes"],
+            key="bed_history_scale",
+        )
+    selected_ufs = st.multiselect(
+        "UFs para comparar (vazio = Brasil)",
+        sorted(states["UF"].unique()),
+        max_selections=5,
+        placeholder="Brasil",
+        key="bed_history_states",
+    )
+
+    count_column = metric_options[selected_metric]["count"]
+    rate_column = metric_options[selected_metric]["rate"]
+    value_column = count_column if selected_scale == "Quantidade cadastrada" else rate_column
+    if selected_ufs:
+        comparison = states.loc[states["UF"].isin(selected_ufs)].copy()
+        summary_series = (
+            comparison.groupby(
+                ["Competência bruta", "Competência", "Data"], as_index=False
+            )[
+                [
+                    "Leitos existentes",
+                    "Leitos destinados ao SUS",
+                    "Leitos de UTI",
+                    "Leitos de UTI SUS",
+                    "População estimada",
+                ]
+            ]
+            .sum()
+            .sort_values("Data")
+        )
+        summary_series[rate_column] = (
+            summary_series[count_column]
+            / summary_series["População estimada"]
+            * 100_000
+        )
+    else:
+        comparison = national.copy()
+        summary_series = national.copy().sort_values("Data")
+
+    comparison["Valor exibido"] = comparison[value_column].round().astype(int)
+    summary_series["Valor exibido"] = summary_series[value_column].round().astype(int)
+    latest_value = int(summary_series.iloc[-1]["Valor exibido"])
+    previous_value = (
+        int(summary_series.iloc[-2]["Valor exibido"])
+        if len(summary_series) > 1
+        else latest_value
+    )
+    first_value = int(summary_series.iloc[0]["Valor exibido"])
+    latest_delta = latest_value - previous_value
+    period_delta = latest_value - first_value
+    unit_suffix = "" if selected_scale == "Quantidade cadastrada" else " por 100 mil"
+
+    metric_a, metric_b, metric_c, metric_d = st.columns(4)
+    metric_a.metric(
+        f"{selected_metric} em {latest_label}",
+        format_integer(latest_value),
+        delta=f"{format_signed_integer(latest_delta)} vs. mês anterior{unit_suffix}",
+    )
+    metric_b.metric(
+        f"Variação desde {first_label}",
+        f"{format_signed_integer(period_delta)}{unit_suffix}",
+    )
+    metric_c.metric("Competências comparadas", int(summary["competences"]))
+    metric_d.metric("Recorte", f"{len(selected_ufs)} UFs" if selected_ufs else "Brasil")
+    st.caption(
+        "As variações comparam valores cadastrados entre competências. Sinal positivo ou "
+        "negativo não representa melhora ou piora assistencial."
+    )
+
+    color = alt.Color(
+        "UF:N",
+        title="UF" if selected_ufs else None,
+        legend=alt.Legend(orient="top") if selected_ufs else None,
+    )
+    history_chart = (
+        alt.Chart(comparison)
+        .mark_line(point=True, strokeWidth=3)
+        .encode(
+            x=alt.X(
+                "Data:T",
+                title="Competência",
+                axis=alt.Axis(format="%m/%Y", labelAngle=0),
+            ),
+            y=alt.Y("Valor exibido:Q", title=value_column, axis=alt.Axis(format=".0f")),
+            color=color,
+            tooltip=[
+                alt.Tooltip("Competência:N"),
+                alt.Tooltip("UF:N"),
+                alt.Tooltip("Valor exibido:Q", title=value_column, format=",.0f"),
+            ],
+        )
+        .properties(height=430)
+    )
+    chart_tab, data_tab = st.tabs(["Evolução", "Dados da série"])
+    with chart_tab:
+        st.altair_chart(history_chart, width="stretch")
+    with data_tab:
+        table = comparison[["Competência", "UF", count_column, rate_column]].copy()
+        table[count_column] = table[count_column].round().astype(int)
+        table[rate_column] = table[rate_column].round().astype(int)
+        st.dataframe(
+            table.sort_values(["Competência", "UF"]),
+            width="stretch",
+            hide_index=True,
+            column_config={
+                count_column: st.column_config.NumberColumn(format="localized"),
+                rate_column: st.column_config.NumberColumn(format="%.0f"),
+            },
+        )
+
+    st.caption(
+        f"Competências mensais do arquivo anual de leitos do CNES. As taxas usam a população "
+        f"estimada pelo IBGE para {summary['population_reference_year']} em toda a série."
     )
     render_traceability(audit, include_population=True, include_beds=True)
 
@@ -1119,7 +1354,7 @@ def render() -> None:
         .finding-copy {color: #4f4035; margin: 0.25rem 0;}
         .scope-note {border-top: 1px solid var(--line); color: var(--muted); font-size: 0.9rem; margin-top: 1rem; padding-top: 0.75rem;}
         @media (max-width: 640px) {
-            .block-container {padding-top: 1.5rem;}
+            .block-container {padding-top: 3.25rem;}
             .source-grid, .definition-grid {grid-template-columns: 1fr;}
             .finding-grid {grid-template-columns: 1fr; gap: 0.65rem;}
         }
@@ -1150,6 +1385,9 @@ def render() -> None:
     def service_page_content() -> None:
         render_service_panel(dashboard, audit)
 
+    def bed_history_page_content() -> None:
+        render_bed_history_panel(dashboard, audit)
+
     quality_page = st.Page(
         quality_page_content,
         title="1 · Qualidade cadastral",
@@ -1176,6 +1414,11 @@ def render() -> None:
         title="5 · Serviços cadastrados",
         icon=":material/medical_services:",
     )
+    bed_history_page = st.Page(
+        bed_history_page_content,
+        title="6 · Evolução mensal de leitos",
+        icon=":material/timeline:",
+    )
     navigation = st.navigation(
         {
             "CNES em Evidência": [
@@ -1184,6 +1427,7 @@ def render() -> None:
                 bed_page,
                 team_page,
                 service_page,
+                bed_history_page,
             ]
         },
         position="sidebar",

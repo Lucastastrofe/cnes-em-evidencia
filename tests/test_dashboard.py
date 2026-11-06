@@ -173,6 +173,17 @@ class DashboardContractTest(unittest.TestCase):
         self.assertIn('"3 · Capacidade hospitalar"', self.source)
         self.assertIn('"4 · Equipes de saúde"', self.source)
         self.assertIn('"5 · Serviços cadastrados"', self.source)
+        self.assertIn('"6 · Evolução mensal de leitos"', self.source)
+
+    def test_sixth_part_is_a_comparable_monthly_series(self):
+        self.assertIn("Parte 6 · Evolução mensal", self.source)
+        self.assertIn("Evolução dos leitos cadastrados", self.source)
+        self.assertIn("Competências comparadas", self.source)
+        self.assertIn("UFs para comparar (vazio = Brasil)", self.source)
+        self.assertIn("max_selections=5", self.source)
+        self.assertIn("mantida constante em toda a série exibida", self.source)
+        self.assertIn("não informa ocupação, disponibilidade em ", self.source)
+        self.assertIn("tempo real, demanda, acesso ou qualidade", self.source)
 
     def test_fifth_part_explains_service_records_without_claiming_delivery(self):
         self.assertIn("Parte 5 · Serviços cadastrados", self.source)

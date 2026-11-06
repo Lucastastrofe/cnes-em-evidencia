@@ -10,7 +10,12 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from cnes_audit.beds import aggregate_latest_bed_capacity, enrich_beds_with_population
+from cnes_audit.beds import (
+    aggregate_bed_history,
+    enrich_bed_history_with_population,
+    enrich_beds_with_population,
+    latest_bed_capacity,
+)
 from cnes_audit.population import enrich_states_with_population, read_population_estimates
 from cnes_audit.quality import audit_rows
 from cnes_audit.services import enrich_services_with_population, parse_service_snapshot
@@ -113,7 +118,8 @@ def build_public_artifacts(
     archive = zip_entry_metadata(source_path)
     dashboard = audit_rows(iter_csv_rows(source_path))
     population = read_population_estimates(population_path)
-    beds = aggregate_latest_bed_capacity(beds_path)
+    bed_history = aggregate_bed_history(beds_path)
+    beds = latest_bed_capacity(bed_history)
     teams = parse_team_snapshot(teams_path, competence=teams_competence)
     services = parse_service_snapshot(services_path, competence=services_competence)
     dashboard["by_state"] = enrich_states_with_population(
@@ -145,6 +151,9 @@ def build_public_artifacts(
         },
         "by_state": bed_states,
     }
+    dashboard["bed_history"] = enrich_bed_history_with_population(
+        bed_history, population
+    )
     team_states = enrich_teams_with_population(teams["by_state"], population)
     dashboard["teams"] = {
         "summary": {
@@ -240,6 +249,8 @@ def build_public_artifacts(
             "sha256": beds_hash,
             "archive_bytes": beds_path.stat().st_size,
             "competence": beds["competence"],
+            "first_competence": bed_history["first_competence"],
+            "competences": bed_history["competences"],
             "rows_read": beds["rows_read"],
             "rows_selected": beds["rows_selected"],
             "states": len(beds["by_state"]),
@@ -271,7 +282,7 @@ def build_public_artifacts(
             "total_service_records": services["total_service_records"],
         },
         "contract": {
-            "version": "5.0",
+            "version": "6.0",
             "publication_level": "somente contagens agregadas",
             "raw_data_published": False,
         },
@@ -283,6 +294,10 @@ def build_public_artifacts(
             "beds_by_state": sum(int(item["beds"]) for item in bed_states),
             "sus_beds_national": beds["sus_beds"],
             "sus_beds_by_state": sum(int(item["sus_beds"]) for item in bed_states),
+            "bed_history_competences": bed_history["competences"],
+            "bed_history_rows": sum(
+                int(item["rows_selected"]) for item in bed_history["national"]
+            ),
             "teams_national": teams["total_teams"],
             "teams_by_state": sum(int(item["teams"]) for item in team_states),
             "teams_by_type": sum(int(item["teams"]) for item in teams["by_type"]),
@@ -301,6 +316,10 @@ def build_public_artifacts(
             "Ausência cadastral não comprova ausência de serviço ou estrutura.",
             "A taxa por população mede presença cadastral relativa, não capacidade assistencial.",
             "Leitos cadastrados não informam ocupação ou disponibilidade em tempo real.",
+            (
+                "A série mensal de leitos usa a mesma estimativa populacional anual em "
+                "todas as competências e não mede variação de demanda ou ocupação."
+            ),
             (
                 "Equipes cadastradas não representam quantidade de profissionais, "
                 "atendimentos ou cobertura efetiva."

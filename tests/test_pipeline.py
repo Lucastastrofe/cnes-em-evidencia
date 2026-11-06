@@ -153,6 +153,14 @@ class PipelineTest(unittest.TestCase):
             self.assertEqual(dashboard["beds"]["summary"]["sus_beds"], 162)
             self.assertEqual(dashboard["beds"]["by_state"][0]["beds_per_100k"], 1.0)
             self.assertEqual(audit["beds_source"]["rows_selected"], 27)
+            self.assertEqual(dashboard["bed_history"]["summary"]["competences"], 1)
+            self.assertEqual(
+                dashboard["bed_history"]["summary"]["first_competence"],
+                "202609",
+            )
+            self.assertEqual(dashboard["bed_history"]["national"][0]["beds"], 270)
+            self.assertEqual(audit["reconciliation"]["bed_history_rows"], 27)
+            self.assertEqual(audit["contract"]["version"], "6.0")
             self.assertEqual(dashboard["teams"]["summary"]["competence"], "202609")
             self.assertEqual(dashboard["teams"]["summary"]["total_teams"], 81)
             self.assertEqual(dashboard["teams"]["by_state"][0]["teams_per_100k"], 0.3)
