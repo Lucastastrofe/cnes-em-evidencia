@@ -158,12 +158,12 @@ class DashboardContractTest(unittest.TestCase):
         self.assertNotIn("O ETL combina", self.source)
 
     def test_second_part_is_an_interactive_dashboard_view(self):
-        self.assertIn("Compare as UFs", self.source)
+        self.assertIn("População e volume cadastral", self.source)
         self.assertIn("multiselect", self.source)
         self.assertIn("vazio = Brasil completo", self.source)
         self.assertIn("Recorte da comparação", self.source)
         self.assertIn("Taxa ponderada", self.source)
-        self.assertIn("UFs na comparação", self.source)
+        self.assertIn("Cadastros no recorte", self.source)
 
     def test_each_part_has_its_own_dashboard_navigation(self):
         self.assertIn("st.navigation", self.source)
@@ -210,11 +210,19 @@ class DashboardContractTest(unittest.TestCase):
         self.assertIn('format="%.0f"', self.source)
 
     def test_population_panel_explains_its_purpose_and_metrics(self):
-        self.assertIn("O que este painel responde", self.source)
+        self.assertIn("O volume cadastrado acompanha o tamanho da população?", self.source)
         self.assertIn("Registros do CNES", self.source)
         self.assertIn("População estimada", self.source)
         self.assertIn("Uma taxa maior não significa", self.source)
         self.assertIn("não é a média simples", self.source)
+
+    def test_each_analytical_part_has_its_own_primary_reading(self):
+        self.assertIn("População × cadastros", self.source)
+        self.assertIn("Quanto da capacidade cadastrada está destinada ao SUS?", self.source)
+        self.assertIn("Composição por tipo", self.source)
+        self.assertIn("Classificação do serviço", self.source)
+        self.assertIn("Onde aparece", self.source)
+        self.assertIn("O cadastro de leitos mudou entre uma competência", self.source)
 
     def test_bed_counts_and_rates_are_displayed_without_fractional_units(self):
         self.assertIn('.round().astype(int)', self.source)

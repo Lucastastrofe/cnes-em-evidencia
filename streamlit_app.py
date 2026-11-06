@@ -70,6 +70,19 @@ def render_definition_grid(items: list[tuple[str, str]]) -> None:
     st.markdown(f'<div class="definition-grid">{definitions}</div>', unsafe_allow_html=True)
 
 
+def render_panel_question(title: str, description: str, accent: str) -> None:
+    st.markdown(
+        (
+            f'<section class="question-block" style="--panel-accent: {accent}">'
+            '<span>Pergunta central</span>'
+            f'<h2>{title}</h2>'
+            f'<p>{description}</p>'
+            "</section>"
+        ),
+        unsafe_allow_html=True,
+    )
+
+
 def state_table(states: list[dict]) -> pd.DataFrame:
     frame = pd.DataFrame(states).rename(
         columns={
@@ -181,11 +194,11 @@ def render_population_panel(dashboard: dict, audit: dict) -> None:
     )
     render_update_context(dashboard, "CNES Estabelecimentos + IBGE")
 
-    st.subheader("O que este painel responde")
-    st.write(
-        "O painel permite comparar a presença cadastral entre estados de tamanhos diferentes e "
-        "identificar UFs que merecem uma investigação mais detalhada. A população funciona como "
-        "referência para que a comparação não dependa apenas do volume absoluto de cadastros."
+    render_panel_question(
+        "O volume cadastrado acompanha o tamanho da população?",
+        "A leitura combina os dois valores para separar estados grandes de estados com presença "
+        "cadastral proporcionalmente alta ou baixa.",
+        "#2F6F83",
     )
 
     render_definition_grid(
@@ -210,7 +223,7 @@ def render_population_panel(dashboard: dict, audit: dict) -> None:
         "mostra presença cadastral relativa e orienta onde aprofundar a análise."
     )
 
-    st.subheader("Compare as UFs")
+    st.subheader("População e volume cadastral")
     filter_states, filter_scope = st.columns([2, 1])
     with filter_states:
         selected_ufs = st.multiselect(
@@ -233,30 +246,95 @@ def render_population_panel(dashboard: dict, audit: dict) -> None:
     elif comparison_scope == "10 menores taxas":
         comparison = comparison.nsmallest(10, "Cadastros por 100 mil habitantes")
 
-    weighted_rate = (
-        comparison["Registros"].sum()
-        / comparison["População estimada"].sum()
-        * 100_000
-    )
+    selected_records = int(comparison["Registros"].sum())
+    selected_population = int(comparison["População estimada"].sum())
+    weighted_rate = selected_records / selected_population * 100_000
     highest = comparison.nlargest(1, "Cadastros por 100 mil habitantes").iloc[0]
     lowest = comparison.nsmallest(1, "Cadastros por 100 mil habitantes").iloc[0]
+    rate_range = (
+        float(highest["Cadastros por 100 mil habitantes"])
+        - float(lowest["Cadastros por 100 mil habitantes"])
+    )
 
     rate_a, rate_b, rate_c, rate_d = st.columns(4)
-    rate_a.metric("Taxa ponderada", format_rate(weighted_rate))
-    rate_a.caption("cadastros por 100 mil habitantes")
-    rate_b.metric("UFs na comparação", len(comparison))
-    rate_c.metric("Maior taxa", format_rate(highest["Cadastros por 100 mil habitantes"]))
-    rate_c.caption(highest["UF"])
-    rate_d.metric("Menor taxa", format_rate(lowest["Cadastros por 100 mil habitantes"]))
-    rate_d.caption(lowest["UF"])
+    rate_a.metric("Cadastros no recorte", format_integer(selected_records))
+    rate_b.metric("População no recorte", format_integer(selected_population))
+    rate_c.metric("Taxa ponderada", format_rate(weighted_rate))
+    rate_c.caption("cadastros por 100 mil habitantes")
+    rate_d.metric("Distância entre as taxas", format_rate(rate_range))
+    rate_d.caption(f'{lowest["UF"]} a {highest["UF"]}')
     st.caption(
         "A taxa ponderada divide o total de registros pela população total das UFs selecionadas; "
         "não é a média simples das taxas estaduais."
     )
 
-    rate_chart = (
+    reference = pd.DataFrame(
+        {
+            "População estimada": [
+                int(comparison["População estimada"].min()),
+                int(comparison["População estimada"].max()),
+            ]
+        }
+    )
+    reference["Cadastros de referência"] = (
+        reference["População estimada"] * weighted_rate / 100_000
+    )
+    reference_line = (
+        alt.Chart(reference)
+        .mark_line(color="#82959B", strokeDash=[6, 5], strokeWidth=2)
+        .encode(
+            x=alt.X("População estimada:Q", scale=alt.Scale(type="log")),
+            y=alt.Y("Cadastros de referência:Q", scale=alt.Scale(type="log")),
+        )
+    )
+    population_points = (
         alt.Chart(comparison)
-        .mark_bar(color="#2B716F")
+        .mark_circle(size=150, opacity=0.88, stroke="#FFFFFF", strokeWidth=1)
+        .encode(
+            x=alt.X(
+                "População estimada:Q",
+                title="População estimada (escala logarítmica)",
+                scale=alt.Scale(type="log"),
+                axis=alt.Axis(format="~s"),
+            ),
+            y=alt.Y(
+                "Registros:Q",
+                title="Cadastros no CNES (escala logarítmica)",
+                scale=alt.Scale(type="log"),
+                axis=alt.Axis(format="~s"),
+            ),
+            color=alt.Color(
+                "Cadastros por 100 mil habitantes:Q",
+                title="Cadastros por 100 mil",
+                scale=alt.Scale(range=["#D7E8EC", "#2F6F83"]),
+            ),
+            tooltip=[
+                alt.Tooltip("UF:N"),
+                alt.Tooltip("Registros:Q", format=",.0f"),
+                alt.Tooltip("População estimada:Q", format=",.0f"),
+                alt.Tooltip("Cadastros por 100 mil habitantes:Q", format=".0f"),
+            ],
+        )
+    )
+    labels = (
+        alt.Chart(comparison)
+        .mark_text(dx=10, dy=-8, color="#29454F", fontSize=11)
+        .encode(
+            x=alt.X("População estimada:Q", scale=alt.Scale(type="log")),
+            y=alt.Y("Registros:Q", scale=alt.Scale(type="log")),
+            text="UF:N",
+        )
+        if len(comparison) <= 10
+        else None
+    )
+    relationship_chart = reference_line + population_points
+    if labels is not None:
+        relationship_chart += labels
+    relationship_chart = relationship_chart.properties(height=430)
+
+    ranking_bars = (
+        alt.Chart(comparison)
+        .mark_bar(color="#2F6F83", cornerRadiusEnd=4, opacity=0.86)
         .encode(
             x=alt.X(
                 "Cadastros por 100 mil habitantes:Q",
@@ -272,16 +350,23 @@ def render_population_panel(dashboard: dict, audit: dict) -> None:
             ),
             tooltip=[
                 alt.Tooltip("UF:N"),
-                alt.Tooltip("Registros:Q", format=",.0f"),
-                alt.Tooltip("População estimada:Q", format=",.0f"),
                 alt.Tooltip("Cadastros por 100 mil habitantes:Q", format=".0f"),
             ],
         )
-        .properties(height=max(260, len(comparison) * 24))
     )
-    rate_chart_tab, rate_table_tab = st.tabs(["Comparação visual", "Dados da seleção"])
-    with rate_chart_tab:
-        st.altair_chart(rate_chart, width="stretch")
+    ranking_chart = ranking_bars.properties(height=max(280, len(comparison) * 24))
+
+    relationship_tab, ranking_tab, rate_table_tab = st.tabs(
+        ["População × cadastros", "Ranking por taxa", "Dados da seleção"]
+    )
+    with relationship_tab:
+        st.caption(
+            "A linha tracejada representa a taxa ponderada do recorte. Pontos acima dela têm "
+            "mais cadastros por habitante; pontos abaixo têm menos."
+        )
+        st.altair_chart(relationship_chart, width="stretch")
+    with ranking_tab:
+        st.altair_chart(ranking_chart, width="stretch")
     with rate_table_tab:
         st.dataframe(
             comparison[
@@ -348,11 +433,11 @@ def render_bed_panel(dashboard: dict, audit: dict) -> None:
         ]
     )
 
-    st.subheader("O que este painel responde")
-    st.write(
-        "O painel permite comparar a capacidade hospitalar cadastrada entre as UFs e observar "
-        "quanto desse total está destinado ao atendimento pelo SUS. A taxa por população evita "
-        "que estados maiores apareçam como mais estruturados apenas por terem mais habitantes."
+    render_panel_question(
+        "Quanto da capacidade cadastrada está destinada ao SUS?",
+        "Cada barra mantém o total de leitos da UF e destaca, dentro dele, a parcela informada "
+        "para atendimento pelo SUS.",
+        "#176B52",
     )
 
     render_definition_grid(
@@ -579,11 +664,11 @@ def render_bed_history_panel(dashboard: dict, audit: dict) -> None:
         ]
     )
 
-    st.subheader("O que este painel responde")
-    st.write(
-        "A série mostra como a capacidade hospitalar cadastrada mudou entre competências "
-        "mensais do mesmo arquivo anual. Ela permite acompanhar o Brasil e comparar até cinco "
-        "UFs, mantendo total, parcela SUS e leitos de UTI como medidas separadas."
+    render_panel_question(
+        "O cadastro de leitos mudou entre uma competência e outra?",
+        "A série acompanha o Brasil ou até cinco UFs sem acumular meses. Total, parcela SUS e "
+        "leitos de UTI continuam como medidas separadas.",
+        "#2B716F",
     )
     render_definition_grid(
         [
@@ -788,11 +873,11 @@ def render_team_panel(dashboard: dict, audit: dict) -> None:
         ]
     )
 
-    st.subheader("O que este painel responde")
-    st.write(
-        "O painel mostra como os registros de equipes ativas se distribuem entre as UFs na "
-        "competência selecionada. A taxa por população coloca estados de tamanhos diferentes "
-        "na mesma escala e ajuda a localizar contrastes que merecem investigação."
+    render_panel_question(
+        "Quais tipos de equipe formam o recorte analisado?",
+        "A composição por tipo vem primeiro. A comparação territorial entra depois, para mostrar "
+        "onde esses registros estão mais ou menos presentes em relação à população.",
+        "#596A91",
     )
     render_definition_grid(
         [
@@ -815,7 +900,7 @@ def render_team_panel(dashboard: dict, audit: dict) -> None:
         "atendimentos realizados, cobertura efetiva ou qualidade da assistência."
     )
 
-    st.subheader("Compare as UFs")
+    st.subheader("Monte o recorte de equipes")
     filter_states, filter_scope = st.columns([2, 1])
     with filter_states:
         selected_ufs = st.multiselect(
@@ -849,12 +934,14 @@ def render_team_panel(dashboard: dict, audit: dict) -> None:
     selected_teams = int(comparison["Equipes cadastradas"].sum())
     selected_population = int(comparison["População estimada"].sum())
     selected_rate = selected_teams / selected_population * 100_000
+    top_type = type_totals.iloc[0]
 
     metric_a, metric_b, metric_c, metric_d = st.columns(4)
     metric_a.metric("Equipes cadastradas", format_integer(selected_teams))
     metric_b.metric("Equipes por 100 mil", format_rate(selected_rate))
-    metric_c.metric("UFs na comparação", len(comparison))
-    metric_d.metric("Tipos presentes", len(type_totals))
+    metric_c.metric("Tipos presentes", len(type_totals))
+    metric_d.metric("Maior grupo", format_integer(int(top_type["teams"])))
+    metric_d.caption(f'{top_type["team_code"]} · {top_type["team_name"].split(" - ", 1)[0]}')
     st.caption(
         "Os indicadores são recalculados para as UFs exibidas. A taxa usa a soma das equipes "
         "e da população do recorte, sem média simples entre estados."
@@ -862,7 +949,7 @@ def render_team_panel(dashboard: dict, audit: dict) -> None:
 
     state_chart = (
         alt.Chart(comparison)
-        .mark_bar(color="#2B716F")
+        .mark_circle(color="#596A91", size=110)
         .encode(
             x=alt.X(
                 "Equipes por 100 mil habitantes:Q",
@@ -885,14 +972,17 @@ def render_team_panel(dashboard: dict, audit: dict) -> None:
         )
         .properties(height=max(280, len(comparison) * 25))
     )
-    type_chart_data = type_totals.head(10).copy()
+    type_chart_data = type_totals.head(12).copy()
+    type_chart_data["Participação"] = (
+        type_chart_data["teams"] / selected_teams if selected_teams else 0
+    )
     type_chart_data["Tipo"] = type_chart_data.apply(
         lambda row: f'{row["team_code"]} · {row["team_name"].split(" - ", 1)[0]}',
         axis=1,
     )
     type_chart = (
         alt.Chart(type_chart_data)
-        .mark_bar(color="#6B8478")
+        .mark_bar(color="#596A91", cornerRadiusEnd=4)
         .encode(
             x=alt.X("teams:Q", title="Equipes cadastradas"),
             y=alt.Y(
@@ -904,22 +994,27 @@ def render_team_panel(dashboard: dict, audit: dict) -> None:
                 alt.Tooltip("team_code:N", title="Código"),
                 alt.Tooltip("team_name:N", title="Tipo informado"),
                 alt.Tooltip("teams:Q", title="Equipes", format=",.0f"),
+                alt.Tooltip("Participação:Q", title="Participação no recorte", format=".1%"),
             ],
         )
-        .properties(height=max(300, len(type_chart_data) * 34))
+        .properties(height=max(340, len(type_chart_data) * 34))
     )
 
-    state_tab, type_tab, data_tab = st.tabs(
-        ["Comparação por UF", "Tipos mais registrados", "Dados da seleção"]
+    type_tab, state_tab, data_tab = st.tabs(
+        ["Composição por tipo", "Distribuição por UF", "Dados da seleção"]
     )
-    with state_tab:
-        st.altair_chart(state_chart, width="stretch")
     with type_tab:
         st.caption(
-            "O TabNet mantém categorias históricas e atuais. Elas aparecem separadas para "
-            "evitar agrupamentos que mudariam o significado do cadastro."
+            "Os tipos aparecem exatamente como publicados no TabNet. Categorias históricas e "
+            "atuais continuam separadas para não alterar o significado da fonte."
         )
         st.altair_chart(type_chart, width="stretch")
+    with state_tab:
+        st.caption(
+            "Cada ponto representa uma UF. A posição mostra os registros de equipes em relação "
+            "à população estimada."
+        )
+        st.altair_chart(state_chart, width="stretch")
     with data_tab:
         st.dataframe(
             comparison[
@@ -970,8 +1065,8 @@ def render_service_panel(dashboard: dict, audit: dict) -> None:
     st.markdown('<p class="eyebrow">Parte 5 · Serviços cadastrados</p>', unsafe_allow_html=True)
     st.title("Serviços de saúde registrados no CNES")
     st.markdown(
-        '<p class="deck">Um recorte da diversidade de serviços informados ao CNES e de como '
-        "esses registros se distribuem entre as unidades federativas.</p>",
+        '<p class="deck">Escolha uma classificação e veja como seus registros se distribuem '
+        "entre as unidades federativas.</p>",
         unsafe_allow_html=True,
     )
     render_source_facts(
@@ -982,12 +1077,11 @@ def render_service_panel(dashboard: dict, audit: dict) -> None:
         ]
     )
 
-    st.subheader("O que este painel responde")
-    st.write(
-        "A comparação mostra onde há maior concentração proporcional de registros e quais "
-        "classificações aparecem com mais frequência no recorte escolhido. Ela serve como ponto "
-        "de partida para investigar a organização cadastral da rede, sem transformar cadastro "
-        "em evidência de atendimento."
+    render_panel_question(
+        "Onde uma classificação de serviço aparece no cadastro?",
+        "Em vez de resumir todas as classificações em uma única taxa, esta etapa permite escolher "
+        "uma delas e observar sua distribuição entre as UFs.",
+        "#955A43",
     )
     render_definition_grid(
         [
@@ -1011,36 +1105,8 @@ def render_service_panel(dashboard: dict, audit: dict) -> None:
         "capacidade instalada ou produção."
     )
 
-    st.subheader("Compare as UFs")
-    filter_states, filter_scope = st.columns([2, 1])
-    with filter_states:
-        selected_ufs = st.multiselect(
-            "UFs para comparar (vazio = Brasil completo)",
-            states["UF"].tolist(),
-            placeholder="Todas as UFs",
-            key="service_state_filter",
-        )
-    with filter_scope:
-        comparison_scope = st.selectbox(
-            "Recorte da comparação",
-            ["Todas as UFs selecionadas", "10 maiores taxas", "10 menores taxas"],
-            key="service_scope_filter",
-        )
-
-    if not selected_ufs:
-        selected_ufs = states["UF"].tolist()
-    comparison = states.loc[states["UF"].isin(selected_ufs)]
-    if comparison_scope == "10 maiores taxas":
-        comparison = comparison.nlargest(10, "Registros por 100 mil habitantes")
-    elif comparison_scope == "10 menores taxas":
-        comparison = comparison.nsmallest(10, "Registros por 100 mil habitantes")
-
-    displayed_ufs = comparison["UF"].tolist()
-    selected_classifications = state_classifications.loc[
-        state_classifications["state_name"].isin(displayed_ufs)
-    ]
     classification_totals = (
-        selected_classifications.groupby(
+        state_classifications.groupby(
             [
                 "classification_code",
                 "service_code",
@@ -1052,27 +1118,87 @@ def render_service_panel(dashboard: dict, audit: dict) -> None:
         .sum()
         .sort_values("service_records", ascending=False)
     )
-    selected_records = int(comparison["Registros de serviço/classificação"].sum())
-    selected_population = int(comparison["População estimada"].sum())
-    selected_rate = selected_records / selected_population * 100_000
-
-    metric_a, metric_b, metric_c, metric_d = st.columns(4)
-    metric_a.metric("Registros", format_integer(selected_records))
-    metric_b.metric("Registros por 100 mil", format_rate(selected_rate))
-    metric_c.metric("UFs na comparação", len(comparison))
-    metric_d.metric("Classificações presentes", len(classification_totals))
-    st.caption(
-        "Os indicadores acompanham as UFs exibidas. A taxa usa os totais do recorte e não a "
-        "média simples das taxas estaduais."
+    classification_totals["Opção"] = classification_totals.apply(
+        lambda row: (
+            f'{row["classification_code"]} · {str(row["service_name"]).title()} / '
+            f'{str(row["classification_name"]).title()}'
+        ),
+        axis=1,
     )
 
-    state_chart = (
-        alt.Chart(comparison)
-        .mark_bar(color="#2B716F")
+    st.subheader("Explore uma classificação")
+    classification_filter, scope_filter = st.columns([2, 1])
+    with classification_filter:
+        selected_option = st.selectbox(
+            "Classificação do serviço",
+            classification_totals["Opção"].tolist(),
+            key="service_classification_filter",
+        )
+    with scope_filter:
+        comparison_scope = st.selectbox(
+            "Estados exibidos",
+            ["Todas as UFs", "10 maiores taxas", "10 maiores volumes"],
+            key="service_scope_filter",
+        )
+
+    selected_definition = classification_totals.loc[
+        classification_totals["Opção"] == selected_option
+    ].iloc[0]
+    selected_rows = state_classifications.loc[
+        (state_classifications["classification_code"] == selected_definition["classification_code"])
+        & (state_classifications["service_code"] == selected_definition["service_code"])
+    ][["state_name", "service_records"]].rename(
+        columns={"state_name": "UF", "service_records": "Registros da classificação"}
+    )
+    classification_states = states[["UF", "População estimada"]].merge(
+        selected_rows,
+        on="UF",
+        how="left",
+    )
+    classification_states["Registros da classificação"] = (
+        classification_states["Registros da classificação"].fillna(0).astype(int)
+    )
+    classification_states["Registros por 100 mil habitantes"] = (
+        classification_states["Registros da classificação"]
+        / classification_states["População estimada"]
+        * 100_000
+    )
+    classification_comparison = classification_states.copy()
+    if comparison_scope == "10 maiores taxas":
+        classification_comparison = classification_comparison.nlargest(
+            10, "Registros por 100 mil habitantes"
+        )
+    elif comparison_scope == "10 maiores volumes":
+        classification_comparison = classification_comparison.nlargest(
+            10, "Registros da classificação"
+        )
+
+    selected_records = int(classification_states["Registros da classificação"].sum())
+    selected_population = int(states["População estimada"].sum())
+    selected_rate = selected_records / selected_population * 100_000
+    states_with_records = int(
+        (classification_states["Registros da classificação"] > 0).sum()
+    )
+
+    metric_a, metric_b, metric_c = st.columns(3)
+    metric_a.metric("Registros da classificação", format_integer(selected_records))
+    metric_b.metric("UFs com registro", states_with_records)
+    metric_c.metric("Taxa nacional", format_rate(selected_rate))
+    metric_c.caption("registros por 100 mil habitantes")
+    st.caption(
+        f'Serviço {selected_definition["service_code"]} · '
+        f'{str(selected_definition["service_name"]).title()}. '
+        f'{len(classification_totals)} classificações estão disponíveis. '
+        "Ausência de registro não comprova ausência do serviço."
+    )
+
+    classification_bars = (
+        alt.Chart(classification_comparison)
+        .mark_bar(color="#955A43", cornerRadiusEnd=4, opacity=0.88)
         .encode(
             x=alt.X(
                 "Registros por 100 mil habitantes:Q",
-                title="Registros por 100 mil habitantes",
+                title="Registros da classificação por 100 mil habitantes",
             ),
             y=alt.Y(
                 "UF:N",
@@ -1084,36 +1210,27 @@ def render_service_panel(dashboard: dict, audit: dict) -> None:
             ),
             tooltip=[
                 alt.Tooltip("UF:N"),
-                alt.Tooltip(
-                    "Registros de serviço/classificação:Q",
-                    title="Registros",
-                    format=",.0f",
-                ),
+                alt.Tooltip("Registros da classificação:Q", format=",.0f"),
                 alt.Tooltip("População estimada:Q", format=",.0f"),
-                alt.Tooltip(
-                    "Registros por 100 mil habitantes:Q",
-                    title="Registros por 100 mil",
-                    format=".0f",
-                ),
+                alt.Tooltip("Registros por 100 mil habitantes:Q", format=".0f"),
             ],
         )
-        .properties(height=max(280, len(comparison) * 25))
     )
-    classification_chart_data = classification_totals.head(12).copy()
-    classification_chart_data["Classificação"] = classification_chart_data.apply(
-        lambda row: f'{row["classification_code"]} · {row["classification_name"]}',
-        axis=1,
+    classification_state_chart = classification_bars.properties(
+        height=max(300, len(classification_comparison) * 25)
     )
-    classification_chart = (
-        alt.Chart(classification_chart_data)
-        .mark_bar(color="#6B8478")
+
+    overview_data = classification_totals.head(12).copy()
+    overview_chart = (
+        alt.Chart(overview_data)
+        .mark_bar(color="#955A43", cornerRadiusEnd=4)
         .encode(
             x=alt.X("service_records:Q", title="Registros"),
             y=alt.Y(
-                "Classificação:N",
+                "Opção:N",
                 sort=alt.SortField(field="service_records", order="descending"),
                 title=None,
-                axis=alt.Axis(labelLimit=300),
+                axis=alt.Axis(labelLimit=320),
             ),
             tooltip=[
                 alt.Tooltip("classification_code:N", title="Código"),
@@ -1122,34 +1239,35 @@ def render_service_panel(dashboard: dict, audit: dict) -> None:
                 alt.Tooltip("service_records:Q", title="Registros", format=",.0f"),
             ],
         )
-        .properties(height=max(340, len(classification_chart_data) * 31))
+        .properties(height=max(340, len(overview_data) * 31))
     )
 
-    state_tab, classification_tab, data_tab = st.tabs(
-        ["Comparação por UF", "Classificações mais registradas", "Dados da seleção"]
+    location_tab, overview_tab, data_tab = st.tabs(
+        ["Onde aparece", "Visão geral da fonte", "Dados da classificação"]
     )
-    with state_tab:
-        st.altair_chart(state_chart, width="stretch")
-    with classification_tab:
+    with location_tab:
         st.caption(
-            "Cada linha mantém a classificação publicada no TabNet. Os totais podem incluir "
-            "mais de um registro associado ao mesmo estabelecimento."
+            "O gráfico usa somente a classificação escolhida. Os valores são proporcionais à "
+            "população para permitir comparação entre estados de tamanhos diferentes."
         )
-        st.altair_chart(classification_chart, width="stretch")
+        st.altair_chart(classification_state_chart, width="stretch")
+    with overview_tab:
+        st.caption(
+            "As doze classificações com mais registros ajudam a dimensionar a fonte, mas não "
+            "substituem a análise individual de cada categoria."
+        )
+        st.altair_chart(overview_chart, width="stretch")
     with data_tab:
+        table = classification_states.copy()
+        table["Registros por 100 mil habitantes"] = (
+            table["Registros por 100 mil habitantes"].round().astype(int)
+        )
         st.dataframe(
-            comparison[
-                [
-                    "UF",
-                    "Registros de serviço/classificação",
-                    "População estimada",
-                    "Registros por 100 mil habitantes",
-                ]
-            ].sort_values("Registros por 100 mil habitantes", ascending=False),
+            table.sort_values("Registros por 100 mil habitantes", ascending=False),
             width="stretch",
             hide_index=True,
             column_config={
-                "Registros de serviço/classificação": st.column_config.NumberColumn(
+                "Registros da classificação": st.column_config.NumberColumn(
                     format="localized"
                 ),
                 "População estimada": st.column_config.NumberColumn(format="localized"),
@@ -1185,11 +1303,11 @@ def render_quality_panel(dashboard: dict, audit: dict) -> None:
     )
     render_update_context(dashboard, "CNES Estabelecimentos")
 
-    st.subheader("O que este painel responde")
-    st.write(
-        "A primeira etapa verifica se os registros têm estrutura suficiente para sustentar "
-        "as análises seguintes. Os controles procuram ausências, duplicidades e códigos fora "
-        "do domínio esperado, sem transformar toda limitação em erro."
+    render_panel_question(
+        "A base sustenta as análises que vêm depois?",
+        "Os controles procuram ausências, duplicidades e códigos fora do domínio esperado. "
+        "O objetivo é separar o que pode ser usado do que exige cuidado adicional.",
+        "#8B4A1D",
     )
 
     first, second, third = st.columns(3)
@@ -1329,6 +1447,10 @@ def render() -> None:
         h2, h3 {margin-top: 2.4rem;}
         .eyebrow {color: var(--green); font-size: 0.72rem; font-weight: 750; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.65rem;}
         .deck {color: var(--muted); font-size: 1.12rem; line-height: 1.55; max-width: 780px; margin: 0 0 1.25rem;}
+        .question-block {border-left: 4px solid var(--panel-accent); background: var(--surface); padding: 1.15rem 1.3rem; margin: 2rem 0 1.4rem;}
+        .question-block span {color: var(--panel-accent); display: block; font-size: 0.68rem; font-weight: 750; letter-spacing: 0.12em; text-transform: uppercase;}
+        .question-block h2 {font-size: 1.45rem; line-height: 1.25; margin: 0.35rem 0 0.45rem;}
+        .question-block p {color: var(--muted); line-height: 1.55; margin: 0; max-width: 860px;}
         .source-grid {display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); margin: 1.25rem 0 2.25rem;}
         .source-fact {background: var(--surface); padding: 0.85rem 1rem; min-height: 76px;}
         .source-fact span {display: block; color: var(--muted); font-size: 0.72rem; letter-spacing: 0.04em; margin-bottom: 0.3rem;}
