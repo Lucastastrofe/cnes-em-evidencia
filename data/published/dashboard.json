@@ -80548,13 +80548,297 @@
       }
     ]
   },
+  "professionals": {
+    "summary": {
+      "competence": "202609",
+      "total_professionals": 4763485,
+      "sus_professionals": 3704496,
+      "non_sus_professionals": 1058989,
+      "states": 27,
+      "professionals_per_100k": 2223.73,
+      "sus_share": 0.777686
+    },
+    "by_state": [
+      {
+        "code": "12",
+        "name": "Acre",
+        "professionals": 19531,
+        "sus_professionals": 17109,
+        "non_sus_professionals": 2422,
+        "population": 887794,
+        "professionals_per_100k": 2199.95,
+        "sus_share": 0.875992
+      },
+      {
+        "code": "27",
+        "name": "Alagoas",
+        "professionals": 69339,
+        "sus_professionals": 62291,
+        "non_sus_professionals": 7048,
+        "population": 3221128,
+        "professionals_per_100k": 2152.63,
+        "sus_share": 0.898354
+      },
+      {
+        "code": "16",
+        "name": "Amapá",
+        "professionals": 22155,
+        "sus_professionals": 20711,
+        "non_sus_professionals": 1444,
+        "population": 809953,
+        "professionals_per_100k": 2735.34,
+        "sus_share": 0.934823
+      },
+      {
+        "code": "13",
+        "name": "Amazonas",
+        "professionals": 84695,
+        "sus_professionals": 75444,
+        "non_sus_professionals": 9251,
+        "population": 4360926,
+        "professionals_per_100k": 1942.13,
+        "sus_share": 0.890773
+      },
+      {
+        "code": "29",
+        "name": "Bahia",
+        "professionals": 293837,
+        "sus_professionals": 253744,
+        "non_sus_professionals": 40093,
+        "population": 14889472,
+        "professionals_per_100k": 1973.45,
+        "sus_share": 0.863554
+      },
+      {
+        "code": "23",
+        "name": "Ceará",
+        "professionals": 178770,
+        "sus_professionals": 154235,
+        "non_sus_professionals": 24535,
+        "population": 9302211,
+        "professionals_per_100k": 1921.8,
+        "sus_share": 0.862757
+      },
+      {
+        "code": "53",
+        "name": "Distrito Federal",
+        "professionals": 99525,
+        "sus_professionals": 53881,
+        "non_sus_professionals": 45644,
+        "population": 3009996,
+        "professionals_per_100k": 3306.48,
+        "sus_share": 0.541382
+      },
+      {
+        "code": "32",
+        "name": "Espírito Santo",
+        "professionals": 105349,
+        "sus_professionals": 78238,
+        "non_sus_professionals": 27111,
+        "population": 4150692,
+        "professionals_per_100k": 2538.11,
+        "sus_share": 0.742655
+      },
+      {
+        "code": "52",
+        "name": "Goiás",
+        "professionals": 148614,
+        "sus_professionals": 121059,
+        "non_sus_professionals": 27555,
+        "population": 7495033,
+        "professionals_per_100k": 1982.83,
+        "sus_share": 0.814587
+      },
+      {
+        "code": "21",
+        "name": "Maranhão",
+        "professionals": 139874,
+        "sus_professionals": 127116,
+        "non_sus_professionals": 12758,
+        "population": 7024557,
+        "professionals_per_100k": 1991.21,
+        "sus_share": 0.908789
+      },
+      {
+        "code": "51",
+        "name": "Mato Grosso",
+        "professionals": 85131,
+        "sus_professionals": 67074,
+        "non_sus_professionals": 18057,
+        "population": 3950330,
+        "professionals_per_100k": 2155.04,
+        "sus_share": 0.787892
+      },
+      {
+        "code": "50",
+        "name": "Mato Grosso do Sul",
+        "professionals": 68774,
+        "sus_professionals": 57084,
+        "non_sus_professionals": 11690,
+        "population": 2946317,
+        "professionals_per_100k": 2334.24,
+        "sus_share": 0.830023
+      },
+      {
+        "code": "31",
+        "name": "Minas Gerais",
+        "professionals": 546188,
+        "sus_professionals": 415015,
+        "non_sus_professionals": 131173,
+        "population": 21460311,
+        "professionals_per_100k": 2545.11,
+        "sus_share": 0.759839
+      },
+      {
+        "code": "41",
+        "name": "Paraná",
+        "professionals": 255158,
+        "sus_professionals": 196948,
+        "non_sus_professionals": 58210,
+        "population": 11952456,
+        "professionals_per_100k": 2134.77,
+        "sus_share": 0.771867
+      },
+      {
+        "code": "25",
+        "name": "Paraíba",
+        "professionals": 92548,
+        "sus_professionals": 83881,
+        "non_sus_professionals": 8667,
+        "population": 4182828,
+        "professionals_per_100k": 2212.57,
+        "sus_share": 0.906351
+      },
+      {
+        "code": "15",
+        "name": "Pará",
+        "professionals": 140300,
+        "sus_professionals": 124258,
+        "non_sus_professionals": 16042,
+        "population": 8756324,
+        "professionals_per_100k": 1602.27,
+        "sus_share": 0.885659
+      },
+      {
+        "code": "26",
+        "name": "Pernambuco",
+        "professionals": 193550,
+        "sus_professionals": 164206,
+        "non_sus_professionals": 29344,
+        "population": 9583176,
+        "professionals_per_100k": 2019.69,
+        "sus_share": 0.848391
+      },
+      {
+        "code": "22",
+        "name": "Piauí",
+        "professionals": 66464,
+        "sus_professionals": 60480,
+        "non_sus_professionals": 5984,
+        "population": 3392617,
+        "professionals_per_100k": 1959.08,
+        "sus_share": 0.909966
+      },
+      {
+        "code": "24",
+        "name": "Rio Grande do Norte",
+        "professionals": 77596,
+        "sus_professionals": 66956,
+        "non_sus_professionals": 10640,
+        "population": 3463737,
+        "professionals_per_100k": 2240.24,
+        "sus_share": 0.86288
+      },
+      {
+        "code": "43",
+        "name": "Rio Grande do Sul",
+        "professionals": 270955,
+        "sus_professionals": 207713,
+        "non_sus_professionals": 63242,
+        "population": 11233317,
+        "professionals_per_100k": 2412.07,
+        "sus_share": 0.766596
+      },
+      {
+        "code": "33",
+        "name": "Rio de Janeiro",
+        "professionals": 415423,
+        "sus_professionals": 299483,
+        "non_sus_professionals": 115940,
+        "population": 17225410,
+        "professionals_per_100k": 2411.69,
+        "sus_share": 0.720911
+      },
+      {
+        "code": "11",
+        "name": "Rondônia",
+        "professionals": 40954,
+        "sus_professionals": 33117,
+        "non_sus_professionals": 7837,
+        "population": 1757338,
+        "professionals_per_100k": 2330.46,
+        "sus_share": 0.808639
+      },
+      {
+        "code": "14",
+        "name": "Roraima",
+        "professionals": 15531,
+        "sus_professionals": 14331,
+        "non_sus_professionals": 1200,
+        "population": 761012,
+        "professionals_per_100k": 2040.84,
+        "sus_share": 0.922735
+      },
+      {
+        "code": "42",
+        "name": "Santa Catarina",
+        "professionals": 188092,
+        "sus_professionals": 138576,
+        "non_sus_professionals": 49516,
+        "population": 8312759,
+        "professionals_per_100k": 2262.69,
+        "sus_share": 0.736746
+      },
+      {
+        "code": "28",
+        "name": "Sergipe",
+        "professionals": 54509,
+        "sus_professionals": 45425,
+        "non_sus_professionals": 9084,
+        "population": 2307255,
+        "professionals_per_100k": 2362.5,
+        "sus_share": 0.833349
+      },
+      {
+        "code": "35",
+        "name": "São Paulo",
+        "professionals": 1046898,
+        "sus_professionals": 725825,
+        "non_sus_professionals": 321073,
+        "population": 46179008,
+        "professionals_per_100k": 2267.04,
+        "sus_share": 0.69331
+      },
+      {
+        "code": "17",
+        "name": "Tocantins",
+        "professionals": 43725,
+        "sus_professionals": 40296,
+        "non_sus_professionals": 3429,
+        "population": 1595994,
+        "professionals_per_100k": 2739.67,
+        "sus_share": 0.921578
+      }
+    ]
+  },
   "metadata": {
-    "run_id": "20261113T171549Z-d9c449968784",
-    "generated_at": "2026-11-13T17:15:49Z",
-    "source_last_modified": "Fri, 13 Nov 2026 06:01:34 GMT",
-    "source_sha256": "d9c449968784ff90f5b10cc5b4679c80b57b46264d198b2c01ae836f743b432f",
+    "run_id": "20261114T124922Z-ae64c1df261b",
+    "generated_at": "2026-11-14T12:49:22Z",
+    "source_last_modified": "Sat, 14 Nov 2026 06:22:04 GMT",
+    "source_sha256": "ae64c1df261b99379695a593ecc485a33517f4be3dd3b3edcbe721adcf00efe7",
     "population_source_sha256": "17389fa5c36be0efa240441fe4011080d9a27b338befb3c8049c4a81da8be946",
     "teams_source_sha256": "d87aa953c487c91d9e9b5e69b297d41ee494dfa9edc3f31a13f15c7785de73b5",
-    "services_source_sha256": "ee3b93da03d84db1b4bc04a6f1f3f92af3bb7710772d1a3a92c104d266430d19"
+    "services_source_sha256": "ee3b93da03d84db1b4bc04a6f1f3f92af3bb7710772d1a3a92c104d266430d19",
+    "professionals_source_sha256": "3ab9a2e7407314821f19af6facb4430cdfc2fac4457d5c46955fff53323289f5"
   }
 }
