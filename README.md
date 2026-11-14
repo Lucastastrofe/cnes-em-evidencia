@@ -1,6 +1,6 @@
 # CNES em Evidência
 
-Aplicação Streamlit e pipeline de dados abertos do CNES. A navegação separa qualidade cadastral, presença por população, capacidade hospitalar, equipes, serviços cadastrados e evolução mensal de leitos; a explicação completa do projeto fica no portfólio.
+Aplicação Streamlit e pipeline de dados abertos do CNES. A navegação separa qualidade cadastral, presença por população, capacidade hospitalar, equipes, serviços cadastrados, evolução mensal de leitos e profissionais cadastrados. A explicação completa do projeto fica no portfólio.
 
 ## Resultado atual
 
@@ -16,6 +16,8 @@ A quinta parte consulta a competência 09/2026 de serviço/classificação no Ta
 
 A sexta parte compara as nove competências disponíveis no arquivo anual de leitos, de 01/2026 a 09/2026. O total nacional passou de 521.602 para 524.000 leitos cadastrados no período. O painel permite acompanhar Brasil ou até cinco UFs, alternando entre total, parcela SUS, UTI e UTI SUS, em quantidade ou por 100 mil habitantes. As variações descrevem o cadastro e não permitem concluir melhora ou piora assistencial.
 
+A sétima parte usa a competência 09/2026 de Profissionais do CNES. A consulta oficial reconciliou 4.763.485 profissionais nas 27 UFs, dos quais 3.704.496 aparecem associados ao atendimento no SUS. O painel combina taxa por 100 mil habitantes e participação no SUS para comparar perfis estaduais. O cadastro não informa jornada, disponibilidade, produtividade, cobertura ou suficiência da força de trabalho.
+
 Esses resultados descrevem o arquivo processado. Eles não medem qualidade assistencial, conformidade sanitária ou disponibilidade atual de serviços.
 
 ## O que o projeto demonstra
@@ -23,7 +25,7 @@ Esses resultados descrevem o arquivo processado. Eles não medem qualidade assis
 - processamento de um CSV de 231 MB diretamente do ZIP, sem carregar a base inteira na memória;
 - controles reproduzíveis de completude, unicidade e validade;
 - reconciliação entre registros lidos e agregados;
-- seis painéis interativos em uma única aplicação Streamlit;
+- sete painéis interativos em uma única aplicação Streamlit;
 - verificação diária da fonte e regeneração dos agregados pelo GitHub Actions;
 - ETL integrado entre CNES e estimativas populacionais do IBGE;
 - comparação por UF usando população como denominador explícito;
@@ -33,6 +35,8 @@ Esses resultados descrevem o arquivo processado. Eles não medem qualidade assis
 - descoberta automática da competência mais recente de equipes no TabNet;
 - reconciliação de equipes por UF e por tipo antes da publicação;
 - descoberta e reconciliação de serviços por UF e classificação;
+- descoberta e reconciliação de profissionais por UF e vínculo de atendimento ao SUS;
+- comparação entre presença relativa de profissionais e participação associada ao SUS;
 - filtros para comparar UFs e alternar entre todas, as dez maiores e as dez menores taxas;
 - minimização de dados e contrato automatizado de privacidade.
 
@@ -41,10 +45,11 @@ Esses resultados descrevem o arquivo processado. Eles não medem qualidade assis
 ```text
 CNES estabelecimentos (ZIP/CSV) ─→ qualidade ──────────┐
 IBGE (SIDRA/JSON) ───────────────→ população por UF ───┼─→ agregados + auditoria ─→ Streamlit
-CNES leitos (ZIP/CSV) ───────────→ competências mensais ┘
+CNES leitos (ZIP/CSV) ───────────→ competências mensais ┤
+CNES profissionais (TabNet) ─────→ vínculo SUS por UF ──┘
 ```
 
-As consultas nacionais de equipes e serviços do TabNet entram no mesmo fluxo e usam a maior competência disponível antes de gerar os agregados.
+As consultas nacionais de equipes, serviços e profissionais do TabNet entram no mesmo fluxo e usam a maior competência disponível antes de gerar os agregados.
 
 ## Privacidade
 
@@ -94,6 +99,7 @@ O escopo e os critérios de aceite estão em [`PROJECT_CONTEXT.md`](PROJECT_CONT
 - a série histórica disponível começa em 01/2026 e usa a estimativa populacional de 2026 como denominador fixo;
 - os registros de equipes não informam quantidade de profissionais, atendimentos ou cobertura efetiva;
 - os registros de serviço/classificação não informam atendimento, disponibilidade ou produção;
+- o cadastro de profissionais não informa jornada, disponibilidade, produtividade, cobertura ou suficiência;
 - o TabNet mantém tipos históricos e atuais de equipe, que permanecem separados no painel;
 - a URL do arquivo de leitos é anual e precisa ser revisada na mudança de ano.
 

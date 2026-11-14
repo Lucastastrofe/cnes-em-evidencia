@@ -53,6 +53,16 @@ A resposta HTML da consulta permanece em `data/work`. O artefato público conté
 
 A resposta HTML da consulta permanece em `data/work`. O artefato público contém somente contagens agregadas por UF e classificação, além de competência, URL e hash. Como um estabelecimento pode informar mais de uma classificação, a soma não representa estabelecimentos únicos.
 
+### Profissionais cadastrados
+
+- Conjunto: CNES Recursos Humanos, Profissionais, Indivíduos, CBO 2002.
+- Responsável pela publicação: Ministério da Saúde, via TabNet/DATASUS.
+- Consulta: quantidade por Unidade da Federação segundo atendimento no SUS.
+- Recorte: maior competência disponível no formulário nacional.
+- Unidade: profissionais cadastrados.
+
+A resposta HTML da consulta permanece em `data/work`. O artefato público contém somente contagens agregadas por UF e situação de atendimento no SUS, além de competência, URL e hash. Não são consultados nomes, CBO, estabelecimentos ou registros individuais.
+
 ## Unidade de análise
 
 Uma linha do arquivo de estabelecimentos. `CO_CNES` é tratado como chave esperada para o controle de unicidade. Essa expectativa é um contrato do projeto e uma violação é publicada como alerta, sem remoção silenciosa.
@@ -87,3 +97,5 @@ Na quarta parte, `equipes por 100 mil habitantes` usa os registros ativos da com
 Na quinta parte, `registros de serviço/classificação por 100 mil habitantes` usa as contagens da competência mais recente do TabNet e a estimativa anual do IBGE. O indicador permite comparar presença cadastral relativa. Ele não mede atendimentos, disponibilidade operacional, capacidade instalada, produção, acesso ou suficiência. Os códigos e descrições permanecem como publicados pela fonte.
 
 Na sexta parte, cada ponto mensal usa apenas os registros da própria competência. Os meses não são somados entre si. A estimativa populacional de 2026 permanece constante no denominador para que a mudança da taxa reflita somente a variação do numerador cadastral. Uma diferença entre meses pode decorrer de abertura, fechamento, correção ou atualização de registros; isoladamente, ela não demonstra ganho ou perda assistencial. A série não informa ocupação, disponibilidade em tempo real, demanda, acesso ou qualidade.
+
+Na sétima parte, `profissionais por 100 mil habitantes` usa o total de indivíduos ativos da competência mais recente e a estimativa anual do IBGE. `participação associada ao SUS` é a razão entre os profissionais marcados como atendimento no SUS e o total da UF. As duas medidas descrevem o cadastro. Não informam carga horária, quantidade de vínculos, disponibilidade real, produtividade, cobertura, acesso ou suficiência da força de trabalho.

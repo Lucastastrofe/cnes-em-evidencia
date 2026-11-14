@@ -66,6 +66,17 @@ Quais problemas de completude, unicidade e validade aparecem no cadastro naciona
 - publicar apenas agregados mensais, sem registros de estabelecimentos;
 - distinguir variação cadastral de mudança assistencial, ocupação ou disponibilidade.
 
+## Escopo do sétimo incremento
+
+- consultar a competência mais recente de Profissionais, Indivíduos, CBO 2002 no TabNet do CNES;
+- separar as contagens informadas pela fonte entre associados e não associados ao atendimento no SUS;
+- validar a cobertura das 27 UFs e reconciliar totais estaduais e nacional;
+- integrar os totais por UF à estimativa populacional já validada pelo projeto;
+- calcular profissionais cadastrados por 100 mil habitantes e participação associada ao SUS;
+- comparar as duas medidas sem criar ranking de qualidade ou suficiência;
+- publicar somente agregados por UF, com competência, URL, hash e horário da consulta;
+- deixar explícito que o cadastro não mede jornada, disponibilidade, produtividade, cobertura ou suficiência da força de trabalho.
+
 ## Fora de escopo
 
 - avaliar qualidade assistencial ou desempenho de estabelecimentos;
@@ -111,6 +122,12 @@ Quais problemas de completude, unicidade e validade aparecem no cadastro naciona
 32. Contagens de estabelecimentos, equipes, serviços e leitos são exibidas como números inteiros; percentuais e taxas permanecem identificados pela unidade.
 33. A leitura principal, a unidade, a referência e o limite de interpretação continuam visíveis em desktop e em tela estreita, sem depender de hover.
 34. O painel evita repetir o mesmo gráfico e a mesma estrutura de cartões em todas as etapas; definições detalhadas ficam disponíveis sob demanda.
+35. A consulta de profissionais seleciona automaticamente a maior competência disponível no TabNet.
+36. Cada UF reconcilia profissionais associados e não associados ao SUS com seu total, e a soma das 27 UFs reconcilia com o Brasil.
+37. O painel calcula a taxa por 100 mil habitantes com soma ponderada da população, sem usar média simples das taxas estaduais.
+38. O painel permite comparar UFs em um gráfico de posição entre taxa de profissionais e participação associada ao SUS.
+39. Contagens de profissionais são exibidas como números inteiros; taxa e percentual permanecem identificados pela unidade.
+40. A publicação mantém somente contagens agregadas por UF e não inclui profissão, estabelecimento ou registro individual.
 
 ## Restrições e riscos
 
@@ -150,3 +167,7 @@ Fato verificado: o TabNet do CNES disponibilizou a competência 09/2026 para ser
 ## Situação em 2026-11-06
 
 Fato verificado: as nove competências de 01/2026 a 09/2026 do arquivo anual de leitos passaram pelos mesmos controles de cobertura, unicidade e consistência. Foram lidas 64.838 linhas mensais. O total nacional foi de 521.602 leitos em janeiro e 524.000 em setembro, com oscilações entre os meses. A sexta parte publica essa série em recortes de Brasil e UF, mantendo a população estimada de 2026 como denominador das taxas. A execução pública de 06/11/2026 concluiu com sucesso.
+
+## Situação em 2026-11-14
+
+Fato verificado localmente: o TabNet do CNES disponibilizou a competência 09/2026 para Profissionais, Indivíduos, CBO 2002. A consulta nacional reconciliou 4.763.485 profissionais nas 27 UFs. Desse total, 3.704.496 aparecem associados ao atendimento no SUS e 1.058.989 como não associados. A sétima parte compara a taxa por 100 mil habitantes com a participação associada ao SUS, sem interpretar o cadastro como disponibilidade, cobertura ou suficiência da força de trabalho.
