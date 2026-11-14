@@ -17,6 +17,10 @@ from cnes_audit.beds import (
     latest_bed_capacity,
 )
 from cnes_audit.population import enrich_states_with_population, read_population_estimates
+from cnes_audit.professionals import (
+    enrich_professionals_with_population,
+    parse_professional_snapshot,
+)
 from cnes_audit.quality import audit_rows
 from cnes_audit.services import enrich_services_with_population, parse_service_snapshot
 from cnes_audit.source import iter_csv_rows, zip_entry_metadata
@@ -88,32 +92,38 @@ def build_public_artifacts(
     beds_path: Path,
     teams_path: Path,
     services_path: Path,
+    professionals_path: Path,
     population_path: Path,
     output_directory: Path,
     source_url: str,
     beds_url: str,
     teams_url: str,
     services_url: str,
+    professionals_url: str,
     population_url: str,
     obtained_at: str,
     source_last_modified: str,
     beds_last_modified: str,
     teams_last_modified: str,
     services_last_modified: str,
+    professionals_last_modified: str,
     population_last_modified: str,
     teams_competence: str,
     services_competence: str,
+    professionals_competence: str,
     code_version: str,
     source_etag: str = "não informado",
     beds_etag: str = "não informado",
     teams_etag: str = "não informado",
     services_etag: str = "não informado",
+    professionals_etag: str = "não informado",
     population_etag: str = "não informado",
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     source_hash = sha256_file(source_path)
     beds_hash = sha256_file(beds_path)
     teams_hash = sha256_file(teams_path)
     services_hash = sha256_file(services_path)
+    professionals_hash = sha256_file(professionals_path)
     population_hash = sha256_file(population_path)
     archive = zip_entry_metadata(source_path)
     dashboard = audit_rows(iter_csv_rows(source_path))
@@ -122,6 +132,10 @@ def build_public_artifacts(
     beds = latest_bed_capacity(bed_history)
     teams = parse_team_snapshot(teams_path, competence=teams_competence)
     services = parse_service_snapshot(services_path, competence=services_competence)
+    professionals = parse_professional_snapshot(
+        professionals_path,
+        competence=professionals_competence,
+    )
     dashboard["by_state"] = enrich_states_with_population(
         dashboard["by_state"], population
     )
@@ -188,6 +202,31 @@ def build_public_artifacts(
         "by_classification": services["by_classification"],
         "by_state_classification": services["by_state_classification"],
     }
+    professional_states = enrich_professionals_with_population(
+        professionals["by_state"],
+        population,
+    )
+    dashboard["professionals"] = {
+        "summary": {
+            "competence": professionals["competence"],
+            "total_professionals": professionals["total_professionals"],
+            "sus_professionals": professionals["sus_professionals"],
+            "non_sus_professionals": professionals["non_sus_professionals"],
+            "states": professionals["states"],
+            "professionals_per_100k": round(
+                professionals["total_professionals"]
+                / population["total_population"]
+                * 100_000,
+                2,
+            ),
+            "sus_share": round(
+                professionals["sus_professionals"]
+                / professionals["total_professionals"],
+                6,
+            ),
+        },
+        "by_state": professional_states,
+    }
     total_rows = dashboard["summary"]["total_records"]
     aggregated_rows = sum(item["records"] for item in dashboard["by_state"])
     if total_rows != aggregated_rows:
@@ -204,6 +243,7 @@ def build_public_artifacts(
         "population_source_sha256": population_hash,
         "teams_source_sha256": teams_hash,
         "services_source_sha256": services_hash,
+        "professionals_source_sha256": professionals_hash,
     }
     dashboard["metadata"] = public_metadata
     audit = {
@@ -281,8 +321,26 @@ def build_public_artifacts(
             "service_classifications": services["service_classifications"],
             "total_service_records": services["total_service_records"],
         },
+        "professionals_source": {
+            "catalog_url": (
+                "https://datasus.saude.gov.br/"
+                "cnes-recursos-humanos-a-partir-de-agosto-de-2007-"
+                "ocupacoes-classificadas-pela-cbo-2002/"
+            ),
+            "resource_url": professionals_url,
+            "obtained_at": obtained_at,
+            "last_modified": professionals_last_modified,
+            "etag": professionals_etag,
+            "sha256": professionals_hash,
+            "response_bytes": professionals_path.stat().st_size,
+            "competence": professionals["competence"],
+            "states": professionals["states"],
+            "total_professionals": professionals["total_professionals"],
+            "sus_professionals": professionals["sus_professionals"],
+            "non_sus_professionals": professionals["non_sus_professionals"],
+        },
         "contract": {
-            "version": "6.0",
+            "version": "7.0",
             "publication_level": "somente contagens agregadas",
             "raw_data_published": False,
         },
@@ -308,6 +366,14 @@ def build_public_artifacts(
             "services_by_classification": sum(
                 int(item["service_records"]) for item in services["by_classification"]
             ),
+            "professionals_national": professionals["total_professionals"],
+            "professionals_by_state": sum(
+                int(item["professionals"]) for item in professional_states
+            ),
+            "sus_professionals_national": professionals["sus_professionals"],
+            "sus_professionals_by_state": sum(
+                int(item["sus_professionals"]) for item in professional_states
+            ),
         },
         "checks": dashboard["checks"],
         "limitations": [
@@ -327,6 +393,10 @@ def build_public_artifacts(
             (
                 "Serviços cadastrados não comprovam atendimento realizado, "
                 "disponibilidade operacional ou produção."
+            ),
+            (
+                "Profissionais cadastrados não informam jornada efetiva, "
+                "disponibilidade, produtividade, cobertura ou suficiência."
             ),
             (
                 "Os tipos de unidade são exibidos por código até a incorporação "
