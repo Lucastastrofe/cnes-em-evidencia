@@ -177,6 +177,7 @@ class DashboardContractTest(unittest.TestCase):
         self.assertIn('"4 · Equipes de saúde"', self.source)
         self.assertIn('"5 · Serviços cadastrados"', self.source)
         self.assertIn('"6 · Evolução mensal de leitos"', self.source)
+        self.assertIn('"7 · Profissionais cadastrados"', self.source)
 
     def test_sixth_part_is_a_comparable_monthly_series(self):
         self.assertIn("Parte 6 · Evolução mensal", self.source)
@@ -187,6 +188,19 @@ class DashboardContractTest(unittest.TestCase):
         self.assertIn("mantida constante em toda a série exibida", self.source)
         self.assertIn("não informa ocupação, disponibilidade em ", self.source)
         self.assertIn("tempo real, demanda, acesso ou qualidade", self.source)
+
+    def test_seventh_part_compares_professional_presence_and_sus_participation(self):
+        self.assertIn("Parte 7 · Profissionais cadastrados", self.source)
+        self.assertIn("Profissionais por 100 mil habitantes", self.source)
+        self.assertIn("Participação associada ao SUS", self.source)
+        self.assertIn("Competência dos profissionais", self.source)
+        self.assertIn("CNES Profissionais + IBGE", self.source)
+        self.assertIn("Linhas de referência mostram o resultado nacional", self.source)
+        self.assertIn("não mede jornada", self.source)
+        self.assertIn(
+            "disponibilidade, produtividade, cobertura ou suficiência",
+            self.source,
+        )
 
     def test_fifth_part_explains_service_records_without_claiming_delivery(self):
         self.assertIn("Parte 5 · Serviços cadastrados", self.source)
@@ -226,6 +240,7 @@ class DashboardContractTest(unittest.TestCase):
         self.assertIn("Classificação do serviço", self.source)
         self.assertIn("Onde aparece", self.source)
         self.assertIn("O cadastro de leitos mudou entre uma competência", self.source)
+        self.assertIn("Como presença relativa e participação no SUS variam entre as UFs?", self.source)
 
     def test_primary_charts_match_the_analytical_relationship(self):
         self.assertIn("Impacto geográfico por UF", self.source)

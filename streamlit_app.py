@@ -163,6 +163,7 @@ def render_traceability(
     include_beds: bool = False,
     include_teams: bool = False,
     include_services: bool = False,
+    include_professionals: bool = False,
 ) -> None:
     with st.expander("Fontes e rastreabilidade"):
         trace_first, trace_second = st.columns(2)
@@ -214,6 +215,19 @@ def render_traceability(
             st.link_button(
                 "Consultar serviços no TabNet",
                 audit["services_source"]["catalog_url"],
+            )
+        if include_professionals:
+            st.write(
+                "**SHA-256 da consulta de profissionais:** "
+                f"`{audit['professionals_source']['sha256']}`"
+            )
+            st.write(
+                "**Profissionais reconciliados:** "
+                f"{format_integer(audit['professionals_source']['total_professionals'])}"
+            )
+            st.link_button(
+                "Consultar profissionais no TabNet",
+                audit["professionals_source"]["catalog_url"],
             )
 
 
@@ -1407,6 +1421,243 @@ def render_service_panel(dashboard: dict, audit: dict) -> None:
     render_traceability(audit, include_population=True, include_services=True)
 
 
+def professional_table(states: list[dict]) -> pd.DataFrame:
+    return pd.DataFrame(states).rename(
+        columns={
+            "name": "UF",
+            "professionals": "Profissionais cadastrados",
+            "sus_professionals": "Associados ao atendimento SUS",
+            "non_sus_professionals": "Não associados ao atendimento SUS",
+            "population": "População estimada",
+            "professionals_per_100k": "Profissionais por 100 mil habitantes",
+            "sus_share": "Participação associada ao SUS",
+        }
+    )
+
+
+def render_professional_panel(dashboard: dict, audit: dict) -> None:
+    summary = dashboard["professionals"]["summary"]
+    states = professional_table(dashboard["professionals"]["by_state"])
+    competence = str(summary["competence"])
+    competence_label = f"{competence[4:]}/{competence[:4]}"
+    national_rate = float(summary["professionals_per_100k"])
+    national_sus_share = float(summary["sus_share"])
+
+    st.markdown(
+        '<p class="eyebrow">Parte 7 · Profissionais cadastrados</p>',
+        unsafe_allow_html=True,
+    )
+    st.title("Profissionais e atendimento ao SUS")
+    st.markdown(
+        '<p class="deck">A etapa compara a presença de profissionais cadastrados e a '
+        "parcela associada ao atendimento no SUS em cada unidade federativa.</p>",
+        unsafe_allow_html=True,
+    )
+    render_source_facts(
+        [
+            ("Competência dos profissionais", competence_label),
+            ("Fonte principal", "CNES Profissionais + IBGE"),
+            (
+                "Painel atualizado",
+                format_timestamp(dashboard["metadata"]["generated_at"]),
+            ),
+        ]
+    )
+
+    render_panel_question(
+        "Como presença relativa e participação no SUS variam entre as UFs?",
+        "A comparação cruza duas medidas. Uma mostra a quantidade em relação à população; "
+        "a outra mostra quanto do total cadastrado está associado ao atendimento no SUS.",
+        "#6D587A",
+    )
+    render_definition_grid(
+        [
+            (
+                "Profissionais cadastrados",
+                "Contagem agregada da visão de indivíduos ativos publicada pelo TabNet.",
+            ),
+            (
+                "Profissionais por 100 mil habitantes",
+                "Relação entre a contagem da UF e a estimativa populacional do IBGE.",
+            ),
+            (
+                "Participação associada ao SUS",
+                "Parcela classificada pela fonte como atendimento ao SUS na competência.",
+            ),
+        ]
+    )
+    render_scope_note(
+        "A classificação descreve o cadastro da competência. Ela não mede jornada, "
+        "disponibilidade, produtividade, cobertura ou suficiência da força de trabalho."
+    )
+
+    st.subheader("Compare as unidades federativas")
+    filter_states, filter_scope = st.columns([2, 1])
+    with filter_states:
+        selected_ufs = st.multiselect(
+            "UFs para comparar (vazio = Brasil completo)",
+            states["UF"].tolist(),
+            placeholder="Todas as UFs",
+            max_selections=10,
+            key="professional_state_filter",
+        )
+    with filter_scope:
+        comparison_scope = st.selectbox(
+            "Recorte da comparação",
+            [
+                "Todas as UFs selecionadas",
+                "10 maiores taxas",
+                "10 maiores participações no SUS",
+            ],
+            key="professional_scope_filter",
+        )
+
+    comparison = states.copy()
+    if selected_ufs:
+        comparison = comparison.loc[comparison["UF"].isin(selected_ufs)]
+    if comparison_scope == "10 maiores taxas":
+        comparison = comparison.nlargest(10, "Profissionais por 100 mil habitantes")
+    elif comparison_scope == "10 maiores participações no SUS":
+        comparison = comparison.nlargest(10, "Participação associada ao SUS")
+
+    selected_total = int(comparison["Profissionais cadastrados"].sum())
+    selected_sus = int(comparison["Associados ao atendimento SUS"].sum())
+    selected_population = int(comparison["População estimada"].sum())
+    selected_rate = selected_total / selected_population * 100_000
+    selected_sus_share = selected_sus / selected_total if selected_total else 0.0
+    above_both = int(
+        (
+            (comparison["Profissionais por 100 mil habitantes"] >= national_rate)
+            & (comparison["Participação associada ao SUS"] >= national_sus_share)
+        ).sum()
+    )
+
+    metric_a, metric_b, metric_c, metric_d = st.columns(4)
+    metric_a.metric("Profissionais cadastrados", format_integer(selected_total))
+    metric_b.metric("Associados ao SUS", format_integer(selected_sus))
+    metric_c.metric("Profissionais por 100 mil", format_rate(selected_rate))
+    metric_d.metric("Participação no SUS", format_percent(selected_sus_share))
+    st.caption(
+        "Os indicadores são recalculados com a soma das UFs exibidas. A taxa usa a "
+        "população total do recorte e não a média simples dos estados."
+    )
+    st.markdown(
+        (
+            '<div class="verdict"><span class="eyebrow">Leitura do recorte</span>'
+            f"<strong>{above_both} de {len(comparison)} UFs exibidas ficam acima das duas "
+            "referências nacionais.</strong>"
+            "O resultado organiza a comparação cadastral e não classifica suficiência "
+            "ou desempenho assistencial.</div>"
+        ),
+        unsafe_allow_html=True,
+    )
+
+    chart_source = comparison.copy()
+    professional_points = (
+        alt.Chart(chart_source)
+        .mark_circle(size=180, color="#6D587A", opacity=0.86, stroke="#FFFFFF")
+        .encode(
+            x=alt.X(
+                "Profissionais por 100 mil habitantes:Q",
+                title="Profissionais por 100 mil habitantes",
+                scale=alt.Scale(zero=False),
+                axis=alt.Axis(format=".0f"),
+            ),
+            y=alt.Y(
+                "Participação associada ao SUS:Q",
+                title="Participação associada ao SUS",
+                scale=alt.Scale(zero=False),
+                axis=alt.Axis(format=".0%"),
+            ),
+            tooltip=[
+                alt.Tooltip("UF:N"),
+                alt.Tooltip("Profissionais cadastrados:Q", format=",.0f"),
+                alt.Tooltip("Associados ao atendimento SUS:Q", format=",.0f"),
+                alt.Tooltip("Profissionais por 100 mil habitantes:Q", format=".0f"),
+                alt.Tooltip("Participação associada ao SUS:Q", format=".1%"),
+            ],
+        )
+    )
+    rate_reference = (
+        alt.Chart(pd.DataFrame({"Taxa nacional": [national_rate]}))
+        .mark_rule(color="#8C9994", strokeDash=[6, 5], strokeWidth=2)
+        .encode(x=alt.X("Taxa nacional:Q"))
+    )
+    share_reference = (
+        alt.Chart(pd.DataFrame({"Participação nacional": [national_sus_share]}))
+        .mark_rule(color="#8C9994", strokeDash=[6, 5], strokeWidth=2)
+        .encode(y=alt.Y("Participação nacional:Q"))
+    )
+    professional_chart = professional_points + rate_reference + share_reference
+    if len(comparison) <= 10:
+        professional_labels = (
+            alt.Chart(chart_source)
+            .mark_text(dx=9, dy=-8, color="#4E3F58", fontSize=11)
+            .encode(
+                x=alt.X("Profissionais por 100 mil habitantes:Q"),
+                y=alt.Y("Participação associada ao SUS:Q"),
+                text=alt.Text("UF:N"),
+            )
+        )
+        professional_chart += professional_labels
+    professional_chart = style_chart(professional_chart.properties(height=500))
+
+    chart_tab, data_tab = st.tabs(["Posição das UFs", "Valores completos"])
+    with chart_tab:
+        st.caption(
+            "Linhas de referência mostram o resultado nacional nas duas medidas. "
+            "A posição de cada UF serve para comparação, não para formar um ranking de qualidade."
+        )
+        st.altair_chart(professional_chart, width="stretch", theme=None)
+    with data_tab:
+        table = comparison.copy()
+        table["Profissionais por 100 mil habitantes"] = (
+            table["Profissionais por 100 mil habitantes"].round().astype(int)
+        )
+        st.dataframe(
+            table[
+                [
+                    "UF",
+                    "Profissionais cadastrados",
+                    "Associados ao atendimento SUS",
+                    "População estimada",
+                    "Profissionais por 100 mil habitantes",
+                    "Participação associada ao SUS",
+                ]
+            ].sort_values("Profissionais por 100 mil habitantes", ascending=False),
+            width="stretch",
+            hide_index=True,
+            column_config={
+                "Profissionais cadastrados": st.column_config.NumberColumn(
+                    format="localized"
+                ),
+                "Associados ao atendimento SUS": st.column_config.NumberColumn(
+                    format="localized"
+                ),
+                "População estimada": st.column_config.NumberColumn(format="localized"),
+                "Profissionais por 100 mil habitantes": st.column_config.NumberColumn(
+                    format="%.0f"
+                ),
+                "Participação associada ao SUS": st.column_config.ProgressColumn(
+                    min_value=0,
+                    max_value=1,
+                    format="percent",
+                ),
+            },
+        )
+
+    st.caption(
+        f"Profissionais ativos no CNES na competência {competence_label} e população "
+        f'estimada pelo IBGE para {dashboard["summary"]["population_reference_year"]}. '
+        "As fontes mantêm suas competências e limitações identificadas."
+    )
+    render_traceability(
+        audit,
+        include_population=True,
+        include_professionals=True,
+    )
+
+
 def render_quality_panel(dashboard: dict, audit: dict) -> None:
     summary = dashboard["summary"]
     checks = dashboard["checks"]
@@ -1746,6 +1997,9 @@ def render() -> None:
     def bed_history_page_content() -> None:
         render_bed_history_panel(dashboard, audit)
 
+    def professional_page_content() -> None:
+        render_professional_panel(dashboard, audit)
+
     quality_page = st.Page(
         quality_page_content,
         title="1 · Qualidade cadastral",
@@ -1777,6 +2031,11 @@ def render() -> None:
         title="6 · Evolução mensal de leitos",
         icon=":material/timeline:",
     )
+    professional_page = st.Page(
+        professional_page_content,
+        title="7 · Profissionais cadastrados",
+        icon=":material/badge:",
+    )
     navigation = st.navigation(
         {
             "CNES em Evidência": [
@@ -1786,6 +2045,7 @@ def render() -> None:
                 team_page,
                 service_page,
                 bed_history_page,
+                professional_page,
             ]
         },
         position="sidebar",
