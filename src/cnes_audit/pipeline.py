@@ -17,7 +17,8 @@ from cnes_audit.beds import (
     latest_bed_capacity,
 )
 from cnes_audit.population import enrich_states_with_population, read_population_estimates
-from cnes_audit.integrated import build_profile, profile_csv
+from cnes_audit.integrated import build_profile, profile_csv, public_dataset, data_dictionary
+from cnes_audit.contracts import encode_dashboard, encode_profile
 from cnes_audit.professionals import (
     enrich_professionals_with_population,
     parse_professional_snapshot,
@@ -406,11 +407,14 @@ def build_public_artifacts(
         ],
     }
     profile = build_profile(dashboard)
-    _write_json(output_directory / "uf-profile.json", profile)
+    _write_json(output_directory / "dados.json", public_dataset(dashboard, profile, audit))
+    _write_json(output_directory / "dicionario.json", {"versao_contrato": "2.0", "colunas": data_dictionary(dashboard, profile)})
+    canonical_profile = encode_profile(profile)
+    _write_json(output_directory / "uf-profile.json", canonical_profile)
     csv_path = output_directory / "uf-profile.csv"
     csv_temporary = csv_path.with_suffix(".csv.tmp")
-    csv_temporary.write_text(profile_csv(profile["rows"]), encoding="utf-8-sig")
+    csv_temporary.write_text(profile_csv(canonical_profile["rows"]), encoding="utf-8-sig")
     os.replace(csv_temporary, csv_path)
-    _write_json(output_directory / "dashboard.json", dashboard)
+    _write_json(output_directory / "dashboard.json", encode_dashboard(dashboard))
     _write_json(output_directory / "audit-report.json", audit)
     return dashboard, audit

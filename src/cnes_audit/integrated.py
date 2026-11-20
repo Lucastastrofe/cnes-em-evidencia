@@ -8,6 +8,7 @@ import hashlib
 from zipfile import ZIP_DEFLATED, ZipFile
 from typing import Any
 from cnes_audit.quality import UF_NAMES
+from cnes_audit.contracts import canonical_tables, relational_snapshot
 
 METRICS = {
     "records": ("Estabelecimentos", None),
@@ -66,13 +67,13 @@ def build_profile(dashboard: dict[str, Any]) -> dict[str, Any]:
 
 def profile_csv(rows: list[dict[str, Any]]) -> str:
     output = io.StringIO(newline="")
-    writer = csv.DictWriter(output, fieldnames=list(rows[0]))
+    writer = csv.DictWriter(output, fieldnames=list(rows[0]), lineterminator="\n")
     writer.writeheader()
     writer.writerows(rows)
     return output.getvalue()
 
 
-def public_tables(dashboard: dict[str, Any], profile: dict[str, Any]) -> dict[str, list[dict]]:
+def legacy_tables(dashboard: dict[str, Any], profile: dict[str, Any]) -> dict[str, list[dict]]:
     tables = {"perfil_uf": profile["rows"]}
     for section in ("beds", "bed_history", "teams", "services", "professionals"):
         for name, rows in dashboard[section].items():
@@ -81,6 +82,22 @@ def public_tables(dashboard: dict[str, Any], profile: dict[str, Any]) -> dict[st
     for name in ("by_unit_type", "by_management", "checks"):
         tables[name] = dashboard[name]
     return tables
+
+
+def public_tables(dashboard: dict[str, Any], profile: dict[str, Any]) -> dict[str, list[dict]]:
+    return canonical_tables(legacy_tables(dashboard, profile))[0]
+
+
+def data_dictionary(dashboard: dict[str, Any], profile: dict[str, Any]) -> list[dict]:
+    return canonical_tables(legacy_tables(dashboard, profile))[1]
+
+
+def public_dataset(dashboard: dict, profile: dict, audit: dict) -> dict:
+    return {"versao_contrato": "2.0", "id_execucao": profile["run_id"],
+            "atualizado_em": profile["generated_at"], "competencias": profile["periods"],
+            "ano_populacao": profile["population_reference_year"],
+            "tabelas": public_tables(dashboard, profile), "dicionario": data_dictionary(dashboard, profile),
+            "fontes": source_catalog(audit), "limitacoes": audit.get("limitations", [])}
 
 
 def source_catalog(audit: dict[str, Any]) -> list[dict[str, Any]]:
@@ -113,7 +130,11 @@ def data_package(dashboard: dict[str, Any], profile: dict[str, Any], audit: dict
             manifest["files"].append({"path": filename, "rows": len(rows), "columns": list(rows[0]), "encoding": "UTF-8 BOM", "delimiter": ",", "null": "empty field", "sha256": hashlib.sha256(content).hexdigest()})
         archive.writestr("manifesto.json", json.dumps(manifest, ensure_ascii=False, indent=2))
         archive.writestr("fontes.json", json.dumps(source_catalog(audit), ensure_ascii=False, indent=2))
-        for name, value in (("dashboard.json", dashboard), ("perfil.json", profile), ("auditoria.json", audit)):
+        for name, value in (("dados.json", public_dataset(dashboard, profile, audit)), ("dicionario.json", data_dictionary(dashboard, profile)), ("auditoria.json", audit)):
             archive.writestr(name, json.dumps(value, ensure_ascii=False, indent=2))
+        archive.writestr("dicionario.csv", profile_csv(data_dictionary(dashboard, profile)).encode("utf-8-sig"))
+        ddl, database = relational_snapshot(tables, data_dictionary(dashboard, profile))
+        archive.writestr("schema.sql", ddl)
+        archive.writestr("cnes.sqlite", database)
         archive.writestr("LEIA-ME.txt", "CNES em Evidência\nDados agregados já publicados pelo projeto.\nCada CSV tem seu próprio grão; não some totais entre tabelas.\nCompetências e ano populacional: perfil.json. Fontes, hashes e limites: auditoria.json.\nCódigos de UF são identificadores: preserve como texto.\nAusências são campos vazios, não zero.\nProfissionais, equipes, serviços e leitos têm unidades diferentes.\nNão contém estabelecimentos individuais nem detalhamento municipal.\nO cadastro não informa acesso, ocupação ou disponibilidade em tempo real.\n")
     return output.getvalue()

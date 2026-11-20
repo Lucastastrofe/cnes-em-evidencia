@@ -8,12 +8,13 @@ from zipfile import ZipFile
 from pathlib import Path
 
 from cnes_audit.integrated import METRICS, build_profile, profile_csv, data_package, public_tables
+from cnes_audit.contracts import decode_dashboard
 
 
 class IntegratedTest(unittest.TestCase):
     def setUp(self):
         self.root = Path(__file__).parents[1]
-        self.dashboard = json.loads((self.root / "data/published/dashboard.json").read_text(encoding="utf-8"))
+        self.dashboard = decode_dashboard(json.loads((self.root / "data/published/dashboard.json").read_text(encoding="utf-8")))
 
     def test_reconciles_each_indicator_and_geometry(self):
         profile = build_profile(self.dashboard)

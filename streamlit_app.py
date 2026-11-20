@@ -10,9 +10,10 @@ import streamlit as st
 import cnes_audit.integrated as integrated
 
 # Streamlit may rerun this file while retaining imported modules from the prior release.
-if not hasattr(integrated, "source_catalog"):
+if not hasattr(integrated, "public_dataset"):
     importlib.reload(integrated)
-from cnes_audit.integrated import METRICS, data_package, profile_csv, public_tables, source_catalog
+from cnes_audit.integrated import METRICS, data_package, profile_csv, public_tables, source_catalog, data_dictionary, public_dataset
+from cnes_audit.contracts import decode_dashboard, decode_profile
 
 from cnes_audit.presentation import (
     describe_controls,
@@ -35,7 +36,7 @@ def published_data_version() -> tuple[int, int]:
 @st.cache_data(show_spinner=False)
 def load_data(data_version: tuple[int, int]) -> tuple[dict, dict]:
     del data_version
-    dashboard = json.loads((DATA_DIRECTORY / "dashboard.json").read_text(encoding="utf-8"))
+    dashboard = decode_dashboard(json.loads((DATA_DIRECTORY / "dashboard.json").read_text(encoding="utf-8")))
     audit = json.loads((DATA_DIRECTORY / "audit-report.json").read_text(encoding="utf-8"))
     return dashboard, audit
 
@@ -1909,7 +1910,7 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
     st.markdown('<p class="eyebrow">Parte 8 · Consulta territorial</p>', unsafe_allow_html=True)
     st.title("O que o CNES mostra em cada estado")
     st.write("Escolha um estado para conhecer seus estabelecimentos, leitos, equipes, serviços e profissionais cadastrados. Compare os números, consulte os detalhes e acompanhe a evolução dos leitos. O período de cada fonte aparece junto à consulta.")
-    profile = json.loads((DATA_DIRECTORY / "uf-profile.json").read_text(encoding="utf-8"))
+    profile = decode_profile(json.loads((DATA_DIRECTORY / "uf-profile.json").read_text(encoding="utf-8")))
     if profile["run_id"] != dashboard["metadata"]["run_id"]:
         st.error("A base integrada pertence a outra atualização. Aguarde a conclusão do pipeline.")
         return
@@ -2019,12 +2020,12 @@ def render_data_center(dashboard: dict, audit: dict) -> None:
     st.markdown('<p class="eyebrow">Dados e documentação</p>', unsafe_allow_html=True)
     st.title("Dados para consultar e reutilizar")
     st.write("Escolha o resumo por estado, uma tabela específica ou o pacote completo. Fontes, períodos e orientações de uso estão reunidos nesta página.")
-    profile = json.loads((DATA_DIRECTORY / "uf-profile.json").read_text(encoding="utf-8"))
+    profile = decode_profile(json.loads((DATA_DIRECTORY / "uf-profile.json").read_text(encoding="utf-8")))
     if profile["run_id"] != dashboard["metadata"]["run_id"]:
         st.warning("Os arquivos estão sendo atualizados. Tente novamente em instantes.")
         return
 
-    downloads, sources, usage = st.tabs(["Baixar dados", "Fontes oficiais", "Como usar"])
+    downloads, sources, dictionary_tab, api_tab, usage = st.tabs(["Baixar dados", "Fontes oficiais", "Dicionário", "API", "Como usar"])
     tables = public_tables(dashboard, profile)
     names = {
         "perfil_uf": "Resumo integrado por UF",
@@ -2044,12 +2045,14 @@ def render_data_center(dashboard: dict, audit: dict) -> None:
     }
     with downloads:
         st.subheader("Pacote completo")
-        st.write("Todas as tabelas públicas em CSV, acompanhadas de fontes, períodos e auditoria. Indicado para quem quer explorar os dados em outra ferramenta.")
+        st.write("Todas as tabelas públicas em CSV, uma base SQLite para consultas SQL, o esquema de criação e os arquivos de fontes, dicionário e auditoria.")
         st.download_button("Baixar pacote completo · ZIP", data_package(dashboard, profile, audit), "cnes-dados-publicos.zip", "application/zip", type="primary")
         st.subheader("Escolher uma tabela")
+        from cnes_audit.contracts import TABLES
+        names = {TABLES.get(key, (key,))[0]: value for key, value in names.items()}
         selected = st.selectbox("Tabela", list(tables), format_func=lambda key: names.get(key, key))
         rows = tables[selected]
-        uf_field = "state_code" if "state_code" in rows[0] else "code" if selected in ("perfil_uf", "beds_by_state", "bed_history_by_state", "teams_by_state", "services_by_state", "professionals_by_state") else None
+        uf_field = "co_uf" if "co_uf" in rows[0] else None
         if uf_field:
             uf_names = {row["code"]: row["name"] for row in profile["rows"]}
             uf = st.selectbox("Recorte territorial", ["Todas as UFs", *sorted(uf_names, key=uf_names.get)], format_func=lambda code: uf_names.get(code, code))
@@ -2061,7 +2064,34 @@ def render_data_center(dashboard: dict, audit: dict) -> None:
         st.download_button("Baixar tabela selecionada · CSV", profile_csv(rows).encode("utf-8-sig"), f"{selected}.csv", "text/csv")
         with st.expander("Resumo integrado em JSON"):
             st.write("Uma linha por UF, com competências, ano populacional e definição dos indicadores.")
-            st.download_button("Baixar resumo e metadados · JSON", json.dumps(profile, ensure_ascii=False, indent=2), "cnes-perfil-uf.json", "application/json")
+            dataset = public_dataset(dashboard, profile, audit)
+            summary = {key: value for key, value in dataset.items() if key != "tabelas"}
+            summary["dados"] = tables["perfil_uf"]
+            st.download_button("Baixar resumo e metadados · JSON", json.dumps(summary, ensure_ascii=False, indent=2), "cnes-perfil-uf.json", "application/json")
+    with dictionary_tab:
+        st.subheader("Da fonte à coluna publicada")
+        st.write("Os nomes publicados seguem snake_case. Campos agregados e indicadores calculados têm a transformação descrita; um nome derivado não é apresentado como coluna original da fonte.")
+        dictionary = data_dictionary(dashboard, profile)
+        chosen = st.selectbox("Dicionário da tabela", sorted(tables))
+        st.dataframe(pd.DataFrame([item for item in dictionary if item["tabela"] == chosen]), hide_index=True, width="stretch")
+        st.download_button("Baixar dicionário · CSV", profile_csv(dictionary).encode("utf-8-sig"), "dicionario.csv", "text/csv")
+        st.download_button("Baixar dicionário · JSON", json.dumps(dictionary, ensure_ascii=False, indent=2), "dicionario.json", "application/json")
+    with api_tab:
+        st.subheader("Consultar por URL")
+        base = "https://lucastastrofe.github.io/cnes-em-evidencia/api/v1"
+        st.write("API pública de leitura, sem chave. As respostas são arquivos JSON preparados a cada atualização do pipeline. Nenhuma consulta executa código no Streamlit.")
+        st.link_button("Abrir índice da API", f"{base}/index.json")
+        endpoint_table = st.selectbox("Tabela da API", sorted(tables))
+        endpoint = f"{base}/tabelas/{endpoint_table}.json"
+        if "co_uf" in tables[endpoint_table][0]:
+            code = st.selectbox("UF da API", ["Todas", *[row["code"] for row in profile["rows"]]])
+            if code != "Todas":
+                endpoint = f"{base}/tabelas/{endpoint_table}/ufs/{code}.json"
+        st.code(endpoint, language=None)
+        st.link_button("Consultar JSON", endpoint)
+        st.code(f'import requests\nresposta = requests.get("{endpoint}", timeout=30)\nresposta.raise_for_status()\ndados = resposta.json()["dados"]', language="python")
+        st.caption("Use os caminhos acima; parâmetros como ?uf=35 não filtram arquivos estáticos. Guarde a resposta localmente e evite repetir downloads sem necessidade. Em falhas temporárias, use timeout e novas tentativas com espera progressiva.")
+        st.write("O serviço gratuito tem limites de tráfego e pode responder 429 ou ficar indisponível. As respostas informam a execução e os períodos; a API não oferece garantia de disponibilidade ou dados em tempo real.")
     with sources:
         st.subheader("Fontes e condições de uso")
         st.write("As tabelas disponíveis aqui foram tratadas e agregadas pelo projeto. Os links abaixo levam às fontes oficiais. Cada uma tem seu período de referência e seus próprios limites de interpretação.")

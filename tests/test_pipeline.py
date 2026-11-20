@@ -5,6 +5,7 @@ from pathlib import Path
 from zipfile import ZipFile
 
 from cnes_audit.pipeline import build_public_artifacts
+from cnes_audit.contracts import decode_dashboard
 from cnes_audit.quality import UF_NAMES
 from cnes_audit.source import REQUIRED_COLUMNS
 
@@ -152,7 +153,7 @@ class PipelineTest(unittest.TestCase):
                 code_version="test-version",
             )
 
-            dashboard = json.loads((output / "dashboard.json").read_text(encoding="utf-8"))
+            dashboard = decode_dashboard(json.loads((output / "dashboard.json").read_text(encoding="utf-8")))
             audit = json.loads((output / "audit-report.json").read_text(encoding="utf-8"))
             public_text = json.dumps([dashboard, audit]).lower()
 

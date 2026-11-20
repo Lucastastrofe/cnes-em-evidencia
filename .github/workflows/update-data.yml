@@ -44,6 +44,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/published
+          python -m cnes_audit.publish
+          git add data/published docs/api docs/.nojekyll
           git commit -m "data: registra verificação diária do CNES"
           git push

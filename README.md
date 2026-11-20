@@ -1,5 +1,28 @@
 # CNES em Evidência
 
+## Dados, dicionário e API
+
+O contrato publicado 2.0 usa os nomes da fonte normalizados quando há correspondência
+direta; agregações e indicadores calculados têm nomes e transformações explícitos.
+O mesmo contrato alimenta arquivos persistidos, CSVs, JSONs e uma cópia SQLite com
+chaves primárias e relacionamentos. O pacote inclui o esquema SQL e o dicionário completo.
+
+- [Central de dados](https://cnes-em-evidencia.streamlit.app/dados)
+- [Índice da API](https://lucastastrofe.github.io/cnes-em-evidencia/api/v1/index.json)
+- [Contrato e migração](docs/CONTRATO-DADOS.md)
+- [Documentação da API gratuita e seus limites](docs/API.md)
+- [Divulgação e uso responsável](docs/USO-RESPONSAVEL.md)
+
+A API entrega respostas estáticas por tabela e UF, geradas na atualização diária.
+Não depende de manter o Streamlit acordado. O serviço gratuito está sujeito aos limites
+do GitHub Pages; não há promessa de chamadas ilimitadas ou de disponibilidade contínua.
+
+Para gerar os contratos e arquivos HTTP a partir da última execução validada:
+
+```bash
+python -m cnes_audit.publish
+```
+
 ## Parte 8 · Perfil territorial integrado
 
 Os downloads ficam na [central de dados](https://cnes-em-evidencia.streamlit.app/dados).
