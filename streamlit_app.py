@@ -1933,26 +1933,69 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
         feature["code"] = code
         feature["name"] = lookup.loc[code, "name"]
         feature["Valor"] = None if pd.isna(lookup.loc[code, "Valor"]) else float(lookup.loc[code, "Valor"])
-    selection = alt.selection_point(fields=["code"], name="uf", on="click", clear="dblclick")
+    selection = alt.selection_point(fields=["code"], name="uf", on="click", clear="dblclick", toggle=False)
     chart = alt.Chart(alt.Data(values=features)).mark_geoshape(stroke="#fbfaf6", strokeWidth=1).encode(
         color=alt.condition("isValid(datum.Valor)", alt.Color("Valor:Q", title=title, scale=alt.Scale(scheme="tealblues", zero=True), legend=alt.Legend(orient="bottom", format=",.0f", titleLimit=450)), alt.value("#dadeda")),
         opacity=alt.condition(selection, alt.value(1), alt.value(0.45)),
         tooltip=[alt.Tooltip("name:N", title="UF"), alt.Tooltip("Valor:Q", title=title, format=",.0f")],
     ).project(type="mercator").add_params(selection).properties(height=450)
     st.subheader(title)
-    st.caption("Toque ou clique em uma UF para destacar. Um duplo clique limpa o destaque. Cinza indica dado ausente. Consulte os valores exatos na tabela.")
+    st.caption("Clique ou toque em uma UF para abrir o perfil abaixo do mapa. Explore equipes, serviços e evolução dos leitos nas abas de detalhe. Cinza indica dado ausente.")
     map_tab, table_tab = st.tabs(["Mapa do Brasil", "Valores por UF"])
     with map_tab:
-        st.altair_chart(style_chart(chart), width="stretch", theme=None)
+        event = st.altair_chart(style_chart(chart), width="stretch", theme=None, key="territory_map", on_select="rerun", selection_mode="uf")
     with table_tab:
         st.dataframe(values[["name", metric, "population", "Valor"]].rename(columns={"name": "UF", metric: labels[metric], "population": "População", "Valor": title + " · comparação"}), hide_index=True, width="stretch", column_config={labels[metric]: st.column_config.NumberColumn(format="%.0f"), "População": st.column_config.NumberColumn(format="%.0f"), title + " · comparação": st.column_config.NumberColumn(format="%.0f")})
-    state = st.selectbox("Estado", frame["name"].sort_values().tolist())
+    picked = event.selection.get("uf", [])
+    picked_code = picked[-1].get("code") if picked else None
+    if picked_code and picked_code != st.session_state.get("last_map_uf"):
+        selected = frame.loc[frame["code"] == picked_code, "name"]
+        if not selected.empty:
+            st.session_state["territory_state"] = selected.iloc[0]
+            st.session_state["last_map_uf"] = picked_code
+    state = st.selectbox("Estado selecionado · altere aqui ou clique no mapa", frame["name"].sort_values().tolist(), key="territory_state")
     row = frame.loc[frame["name"] == state].iloc[0]
     st.subheader(state)
     for columns, fields in [(st.columns(3), ["records", "beds", "professionals"]), (st.columns(2), ["teams", "service_records"])]:
         for column, field in zip(columns, fields):
             column.metric(labels[field], "Não disponível" if pd.isna(row[field]) else format_integer(int(row[field])))
     st.caption("Cada indicador mantém sua unidade. Registros de serviços não equivalem a serviços únicos; os totais não medem atendimento ou disponibilidade atual.")
+    detail_tabs = st.tabs(["Leitos e SUS", "Equipes", "Serviços", "Evolução mensal"])
+    with detail_tabs[0]:
+        st.subheader(f"Leitos cadastrados em {state}")
+        bed_total, bed_sus = int(row["beds"]), int(row["sus_beds"])
+        composition = pd.DataFrame({"Parcela": ["Destinados ao SUS", "Demais leitos"], "Leitos": [bed_sus, bed_total - bed_sus]})
+        st.altair_chart(style_chart(alt.Chart(composition).mark_bar().encode(x=alt.X("Leitos:Q", axis=alt.Axis(format="d")), color=alt.Color("Parcela:N", scale=alt.Scale(range=["#176b52", "#c6d4cf"]), legend=alt.Legend(orient="bottom")), tooltip=["Parcela:N", alt.Tooltip("Leitos:Q", format=",.0f")]).properties(height=110)), width="stretch", theme=None)
+        st.write(f"{format_integer(bed_sus)} dos {format_integer(bed_total)} leitos estão destinados ao SUS ({format_percent(bed_sus / bed_total) if bed_total else 'sem total para calcular'}).")
+        st.caption("Capacidade cadastrada; não informa ocupação ou disponibilidade em tempo real.")
+    for tab, section, label, quantity in [(detail_tabs[1], "teams", "team_name", "teams"), (detail_tabs[2], "services", "classification_name", "service_records")]:
+        with tab:
+            source_key = "by_state_type" if section == "teams" else "by_state_classification"
+            detail = pd.DataFrame(dashboard[section][source_key])
+            detail = detail.loc[detail["state_code"] == row["code"]].copy()
+            search = st.text_input("Buscar tipo de equipe" if section == "teams" else "Buscar serviço ou classificação", key=f"territory_search_{section}")
+            if section == "services":
+                detail["Descrição"] = detail["service_name"] + " · " + detail[label]
+            else:
+                detail["Descrição"] = detail[label]
+            if search:
+                detail = detail.loc[detail["Descrição"].str.contains(search, case=False, regex=False, na=False)]
+            detail = detail.sort_values(quantity, ascending=False)
+            st.caption(f"{len(detail)} categorias encontradas em {state}. O gráfico exibe até 10; a tabela e o download preservam o resultado completo da busca.")
+            if detail.empty:
+                st.info("Nenhuma categoria corresponde à busca nesta UF.")
+            else:
+                st.altair_chart(style_chart(alt.Chart(detail.head(10)).mark_bar(color="#2F6F83").encode(x=alt.X(f"{quantity}:Q", title="Registros", axis=alt.Axis(format="d")), y=alt.Y("Descrição:N", sort="-x", title=None, axis=alt.Axis(labelLimit=210)), tooltip=["Descrição:N", alt.Tooltip(f"{quantity}:Q", title="Registros", format=",.0f")]).properties(height=340)), width="stretch", theme=None)
+                st.dataframe(detail[["Descrição", quantity]].rename(columns={quantity: "Registros"}), hide_index=True, width="stretch", column_config={"Registros": st.column_config.NumberColumn(format="%.0f")})
+                st.download_button("Baixar detalhe desta UF", detail.to_csv(index=False).encode("utf-8-sig"), f"cnes-{section}-{row['code']}.csv", "text/csv", key=f"download_{section}")
+    with detail_tabs[3]:
+        history = pd.DataFrame(dashboard["bed_history"]["by_state"])
+        history = history.loc[history["code"] == row["code"]].copy()
+        history["Mês"] = pd.to_datetime(history["competence"], format="%Y%m")
+        history = history.melt(id_vars=["Mês"], value_vars=["beds", "sus_beds"], var_name="Série", value_name="Leitos")
+        history["Série"] = history["Série"].map({"beds": "Total", "sus_beds": "SUS"})
+        st.altair_chart(style_chart(alt.Chart(history).mark_line(point=True).encode(x=alt.X("Mês:T", axis=alt.Axis(format="%m/%Y")), y=alt.Y("Leitos:Q", scale=alt.Scale(zero=True), axis=alt.Axis(format="d")), color=alt.Color("Série:N", legend=alt.Legend(orient="bottom")), tooltip=[alt.Tooltip("Mês:T", format="%m/%Y"), "Série:N", alt.Tooltip("Leitos:Q", format=",.0f")]).properties(height=320)), width="stretch", theme=None)
+        st.caption("As variações representam alterações no cadastro mensal, sem permitir concluir melhora ou piora da assistência.")
     st.subheader("O que a governança muda nesta leitura")
     st.write("A comparação reúne as fontes pela mesma chave de UF e usa a população como denominador comum. Campos ausentes permanecem ausentes: não são convertidos em zero. As competências precisam ser conferidas antes de interpretar os indicadores em conjunto.")
     with st.expander("Períodos e definições das fontes"):
@@ -2108,7 +2151,7 @@ def render() -> None:
     )
     navigation = st.navigation(
         {
-            "Visão integrada": [st.Page(lambda: render_integrated_panel(dashboard, audit), title="Perfil por UF", url_path="integrated_profile", default=True)],
+            "Produto integrado": [st.Page(lambda: render_integrated_panel(dashboard, audit), title="8 · Mapa e perfil territorial", default=True)],
             "CNES em Evidência": [
                 quality_page,
                 population_page,

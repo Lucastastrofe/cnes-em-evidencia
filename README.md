@@ -5,6 +5,9 @@
 [Abrir o mapa interativo](https://cnes-em-evidencia.streamlit.app/)
 
 A página inicial reúne as dimensões estudadas nas sete etapas em uma consulta por UF.
+No menu, abra **8 · Mapa e perfil territorial**. O clique em um estado atualiza o perfil:
+composição dos leitos SUS, tipos de equipe, serviços e classificações com busca e download,
+e série mensal de leitos. A seleção pelo campo de UF oferece o mesmo detalhamento.
 Escolha estabelecimentos, leitos, parcela SUS, equipes, serviços ou profissionais e alterne
 entre contagens e taxas por 100 mil habitantes. A tabela oferece os valores do mapa sem
 depender de cores ou de passar o mouse. O perfil estadual permite consultar outras dimensões.

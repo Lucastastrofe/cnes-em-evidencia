@@ -2,6 +2,10 @@
 
 Objetivo: permitir comparar a presença cadastral por UF e reutilizar os agregados com origem e período identificados.
 
+Revisão de interação: o clique no mapa deve atualizar a UF do perfil. As abas mostram
+composição dos leitos SUS, tipos de equipe, classificações de serviços e evolução mensal.
+Busca e exportação preservam o recorte estadual. Validado no navegador com clique em Mato Grosso.
+
 Aceite: 27 UFs na malha e no produto; totais reconciliados por indicador; chave única;
 contagens inteiras; nulos preservados; comparação absoluta e por população; tabela acessível;
 download CSV/JSON; períodos por fonte; navegação legível em telas estreitas.
