@@ -1966,8 +1966,11 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
     with detail_tabs[0]:
         st.subheader(f"Leitos cadastrados em {state}")
         bed_total, bed_sus = int(row["beds"]), int(row["sus_beds"])
-        composition = pd.DataFrame({"Parcela": ["Destinados ao SUS", "Demais leitos"], "Leitos": [bed_sus, bed_total - bed_sus]})
-        st.altair_chart(style_chart(alt.Chart(composition).mark_bar().encode(x=alt.X("Leitos:Q", axis=alt.Axis(format="d")), color=alt.Color("Parcela:N", scale=alt.Scale(range=["#176b52", "#c6d4cf"]), legend=alt.Legend(orient="bottom")), tooltip=["Parcela:N", alt.Tooltip("Leitos:Q", format=",.0f")]).properties(height=110)), width="stretch", theme=None)
+        import cnes_audit.visuals as visuals
+        if not hasattr(visuals, "bed_composition"):
+            importlib.reload(visuals)
+        _, composition_chart = visuals.bed_composition(bed_total, bed_sus)
+        st.altair_chart(style_chart(composition_chart), width="stretch", theme=None)
         st.write(f"{format_integer(bed_sus)} dos {format_integer(bed_total)} leitos estão destinados ao SUS ({format_percent(bed_sus / bed_total) if bed_total else 'sem total para calcular'}).")
         st.caption("Capacidade cadastrada; não informa ocupação ou disponibilidade em tempo real.")
     for tab, section, label, quantity in [(detail_tabs[1], "teams", "team_name", "teams"), (detail_tabs[2], "services", "classification_name", "service_records")]:
