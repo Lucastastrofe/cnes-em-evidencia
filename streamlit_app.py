@@ -1,11 +1,17 @@
 from __future__ import annotations
 
 import json
+import importlib
 from pathlib import Path
 
 import altair as alt
 import pandas as pd
 import streamlit as st
+import cnes_audit.integrated as integrated
+
+# Streamlit may rerun this file while retaining imported modules from the prior release.
+if not hasattr(integrated, "source_catalog"):
+    importlib.reload(integrated)
 from cnes_audit.integrated import METRICS, data_package, profile_csv, public_tables, source_catalog
 
 from cnes_audit.presentation import (
