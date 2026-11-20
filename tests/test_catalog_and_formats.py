@@ -26,7 +26,9 @@ class CatalogAndFormatsTest(unittest.TestCase):
     def test_source_columns_and_layers_are_separate_and_reconcile(self):
         tables = public_tables(self.dashboard, self.profile)
         self.assertEqual(set(tables["fonte_leitos"][0]), {"comp", "uf", "leitos_existentes", "leitos_sus", "uti_total_exist", "uti_total_sus"})
-        self.assertEqual(set(tables["fonte_populacao"][0]), {"d1c", "d1n", "d3c", "v"})
+        self.assertEqual(set(tables["fonte_populacao"][0]), {"co_uf", "nome_uf", "ano_referencia", "populacao_estimada"})
+        original_fields = {field["coluna"]: field["nome_na_fonte"] for field in data_dictionary(self.dashboard, self.profile) if field["tabela"] == "fonte_populacao"}
+        self.assertEqual(original_fields, {"co_uf": "D1C", "nome_uf": "D1N", "ano_referencia": "D3C", "populacao_estimada": "V"})
         latest = max(row["comp"] for row in tables["fonte_leitos"])
         self.assertEqual(sum(row["leitos_existentes"] for row in tables["fonte_leitos"] if row["comp"] == latest), self.dashboard["beds"]["summary"]["total_beds"])
         self.assertEqual(sum(row["quantidade"] for row in tables["fonte_profissionais"]), self.dashboard["professionals"]["summary"]["total_professionals"])

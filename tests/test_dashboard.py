@@ -155,7 +155,7 @@ class DashboardContractTest(unittest.TestCase):
         self.assertIn("Painel atualizado", self.source)
 
     def test_second_part_compares_cnes_with_population_without_claiming_capacity(self):
-        self.assertIn("Parte 2 · Comparação proporcional", self.source)
+        self.assertIn("Estudo aplicado · Comparação proporcional", self.source)
         self.assertIn("por 100 mil habitantes", self.source)
         self.assertIn("não mede oferta, acesso ou capacidade assistencial", self.source)
         self.assertNotIn("O ETL combina", self.source)
@@ -168,19 +168,17 @@ class DashboardContractTest(unittest.TestCase):
         self.assertIn("Taxa ponderada", self.source)
         self.assertIn("Cadastros no recorte", self.source)
 
-    def test_each_part_has_its_own_dashboard_navigation(self):
+    def test_study_navigation_keeps_legacy_routes_without_weekly_menu(self):
         self.assertIn("st.navigation", self.source)
-        self.assertIn('"CNES em Evidência"', self.source)
-        self.assertIn('"1 · Qualidade cadastral"', self.source)
-        self.assertIn('"2 · Presença por população"', self.source)
-        self.assertIn('"3 · Capacidade hospitalar"', self.source)
-        self.assertIn('"4 · Equipes de saúde"', self.source)
-        self.assertIn('"5 · Serviços cadastrados"', self.source)
-        self.assertIn('"6 · Evolução mensal de leitos"', self.source)
-        self.assertIn('"7 · Profissionais cadastrados"', self.source)
+        self.assertIn('position="hidden"', self.source)
+        self.assertIn('label="Estudo aplicado"', self.source)
+        self.assertIn('label="Dados e documentação"', self.source)
+        self.assertIn('label="Qualidade e governança"', self.source)
+        for route in ("quality_page_content", "population_page_content", "bed_page_content", "team_page_content", "service_page_content", "bed_history_page_content", "professional_page_content"):
+            self.assertIn(route, self.source)
 
     def test_sixth_part_is_a_comparable_monthly_series(self):
-        self.assertIn("Parte 6 · Evolução mensal", self.source)
+        self.assertIn("Estudo aplicado · Evolução mensal", self.source)
         self.assertIn("Evolução dos leitos cadastrados", self.source)
         self.assertIn("Competências comparadas", self.source)
         self.assertIn("UFs para comparar (vazio = Brasil)", self.source)
@@ -190,7 +188,7 @@ class DashboardContractTest(unittest.TestCase):
         self.assertIn("tempo real, demanda, acesso ou qualidade", self.source)
 
     def test_seventh_part_compares_professional_presence_and_sus_participation(self):
-        self.assertIn("Parte 7 · Profissionais cadastrados", self.source)
+        self.assertIn("Estudo aplicado · Profissionais cadastrados", self.source)
         self.assertIn("Profissionais por 100 mil habitantes", self.source)
         self.assertIn("Participação associada ao SUS", self.source)
         self.assertIn("Competência dos profissionais", self.source)
@@ -203,19 +201,19 @@ class DashboardContractTest(unittest.TestCase):
         )
 
     def test_fifth_part_explains_service_records_without_claiming_delivery(self):
-        self.assertIn("Parte 5 · Serviços cadastrados", self.source)
+        self.assertIn("Estudo aplicado · Serviços cadastrados", self.source)
         self.assertIn("Registros de serviço/classificação", self.source)
         self.assertIn("não comprova atendimento realizado", self.source)
         self.assertIn("Competência dos serviços", self.source)
 
     def test_fourth_part_explains_teams_without_claiming_workforce_or_coverage(self):
-        self.assertIn("Parte 4 · Equipes de saúde", self.source)
+        self.assertIn("Estudo aplicado · Equipes de saúde", self.source)
         self.assertIn("Equipes cadastradas", self.source)
         self.assertIn("não representa quantidade de profissionais", self.source)
         self.assertIn("Competência das equipes", self.source)
 
     def test_third_part_explains_capacity_without_claiming_availability(self):
-        self.assertIn("Parte 3 · Capacidade hospitalar", self.source)
+        self.assertIn("Estudo aplicado · Capacidade hospitalar", self.source)
         self.assertIn("Leitos existentes", self.source)
         self.assertIn("Leitos destinados ao SUS", self.source)
         self.assertIn("não informa ocupação ou disponibilidade em tempo real", self.source)

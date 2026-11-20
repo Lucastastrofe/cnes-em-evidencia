@@ -38,3 +38,6 @@ jobs:
 
       - name: Validar o Streamlit
         run: streamlit version
+
+      - name: Conferir as páginas do painel
+        run: python tests/smoke_panels.py

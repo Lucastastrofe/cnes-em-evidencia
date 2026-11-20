@@ -1,5 +1,13 @@
 # Contexto do projeto
 
+## Experiência final
+
+Navegação principal: Estudo aplicado, Dados e documentação e Qualidade e governança.
+As análises são selecionadas por tema dentro do estudo; os links semanais antigos são
+compatíveis, mas não aparecem como uma lista de etapas. O mapa apresenta mapa, perfil e
+método sob demanda. A página /governanca distingue controles da execução dos dados e
+verificação do software, consultando o resultado público do CI sem prometer certificação.
+
 ## Produto atual · revisão de 20/11/2026
 
 A série analítica de sete etapas sustenta um produto de dados independente da apresentação.

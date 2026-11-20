@@ -5,7 +5,7 @@ import copy
 import sqlite3
 import json
 
-PUBLIC_CONTRACT_VERSION = "2.1"
+PUBLIC_CONTRACT_VERSION = "3.0"
 
 TABLES = {
     "perfil_uf": ("perfil_uf", ["co_uf"], "UF"),
@@ -169,7 +169,7 @@ def encode_profile(profile: dict) -> dict:
     tables, dictionary = canonical_tables({"perfil_uf": profile["rows"]})
     result["rows"] = tables["perfil_uf"]
     result["dictionary"] = dictionary
-    result["schema_version"] = "2.1"
+    result["schema_version"] = "3.0"
     result["_colunas_legadas"] = {field_contract("perfil_uf", field)[0]: field for field in profile["rows"][0]}
     return result
 
@@ -188,7 +188,9 @@ def relational_snapshot(tables: dict, dictionary: list[dict]) -> tuple[str, byte
     connection.execute("PRAGMA foreign_keys=ON")
     statements = []
     try:
-        for table, rows in tables.items():
+        ordered = (["perfil_uf"] if "perfil_uf" in tables else []) + [name for name in tables if name != "perfil_uf"]
+        for table in ordered:
+            rows = tables[table]
             columns = [item for item in dictionary if item["tabela"] == table]
             keys = [item["coluna"] for item in columns if item["chave"]]
             definitions = []
@@ -209,7 +211,7 @@ def relational_snapshot(tables: dict, dictionary: list[dict]) -> tuple[str, byte
         statements.append(metadata_statement)
         connection.execute(metadata_statement)
         reference = dictionary[0]
-        metadata = {"id_execucao": reference.get("id_execucao", "Consultar manifesto"), "atualizado_em": reference.get("atualizado_em", "Consultar manifesto"), "versao_contrato": reference.get("versao_contrato", "2.1"), "dicionario_json": json.dumps(dictionary, ensure_ascii=False)}
+        metadata = {"id_execucao": reference.get("id_execucao", "Consultar manifesto"), "atualizado_em": reference.get("atualizado_em", "Consultar manifesto"), "versao_contrato": reference.get("versao_contrato", "3.0"), "dicionario_json": json.dumps(dictionary, ensure_ascii=False)}
         connection.executemany('INSERT INTO "__metadados" VALUES (?,?)', metadata.items())
         connection.commit()
         if connection.execute("PRAGMA integrity_check").fetchone()[0] != "ok":

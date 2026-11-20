@@ -3,7 +3,7 @@ from streamlit.testing.v1 import AppTest
 
 
 panels = ["quality", "population", "bed", "team", "service", "bed_history", "professional", "integrated"]
-functions = [f"render_{panel}_panel" for panel in panels] + ["render_data_center"]
+functions = [f"render_{panel}_panel" for panel in panels] + ["render_data_center", "render_governance_panel", "render_study_panel"]
 for function in functions:
     source = (
         "import runpy\n"

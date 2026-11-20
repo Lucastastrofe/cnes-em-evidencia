@@ -58,7 +58,7 @@ def build_api(data_directory: Path, destination: Path) -> dict:
         write(f"ufs/{row['co_uf']}.json", {"metadados": meta, "dados": row})
     write("catalogo.json", {"metadados": meta, "tabelas": catalog})
     write("catalogo-dcat.json", dcat_catalog(dataset))
-    write("index.json", {"contrato": "2.1", "transporte": "API estática GET", "endpoints": endpoints,
+    write("index.json", {"contrato": "3.0", "transporte": "API estática GET", "endpoints": endpoints,
                          "filtro_uf": "tabelas/{tabela}/ufs/{co_uf}.json", "parametros_query": False})
     (api / "dicionario.csv").write_text(profile_csv(dataset["dicionario"]), encoding="utf-8-sig")
     (api / "dados.zip").write_bytes(data_package(dashboard, profile, audit))

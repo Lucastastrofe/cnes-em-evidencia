@@ -2,25 +2,38 @@ from __future__ import annotations
 
 import json
 import importlib
+import urllib.request
 from pathlib import Path
 
 import altair as alt
 import pandas as pd
 import streamlit as st
+import cnes_audit.catalog as catalog
 import cnes_audit.contracts as contracts
 import cnes_audit.integrated as integrated
 
-# Streamlit may rerun this file while retaining imported modules from the prior release.
-if getattr(contracts, "PUBLIC_CONTRACT_VERSION", None) != "2.1":
+# Streamlit may retain pure contract modules from the prior release.
+if getattr(catalog, "PUBLIC_CONTRACT_VERSION", None) != "3.0":
+    importlib.reload(catalog)
+if getattr(contracts, "PUBLIC_CONTRACT_VERSION", None) != "3.0":
     importlib.reload(contracts)
-if getattr(integrated, "PUBLIC_CONTRACT_VERSION", None) != "2.1":
+if getattr(integrated, "PUBLIC_CONTRACT_VERSION", None) != "3.0":
     importlib.reload(integrated)
 from cnes_audit.integrated import METRICS, data_package, profile_csv, public_tables, source_catalog, data_dictionary, public_dataset
-from cnes_audit.contracts import decode_dashboard, decode_profile
+from cnes_audit.contracts import TABLES, decode_dashboard, decode_profile
 from cnes_audit.api_client import fetch_catalog, fetch_table
 from cnes_audit.catalog import table_catalog, UF_ABBREVIATIONS
 from cnes_audit.contracts import relational_snapshot
 from cnes_audit.exports import parquet_bytes
+from cnes_audit.presentation import (
+    describe_controls,
+    format_timestamp,
+    interpret_materiality,
+    management_without_information,
+    split_checks,
+)
+
+DATA_DIRECTORY = Path(__file__).parent / "data" / "published"
 
 
 @st.cache_data(ttl=600, show_spinner=False)
@@ -32,15 +45,20 @@ def load_api_catalog() -> dict:
 def load_api_table(table: str, uf: str | None = None) -> dict:
     return fetch_table(table, uf)
 
-from cnes_audit.presentation import (
-    describe_controls,
-    format_timestamp,
-    interpret_materiality,
-    management_without_information,
-    split_checks,
-)
 
-DATA_DIRECTORY = Path(__file__).parent / "data" / "published"
+@st.cache_data(ttl=600, show_spinner=False)
+def load_ci_status() -> dict:
+    request = urllib.request.Request("https://api.github.com/repos/Lucastastrofe/cnes-em-evidencia/actions/runs?per_page=15", headers={"Accept": "application/vnd.github+json", "User-Agent": "cnes-em-evidencia"})
+    with urllib.request.urlopen(request, timeout=15) as response:
+        payload = json.load(response)
+    runs = payload.get("workflow_runs", [])
+    for run in runs:
+        if run.get("name") == "Verificação" and run.get("head_branch") == "main":
+            url = str(run.get("html_url", ""))
+            if not url.startswith("https://github.com/Lucastastrofe/cnes-em-evidencia/actions/runs/"):
+                raise ValueError("Link de verificação inválido")
+            return {key: run.get(key) for key in ("status", "conclusion", "html_url", "head_sha", "updated_at")}
+    raise ValueError("Não foi encontrada uma verificação do ramo principal")
 
 
 def published_data_version() -> tuple[int, int]:
@@ -117,7 +135,7 @@ def render_definition_grid(items: list[tuple[str, str]]) -> None:
         f'<div class="definition"><strong>{title}</strong><p>{description}</p></div>'
         for title, description in items
     )
-    with st.expander("Como ler esta etapa"):
+    with st.expander("Como interpretar"):
         st.markdown(
             f'<div class="definition-grid">{definitions}</div>',
             unsafe_allow_html=True,
@@ -128,7 +146,7 @@ def render_panel_question(title: str, description: str, accent: str) -> None:
     st.markdown(
         (
             f'<section class="analysis-intro" style="--panel-accent: {accent}">'
-            '<span>O que esta etapa responde</span>'
+            '<span>Pergunta da análise</span>'
             f'<h2>{title}</h2>'
             f'<p>{description}</p>'
             "</section>"
@@ -263,7 +281,7 @@ def render_population_panel(dashboard: dict, audit: dict) -> None:
         subset=["População estimada", "Cadastros por 100 mil habitantes"]
     )
 
-    st.markdown('<p class="eyebrow">Parte 2 · Comparação proporcional</p>', unsafe_allow_html=True)
+    st.markdown('<p class="eyebrow">Estudo aplicado · Comparação proporcional</p>', unsafe_allow_html=True)
     st.title("CNES e população")
     st.markdown(
         '<p class="deck">A população entra como referência para comparar a presença cadastral '
@@ -469,10 +487,10 @@ def render_bed_panel(dashboard: dict, audit: dict) -> None:
     competence = str(summary["competence"])
     competence_label = f"{competence[4:]}/{competence[:4]}"
 
-    st.markdown('<p class="eyebrow">Parte 3 · Capacidade hospitalar</p>', unsafe_allow_html=True)
+    st.markdown('<p class="eyebrow">Estudo aplicado · Capacidade hospitalar</p>', unsafe_allow_html=True)
     st.title("Leitos hospitalares por UF")
     st.markdown(
-        '<p class="deck">Esta etapa mostra a capacidade cadastrada em cada UF e identifica '
+        '<p class="deck">A análise mostra a capacidade cadastrada em cada UF e identifica '
         "quanto do total está destinado ao SUS.</p>",
         unsafe_allow_html=True,
     )
@@ -699,7 +717,7 @@ def render_bed_history_panel(dashboard: dict, audit: dict) -> None:
     first_label = f"{first_competence[4:]}/{first_competence[:4]}"
     latest_label = f"{latest_competence[4:]}/{latest_competence[:4]}"
 
-    st.markdown('<p class="eyebrow">Parte 6 · Evolução mensal</p>', unsafe_allow_html=True)
+    st.markdown('<p class="eyebrow">Estudo aplicado · Evolução mensal</p>', unsafe_allow_html=True)
     st.title("Evolução dos leitos cadastrados")
     st.markdown(
         '<p class="deck">Uma série por competência para acompanhar mudanças no cadastro de '
@@ -943,7 +961,7 @@ def render_team_panel(dashboard: dict, audit: dict) -> None:
     competence = str(summary["competence"])
     competence_label = f"{competence[4:]}/{competence[:4]}"
 
-    st.markdown('<p class="eyebrow">Parte 4 · Equipes de saúde</p>', unsafe_allow_html=True)
+    st.markdown('<p class="eyebrow">Estudo aplicado · Equipes de saúde</p>', unsafe_allow_html=True)
     st.title("Equipes de saúde por UF")
     st.markdown(
         '<p class="deck">Uma leitura dos registros de equipes ativas no CNES, com comparação '
@@ -1195,7 +1213,7 @@ def render_service_panel(dashboard: dict, audit: dict) -> None:
     competence = str(summary["competence"])
     competence_label = f"{competence[4:]}/{competence[:4]}"
 
-    st.markdown('<p class="eyebrow">Parte 5 · Serviços cadastrados</p>', unsafe_allow_html=True)
+    st.markdown('<p class="eyebrow">Estudo aplicado · Serviços cadastrados</p>', unsafe_allow_html=True)
     st.title("Serviços de saúde registrados no CNES")
     st.markdown(
         '<p class="deck">Escolha uma classificação e veja como seus registros se distribuem '
@@ -1212,7 +1230,7 @@ def render_service_panel(dashboard: dict, audit: dict) -> None:
 
     render_panel_question(
         "Onde uma classificação de serviço aparece no cadastro?",
-        "Em vez de resumir todas as classificações em uma única taxa, esta etapa permite escolher "
+        "Para consultar as diferenças entre classificações, a análise permite escolher "
         "uma delas e observar sua distribuição entre as UFs.",
         "#955A43",
     )
@@ -1469,12 +1487,12 @@ def render_professional_panel(dashboard: dict, audit: dict) -> None:
     national_sus_share = float(summary["sus_share"])
 
     st.markdown(
-        '<p class="eyebrow">Parte 7 · Profissionais cadastrados</p>',
+        '<p class="eyebrow">Estudo aplicado · Profissionais cadastrados</p>',
         unsafe_allow_html=True,
     )
     st.title("Profissionais e atendimento ao SUS")
     st.markdown(
-        '<p class="deck">A etapa compara a presença de profissionais cadastrados e a '
+        '<p class="deck">A análise compara a presença de profissionais cadastrados e a '
         "parcela associada ao atendimento no SUS em cada unidade federativa.</p>",
         unsafe_allow_html=True,
     )
@@ -1692,10 +1710,10 @@ def render_quality_panel(dashboard: dict, audit: dict) -> None:
         missing_location["id"], missing_location["failure_rate"]
     )
 
-    st.markdown('<p class="eyebrow">Parte 1 · Qualidade cadastral</p>', unsafe_allow_html=True)
+    st.markdown('<p class="eyebrow">Estudo aplicado · Qualidade cadastral</p>', unsafe_allow_html=True)
     st.title("CNES em Evidência")
     st.markdown(
-        '<p class="deck">Antes de usar o CNES em mapas ou indicadores, esta etapa verifica '
+        '<p class="deck">Antes de usar o CNES em mapas ou indicadores, esta análise verifica '
         "se os campos necessários sustentam a análise.</p>",
         unsafe_allow_html=True,
     )
@@ -1933,6 +1951,7 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
         return
     frame = pd.DataFrame(profile["rows"])
     labels = {key: value[0] for key, value in METRICS.items()}
+    view = st.radio("Visualização", ["Mapa", "Perfil da UF", "Como interpretar"], horizontal=True, key="territory_view")
     left, right = st.columns([2, 1])
     metric = left.selectbox("Leitos no mapa", ["beds", "sus_beds"], format_func=labels.get)
     proportional = right.toggle("Por 100 mil habitantes", value=True)
@@ -1964,14 +1983,16 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
         opacity=alt.condition(selection, alt.value(1), alt.value(0.45)),
         tooltip=[alt.Tooltip("name:N", title="UF"), alt.Tooltip("Valor:Q", title=title, format=",.0f")],
     ).project(type="mercator").add_params(selection).properties(height=450)
-    st.subheader(title)
-    st.caption("Selecione uma UF no mapa para comparar a composição SUS e acompanhar os meses disponíveis. Os dados de equipes e serviços oferecem contexto adicional, com suas próprias competências.")
-    map_tab, table_tab = st.tabs(["Mapa do Brasil", "Valores por UF"])
-    with map_tab:
-        event = st.altair_chart(style_chart(chart), width="stretch", theme=None, key="territory_map", on_select="rerun", selection_mode="uf")
-    with table_tab:
-        st.dataframe(values[["name", metric, "population", "Valor"]].rename(columns={"name": "UF", metric: labels[metric], "population": "População", "Valor": title + " · comparação"}), hide_index=True, width="stretch", column_config={labels[metric]: st.column_config.NumberColumn(format="%.0f"), "População": st.column_config.NumberColumn(format="%.0f"), title + " · comparação": st.column_config.NumberColumn(format="%.0f")})
-    picked = event.selection.get("uf", [])
+    event = None
+    if view == "Mapa":
+        st.subheader(title)
+        st.caption("Selecione uma UF no mapa. Para consultar a composição SUS e a evolução mensal, abra Perfil da UF.")
+        map_tab, table_tab = st.tabs(["Mapa do Brasil", "Valores por UF"])
+        with map_tab:
+            event = st.altair_chart(style_chart(chart), width="stretch", theme=None, key="territory_map", on_select="rerun", selection_mode="uf")
+        with table_tab:
+            st.dataframe(values[["name", metric, "population", "Valor"]].rename(columns={"name": "UF", metric: labels[metric], "population": "População", "Valor": title + " · comparação"}), hide_index=True, width="stretch", column_config={labels[metric]: st.column_config.NumberColumn(format="%.0f"), "População": st.column_config.NumberColumn(format="%.0f"), title + " · comparação": st.column_config.NumberColumn(format="%.0f")})
+    picked = event.selection.get("uf", []) if event else []
     picked_code = picked[-1].get("code") if picked else None
     if picked_code and picked_code != st.session_state.get("last_map_uf"):
         selected = frame.loc[frame["code"] == picked_code, "name"]
@@ -1980,6 +2001,9 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
             st.session_state["last_map_uf"] = picked_code
     state = st.selectbox("Estado selecionado · altere aqui ou clique no mapa", frame["name"].sort_values().tolist(), key="territory_state")
     row = frame.loc[frame["name"] == state].iloc[0]
+    if view == "Como interpretar":
+        render_territorial_method(profile, row)
+        return
     st.subheader(state)
     first, second, third = st.columns(3)
     first.metric("Leitos existentes", format_integer(int(row["beds"])))
@@ -1990,6 +2014,11 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
     state_rate = row[metric] / row["population"] * 100_000
     st.write(f"{state} registra {format_rate(state_rate)} {labels[metric].lower()} por 100 mil habitantes. A referência nacional é {format_rate(national_rate)}, calculada com o total de leitos e a população do país.")
     st.caption("A comparação descreve capacidade cadastrada. Não informa demanda, ocupação, acesso ou suficiência da rede.")
+    if view == "Mapa":
+        def show_profile() -> None:
+            st.session_state["territory_view"] = "Perfil da UF"
+        st.button("Detalhar esta UF", on_click=show_profile)
+        return
     detail_tabs = st.tabs(["Leitos e SUS", "Contexto · equipes", "Contexto · serviços", "Evolução mensal"])
     with detail_tabs[0]:
         st.subheader(f"Leitos cadastrados em {state}")
@@ -2026,13 +2055,17 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
         history["Série"] = history["Série"].map({"beds": "Total", "sus_beds": "SUS"})
         st.altair_chart(style_chart(alt.Chart(history).mark_line(point=True).encode(x=alt.X("Mês:T", axis=alt.Axis(format="%m/%Y")), y=alt.Y("Leitos:Q", scale=alt.Scale(zero=True), axis=alt.Axis(format="d")), color=alt.Color("Série:N", legend=alt.Legend(orient="bottom")), tooltip=[alt.Tooltip("Mês:T", format="%m/%Y"), "Série:N", alt.Tooltip("Leitos:Q", format=",.0f")]).properties(height=320)), width="stretch", theme=None)
         st.caption("As variações representam alterações no cadastro mensal, sem permitir concluir melhora ou piora da assistência.")
+    st.caption("Método e limitações estão na opção Como interpretar.")
+
+
+def render_territorial_method(profile: dict, row) -> None:
     st.subheader("Antes de comparar os números")
     st.write("As fontes são ligadas pelo código da UF, e as taxas usam a mesma referência de população. Quando falta um valor, ele continua em branco. Confira também as competências: duas informações sobre o mesmo estado podem se referir a meses diferentes.")
     with st.expander("Períodos e definições das fontes"):
         st.dataframe(pd.DataFrame([{"Fonte": {"beds": "Leitos", "teams": "Equipes", "services": "Serviços", "professionals": "Profissionais"}[key], "Competência": f"{value[4:]}/{value[:4]}"} for key, value in profile["periods"].items()]), hide_index=True, width="stretch")
         st.write("Os estabelecimentos vêm do arquivo verificado nesta atualização. As demais fontes têm competências mensais, enquanto a população é anual. Reunir essas informações por estado não significa que elas retratem o mesmo momento.")
     with st.expander("Coordenadas e uso responsável do mapa"):
-        st.write(f"Nesta UF, {format_integer(int(row['issues']))} registros têm ocorrências nos controles cadastrais. O detalhamento de cada regra está na etapa 1. O mapa usa limites estaduais do IBGE e agrega pela chave de UF; ele não posiciona estabelecimentos por latitude e longitude. Para um mapa de pontos, a completude das coordenadas precisaria ser tratada antes da publicação.")
+        st.write(f"Nesta UF, {format_integer(int(row['issues']))} registros têm ocorrências nos controles cadastrais. As regras estão detalhadas na análise de qualidade cadastral. O mapa usa limites estaduais do IBGE e agrega pela chave de UF; ele não posiciona estabelecimentos por latitude e longitude. Para um mapa de pontos, a completude das coordenadas precisaria ser tratada antes da publicação.")
         st.link_button("Consultar qualidade cadastral", "https://cnes-em-evidencia.streamlit.app/quality_page_content")
     st.page_link("https://cnes-em-evidencia.streamlit.app/dados", label="Consultar fontes e baixar dados", icon=":material/download:")
     st.caption("Malha oficial simplificada do IBGE. As comparações descrevem cadastros e não permitem concluir sobre acesso ou suficiência assistencial.")
@@ -2081,7 +2114,6 @@ def render_data_center(dashboard: dict, audit: dict) -> None:
             st.download_button("Baixar estrutura das tabelas · SQL", sql, "schema.sql", "application/sql")
             st.download_button("Baixar todas as tabelas e metadados · JSON", json.dumps(public_dataset(dashboard, profile, audit), ensure_ascii=False, indent=2), "dados.json", "application/json")
         st.subheader("Escolher uma tabela")
-        from cnes_audit.contracts import TABLES
         names = {TABLES.get(key, (key,))[0]: value for key, value in names.items()}
         layer = st.radio("Camada dos dados", ["Fontes normalizadas", "Visões analíticas"], horizontal=True)
         available = [name for name in tables if name.startswith("fonte_") == (layer == "Fontes normalizadas")]
@@ -2150,7 +2182,7 @@ def render_data_center(dashboard: dict, audit: dict) -> None:
             st.success(f"API conectada · {len(remote_catalog['tabelas'])} tabelas disponíveis")
             remote_rows = remote_catalog["tabelas"]
             st.dataframe(pd.DataFrame(remote_rows)[["tabela", "camada", "linhas", "colunas", "grao"]], hide_index=True, width="stretch")
-            st.caption(f"Execução informada pela API: {remote_catalog['metadados']['id_execucao']}. Catálogo consultado diretamente no endereço público; cache de 10 minutos.")
+            st.caption(f"Execução informada pela API: {remote_catalog['metadados']['id_execucao']} · contrato {remote_catalog['metadados'].get('versao_contrato', 'não informado')}. Catálogo consultado diretamente no endereço público; cache de 10 minutos.")
             choices = [item["tabela"] for item in remote_rows]
         else:
             choices = sorted(tables)
@@ -2202,6 +2234,84 @@ def render_data_center(dashboard: dict, audit: dict) -> None:
         st.write("A licença MIT se aplica ao código do projeto. Consulte os termos de cada catálogo oficial para reutilizar os dados.")
         st.caption("Os dados descrevem cadastros. Não medem acesso à saúde, ocupação, disponibilidade em tempo real ou suficiência da rede.")
         render_traceability(audit, include_population=True, include_beds=True, include_teams=True, include_services=True, include_professionals=True)
+
+
+def render_governance_panel(dashboard: dict, audit: dict) -> None:
+    st.markdown('<p class="eyebrow">Qualidade e governança</p>', unsafe_allow_html=True)
+    st.title("Como os dados são verificados")
+    st.write("Acompanhe a última carga, os achados da base e as verificações do código. Cada resultado vale para uma execução identificada; não é uma garantia de qualidade para qualquer uso.")
+    overview, controls, software, responsibility = st.tabs(["Situação da base", "Controles e totais", "Testes do projeto", "Responsabilidades"])
+    checks = dashboard["checks"]
+    approved = [check for check in checks if check["failures"] == 0]
+    findings = [check for check in checks if check["failures"] > 0]
+    with overview:
+        one, two, three = st.columns(3)
+        one.metric("Controles sem ocorrências", f"{len(approved)} de {len(checks)}")
+        two.metric("Controles com achados", len(findings))
+        three.metric("Registros processados", format_integer(dashboard["summary"]["total_records"]))
+        st.write(f"**Última verificação:** {format_timestamp(audit['generated_at'])}")
+        st.write(f"**Resultado da carga:** {audit['status']}")
+        st.code(audit["run_id"], language=None)
+        for finding in findings:
+            st.subheader(finding["label"])
+            st.write(f"{format_integer(finding['failures'])} ocorrências em {format_integer(finding['evaluated'])} avaliações ({format_percent(finding['failure_rate'])}).")
+            if finding["id"] == "coordinates_missing":
+                meaning = interpret_materiality(finding["id"], finding["failure_rate"])
+                st.write(meaning["affected_use"])
+                st.write(meaning["unaffected_use"])
+                st.caption(meaning["criterion"])
+        if not findings:
+            st.info("Os controles definidos não encontraram ocorrências nesta execução. Outros usos podem exigir verificações adicionais.")
+        st.caption("As competências variam entre as fontes. Os períodos e horários de obtenção ficam em Dados e documentação → Fontes oficiais.")
+    with controls:
+        st.subheader("Regras aplicadas à base")
+        st.dataframe(pd.DataFrame(describe_controls(checks)), hide_index=True, width="stretch")
+        st.subheader("Reconciliação da execução")
+        reconciliation = audit["reconciliation"]
+        st.write(f"Registros lidos: **{format_integer(reconciliation['rows_read'])}**. Registros agregados: **{format_integer(reconciliation['rows_aggregated'])}**.")
+        with st.expander("Totais e vínculos registrados na auditoria"):
+            st.json(reconciliation)
+        st.write("A publicação ocorre após a validação dos contratos e dos totais. Se a rotina falhar antes de publicar, permanece disponível a última versão válida; por isso o horário da execução precisa ser conferido.")
+    with software:
+        st.subheader("Verificação do código no GitHub")
+        try:
+            ci = load_ci_status()
+            if ci["status"] != "completed":
+                label = "Verificação em andamento"
+            else:
+                label = {"success": "Verificação aprovada", "failure": "Verificação com falha", "cancelled": "Verificação cancelada"}.get(ci["conclusion"], f"Resultado: {ci['conclusion']}")
+            st.write(f"**{label}**")
+            st.caption(f"Código: {str(ci['head_sha'])[:8]} · atualizado em {format_timestamp(ci['updated_at'])}")
+            st.link_button("Abrir execução e resultados", ci["html_url"])
+        except (OSError, ValueError, KeyError):
+            st.info("Não foi possível consultar o resultado do GitHub agora. Acesse as execuções pelo link abaixo.")
+        st.link_button("Consultar histórico de verificações", "https://github.com/Lucastastrofe/cnes-em-evidencia/actions/workflows/ci.yml")
+        st.write("A rotina verifica leitura das fontes, regras de qualidade, reconciliação, nomes e tipos publicados, integridade do SQLite, equivalência entre formatos e contratos da aplicação.")
+        st.caption("Esse resultado se refere ao código da aplicação. Os controles e totais nas outras abas se referem à execução da base identificada acima; são evidências diferentes.")
+    with responsibility:
+        st.write("O mantenedor do CNES em Evidência responde pela transformação e publicação deste projeto independente. Ministério da Saúde, DATASUS e IBGE são os publicadores das fontes de origem; não certificam nem endossam esta aplicação.")
+        st.write("Os dados publicados são agregados. Campos de origem e indicadores calculados ficam separados, com definição, tipo, unidade, chave, referência e transformação no dicionário. O esquema não substitui a avaliação de adequação ao estudo de cada pessoa.")
+        st.link_button("Relatar problema nos dados ou no painel", "https://github.com/Lucastastrofe/cnes-em-evidencia/issues")
+        st.link_button("Consultar uso responsável e limitações", "https://github.com/Lucastastrofe/cnes-em-evidencia/blob/main/docs/USO-RESPONSAVEL.md")
+        with st.expander("Fontes, versão do código e hashes desta carga"):
+            st.write(f"Código da carga: `{audit['code_version']}`")
+            st.code(audit["source"]["sha256"], language=None)
+            st.caption("SHA-256 do arquivo de estabelecimentos. Os hashes das demais fontes estão na auditoria e no catálogo de fontes.")
+
+
+def render_study_panel(dashboard: dict, audit: dict, initial_topic: str = "Mapa e perfis") -> None:
+    topics = {
+        "Mapa e perfis": render_integrated_panel,
+        "Estabelecimentos e população": render_population_panel,
+        "Leitos e UTI": render_bed_panel,
+        "Equipes": render_team_panel,
+        "Serviços": render_service_panel,
+        "Profissionais": render_professional_panel,
+        "Evolução mensal": render_bed_history_panel,
+        "Qualidade cadastral": render_quality_panel,
+    }
+    topic = st.selectbox("Tema da análise", list(topics), index=list(topics).index(initial_topic), key=f"study_topic_{initial_topic}")
+    topics[topic](dashboard, audit)
 
 
 def render() -> None:
@@ -2289,80 +2399,77 @@ def render() -> None:
         st.stop()
 
     def quality_page_content() -> None:
-        render_quality_panel(dashboard, audit)
+        render_study_panel(dashboard, audit, "Qualidade cadastral")
 
     def population_page_content() -> None:
-        render_population_panel(dashboard, audit)
+        render_study_panel(dashboard, audit, "Estabelecimentos e população")
 
     def bed_page_content() -> None:
-        render_bed_panel(dashboard, audit)
+        render_study_panel(dashboard, audit, "Leitos e UTI")
 
     def team_page_content() -> None:
-        render_team_panel(dashboard, audit)
+        render_study_panel(dashboard, audit, "Equipes")
 
     def service_page_content() -> None:
-        render_service_panel(dashboard, audit)
+        render_study_panel(dashboard, audit, "Serviços")
 
     def bed_history_page_content() -> None:
-        render_bed_history_panel(dashboard, audit)
+        render_study_panel(dashboard, audit, "Evolução mensal")
 
     def professional_page_content() -> None:
-        render_professional_panel(dashboard, audit)
+        render_study_panel(dashboard, audit, "Profissionais")
 
     def data_page_content() -> None:
         render_data_center(dashboard, audit)
 
+    def governance_page_content() -> None:
+        render_governance_panel(dashboard, audit)
+
     quality_page = st.Page(
         quality_page_content,
-        title="1 · Qualidade cadastral",
+        title="Qualidade cadastral",
         icon=":material/fact_check:",
     )
     population_page = st.Page(
         population_page_content,
-        title="2 · Presença por população",
+        title="Presença por população",
         icon=":material/compare_arrows:",
     )
     bed_page = st.Page(
         bed_page_content,
-        title="3 · Capacidade hospitalar",
+        title="Capacidade hospitalar",
         icon=":material/bed:",
     )
     team_page = st.Page(
         team_page_content,
-        title="4 · Equipes de saúde",
+        title="Equipes de saúde",
         icon=":material/groups:",
     )
     service_page = st.Page(
         service_page_content,
-        title="5 · Serviços cadastrados",
+        title="Serviços cadastrados",
         icon=":material/medical_services:",
     )
     bed_history_page = st.Page(
         bed_history_page_content,
-        title="6 · Evolução mensal de leitos",
+        title="Evolução mensal de leitos",
         icon=":material/timeline:",
     )
     professional_page = st.Page(
         professional_page_content,
-        title="7 · Profissionais cadastrados",
+        title="Profissionais cadastrados",
         icon=":material/badge:",
     )
-    navigation = st.navigation(
-        {
-            "Produto de dados": [st.Page(data_page_content, title="Downloads e fontes", url_path="dados", icon=":material/download:")],
-            "Estudo aplicado": [st.Page(lambda: render_integrated_panel(dashboard, audit), title="Leitos e participação do SUS", default=True)],
-            "Análises da série": [
-                quality_page,
-                population_page,
-                bed_page,
-                team_page,
-                service_page,
-                bed_history_page,
-                professional_page,
-            ]
-        },
-        position="sidebar",
-    )
+    study_page = st.Page(lambda: render_study_panel(dashboard, audit), title="Estudo aplicado", default=True)
+    data_page = st.Page(data_page_content, title="Dados e documentação", url_path="dados", icon=":material/download:")
+    governance_page = st.Page(governance_page_content, title="Qualidade e governança", url_path="governanca", icon=":material/fact_check:")
+    # Keep old post URLs registered, without exposing the weekly sequence in the menu.
+    navigation = st.navigation([study_page, data_page, governance_page, quality_page, population_page, bed_page, team_page, service_page, bed_history_page, professional_page], position="hidden")
+    st.sidebar.markdown("**CNES em Evidência**")
+    st.sidebar.caption("Análise e reutilização de dados públicos")
+    st.sidebar.page_link(study_page, label="Estudo aplicado", icon=":material/map:")
+    st.sidebar.page_link(data_page, label="Dados e documentação", icon=":material/database:")
+    st.sidebar.page_link(governance_page, label="Qualidade e governança", icon=":material/fact_check:")
     navigation.run()
 
 

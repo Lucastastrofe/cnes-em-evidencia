@@ -1,6 +1,16 @@
-# Contrato publicado 2.1
+# Contrato publicado 3.0
+
+Mudança de nomes na população: consumidores da versão 2.1 devem substituir d1c por co_uf,
+d1n por nome_uf, d3c por ano_referencia e v por populacao_estimada. O ano passa a inteiro.
+A mudança é identificada como versão 3.0 do contrato; não é compatível com consultas que
+usam os nomes anteriores dessa tabela. Os nomes das demais fontes permanecem preservados.
 
 ## Camadas e governança
+
+Exceção de nomenclatura acordada: na tabela de população por UF, D1C → co_uf,
+D1N → nome_uf, D3C → ano_referencia e V → populacao_estimada. O dicionário registra
+os nomes originais. As demais distribuições de fonte mantêm os nomes originais
+normalizados; nomes analíticos permanecem restritos às visões calculadas.
 
 Cinco distribuições fonte_* preservam os nomes das dimensões e medidas originais
 normalizados. São consultas agregadas, não microdados: fonte_leitos soma por UF e mês;

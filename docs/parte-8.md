@@ -1,5 +1,11 @@
 # Produto de dados e estudo aplicado
 
+Navegação final: Estudo aplicado, Dados e documentação e Qualidade e governança.
+Todas as análises ficam acessíveis por um seletor de tema, uma por vez. Links anteriores
+continuam registrados como compatibilidade. No mapa, perfil estadual e método ficam
+separados da visão inicial, para reduzir rolagem. /governanca publica controles, achados,
+reconciliação, identificação da carga e situação do CI em abas, sem confundir suas versões.
+
 Revisão: o mapa deixou de ser identificado como etapa 8 e passou a estudar leitos e SUS.
 As fontes normalizadas e visões analíticas ficam separadas na central, com nomes originais
 normalizados nas distribuições de fonte e cálculos identificados nas visões. Os formatos

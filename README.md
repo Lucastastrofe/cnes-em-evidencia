@@ -1,8 +1,29 @@
 # CNES em Evidência
 
+Integração de fontes públicas do CNES e IBGE, com camadas separadas, contratos de dados,
+atualização automatizada e verificações que acompanham os arquivos publicados.
+
+O desafio foi combinar cadastros, medidas e períodos diferentes sem perder o significado
+das fontes. As decisões de modelagem ficam no dicionário; chaves, totais e formatos são
+verificados antes da publicação. A base pode ser levada para outro ambiente em SQLite,
+CSV, JSON ou Parquet, preservando origem e referência.
+
+A aplicação final tem três áreas:
+
+- [Estudo aplicado](https://cnes-em-evidencia.streamlit.app/): todas as análises por tema,
+  com uma leitura de cada vez; os links antigos das publicações continuam funcionando.
+- [Dados e documentação](https://cnes-em-evidencia.streamlit.app/dados): arquivos, SQLite,
+  dicionário, fontes e formas de reutilização.
+- [Qualidade e governança](https://cnes-em-evidencia.streamlit.app/governanca): controles,
+  achados, reconciliação, execução da base, testes de software e responsabilidades.
+
+O mapa separa visualização territorial, perfil da UF e método. O histórico semanal da
+construção permanece na documentação e nos commits, sem organizar a navegação de quem usa
+o painel para analisar os dados.
+
 ## Dados, dicionário e API
 
-O contrato publicado 2.1 usa os nomes da fonte normalizados quando há correspondência
+O contrato publicado 3.0 usa os nomes da fonte normalizados quando há correspondência
 direta; agregações e indicadores calculados têm nomes e transformações explícitos.
 O mesmo contrato alimenta arquivos persistidos, CSVs, JSONs e uma cópia SQLite com
 chaves primárias e relacionamentos. O pacote inclui o esquema SQL e o dicionário completo.
@@ -27,7 +48,9 @@ python -m cnes_audit.publish
 
 O produto final separa cinco distribuições de fontes normalizadas e agregadas das 14
 visões analíticas. As primeiras preservam nomes como comp, uf, leitos_existentes,
-unidade_da_federacao, quantidade e os campos D1C/D1N/D3C/V do SIDRA em minúsculas.
+unidade_da_federacao e quantidade. População por UF é a exceção: os campos genéricos
+D1C/D1N/D3C/V do SIDRA são publicados como co_uf, nome_uf, ano_referencia e
+populacao_estimada, com o mapeamento explícito no dicionário.
 As visões reúnem contagens, taxas e integrações derivadas. Nenhuma distribuição é
 apresentada como microdado bruto: o pipeline já agrega e reorganiza consultas.
 

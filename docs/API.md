@@ -23,7 +23,7 @@ string. Recortes de UF são caminhos pré-gerados; ?uf=35 não filtra uma tabela
 Tabela inexistente ou UF fora do contrato retorna 404 do provedor (pode ser HTML).
 
 As tabelas retornam metadados, total e dados. Os códigos são strings. A versão do contrato
-é 2.1. Guarde respostas localmente, use timeout e retentativas limitadas com espera
+é 3.0. Guarde respostas localmente, use timeout e retentativas limitadas com espera
 progressiva; respeite Retry-After quando recebido. Downloads completos são preferíveis a
 muitas consultas pequenas para ingestão de todas as UFs. Confira id_execucao ao combinar
 respostas e não interprete HTTP 200 como comprovação de que a origem mudou naquele dia.

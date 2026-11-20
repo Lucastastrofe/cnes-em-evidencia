@@ -3,6 +3,8 @@ from __future__ import annotations
 
 from cnes_audit.beds import UF_CODES
 
+PUBLIC_CONTRACT_VERSION = "3.0"
+
 API_BASE = "https://lucastastrofe.github.io/cnes-em-evidencia/api/v1"
 UF_ABBREVIATIONS = {value: key for key, value in UF_CODES.items()}
 
@@ -33,11 +35,11 @@ def source_tables(dashboard: dict) -> tuple[dict, list[dict]]:
             "atende_no_sus": ("Atende no SUS", "string", "categoria_sim_nao", "Dimensão SUS da consulta, convertida de colunas para linhas"),
             "quantidade": ("Quantidade", "integer", "profissionais", "Medida Quantidade da consulta por UF e categoria SUS"),
         }),
-        "fonte_populacao": ("IBGE SIDRA", ["d1c", "d3c"], "UF e ano", {
-            "d1c": ("D1C", "string", "codigo_ibge_uf", "Código da UF retornado pelo SIDRA"),
-            "d1n": ("D1N", "string", "nome_uf", "Nome da UF retornado pelo SIDRA"),
-            "d3c": ("D3C", "string", "ano", "Ano de referência retornado pelo SIDRA"),
-            "v": ("V", "integer", "habitantes", "Valor da estimativa convertido de texto para inteiro"),
+        "fonte_populacao": ("IBGE SIDRA", ["co_uf", "ano_referencia"], "UF e ano", {
+            "co_uf": ("D1C", "string", "codigo_ibge_uf", "Código da UF retornado pelo SIDRA; nome descritivo para o campo D1C"),
+            "nome_uf": ("D1N", "string", "nome_uf", "Nome da UF retornado pelo SIDRA; nome descritivo para o campo D1N"),
+            "ano_referencia": ("D3C", "integer", "ano", "Ano de referência retornado pelo SIDRA, convertido para inteiro"),
+            "populacao_estimada": ("V", "integer", "habitantes", "Valor da estimativa convertido de texto para inteiro; nome descritivo para o campo V"),
         }),
     }
     tables = {
@@ -45,7 +47,7 @@ def source_tables(dashboard: dict) -> tuple[dict, list[dict]]:
         "fonte_equipes": [{"unidade_da_federacao": r["state_code"], "tipo_da_equipe": f"{r['team_code']} {r['team_name']}", "quantidade": r["teams"]} for r in dashboard["teams"]["by_state_type"]],
         "fonte_servicos": [{"unidade_da_federacao": r["state_code"], "classificacao_do_servico": f"{r['classification_code']} {r['service_code']} {r['service_name']} / {r['classification_name']}", "quantidade": r["service_records"]} for r in dashboard["services"]["by_state_classification"]],
         "fonte_profissionais": [{"unidade_da_federacao": r["code"], "atende_no_sus": label, "quantidade": r[field]} for r in dashboard["professionals"]["by_state"] for label, field in (("Sim", "sus_professionals"), ("Não", "non_sus_professionals"))],
-        "fonte_populacao": [{"d1c": r["code"], "d1n": r["name"], "d3c": str(dashboard["summary"]["population_reference_year"]), "v": r["population"]} for r in dashboard["by_state"] if r["population"] is not None],
+        "fonte_populacao": [{"co_uf": r["code"], "nome_uf": r["name"], "ano_referencia": dashboard["summary"]["population_reference_year"], "populacao_estimada": r["population"]} for r in dashboard["by_state"] if r["population"] is not None],
     }
     dictionary = []
     for name, rows in tables.items():
@@ -68,7 +70,7 @@ def governance_dictionary(dictionary: list[dict], dataset: dict, audit: dict) ->
             "responsavel_publicacao": "Mantenedor do CNES em Evidência",
             "canal_contato": "https://github.com/Lucastastrofe/cnes-em-evidencia/issues",
             "classificacao_acesso": "publico_agregado",
-            "versao_contrato": "2.1", "id_execucao": dataset["id_execucao"],
+            "versao_contrato": "3.0", "id_execucao": dataset["id_execucao"],
             "atualizado_em": dataset["atualizado_em"],
             "regra_nulidade": "Ausência preservada como null; não imputar zero" if nullable else "Não foram observados nulos nesta execução; não constitui garantia de completude futura",
             "dominio_formato": "AAAAMM" if item["coluna"] == "comp" else "Duas posições; código IBGE da UF" if item["coluna"] in ("co_uf", "unidade_da_federacao", "d1c") else "Sim ou Não" if item["coluna"] == "atende_no_sus" else "Número inteiro não negativo" if item["tipo"] == "integer" else "Conforme definição e unidade",
