@@ -1,5 +1,14 @@
 # Contexto dos dados
 
+## Contrato atual e camadas
+
+Contrato publicado 2.1. Campos da fonte têm nomes originais normalizados; indicadores ficam
+em visões analíticas separadas. As cinco distribuições fonte_* continuam agregadas, com
+transformações explícitas, e não são cópias de arquivos brutos. O dicionário gerado é a
+referência por coluna; docs/CONTRATO-DADOS.md descreve as regras de governança e distribuição.
+A licença do rodapé do portal não foi automaticamente atribuída aos registros; a distinção
+entre termos do site, dados e código está documentada em docs/USO-RESPONSAVEL.md.
+
 ## Fonte
 
 - Conjunto: CNES — Cadastro Nacional de Estabelecimentos de Saúde.

@@ -7,13 +7,30 @@ from pathlib import Path
 import altair as alt
 import pandas as pd
 import streamlit as st
+import cnes_audit.contracts as contracts
 import cnes_audit.integrated as integrated
 
 # Streamlit may rerun this file while retaining imported modules from the prior release.
-if not hasattr(integrated, "public_dataset"):
+if getattr(contracts, "PUBLIC_CONTRACT_VERSION", None) != "2.1":
+    importlib.reload(contracts)
+if getattr(integrated, "PUBLIC_CONTRACT_VERSION", None) != "2.1":
     importlib.reload(integrated)
 from cnes_audit.integrated import METRICS, data_package, profile_csv, public_tables, source_catalog, data_dictionary, public_dataset
 from cnes_audit.contracts import decode_dashboard, decode_profile
+from cnes_audit.api_client import fetch_catalog, fetch_table
+from cnes_audit.catalog import table_catalog, UF_ABBREVIATIONS
+from cnes_audit.contracts import relational_snapshot
+from cnes_audit.exports import parquet_bytes
+
+
+@st.cache_data(ttl=600, show_spinner=False)
+def load_api_catalog() -> dict:
+    return fetch_catalog()
+
+
+@st.cache_data(ttl=600, show_spinner=False)
+def load_api_table(table: str, uf: str | None = None) -> dict:
+    return fetch_table(table, uf)
 
 from cnes_audit.presentation import (
     describe_controls,
@@ -1907,9 +1924,9 @@ def render_quality_panel(dashboard: dict, audit: dict) -> None:
 
 
 def render_integrated_panel(dashboard: dict, audit: dict) -> None:
-    st.markdown('<p class="eyebrow">Parte 8 · Consulta territorial</p>', unsafe_allow_html=True)
-    st.title("O que o CNES mostra em cada estado")
-    st.write("Escolha um estado para conhecer seus estabelecimentos, leitos, equipes, serviços e profissionais cadastrados. Compare os números, consulte os detalhes e acompanhe a evolução dos leitos. O período de cada fonte aparece junto à consulta.")
+    st.markdown('<p class="eyebrow">Estudo aplicado · CNES e população</p>', unsafe_allow_html=True)
+    st.title("Leitos e participação do SUS no território")
+    st.write("Como a presença de leitos varia entre os estados quando consideramos a população? Este estudo usa o produto de dados do CNES em Evidência para comparar o total cadastrado, a parcela destinada ao SUS e a evolução mensal.")
     profile = decode_profile(json.loads((DATA_DIRECTORY / "uf-profile.json").read_text(encoding="utf-8")))
     if profile["run_id"] != dashboard["metadata"]["run_id"]:
         st.error("A base integrada pertence a outra atualização. Aguarde a conclusão do pipeline.")
@@ -1917,7 +1934,7 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
     frame = pd.DataFrame(profile["rows"])
     labels = {key: value[0] for key, value in METRICS.items()}
     left, right = st.columns([2, 1])
-    metric = left.selectbox("Indicador", list(labels), format_func=labels.get)
+    metric = left.selectbox("Leitos no mapa", ["beds", "sus_beds"], format_func=labels.get)
     proportional = right.toggle("Por 100 mil habitantes", value=True)
     section = METRICS[metric][1]
     competence = profile["periods"].get(section)
@@ -1948,7 +1965,7 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
         tooltip=[alt.Tooltip("name:N", title="UF"), alt.Tooltip("Valor:Q", title=title, format=",.0f")],
     ).project(type="mercator").add_params(selection).properties(height=450)
     st.subheader(title)
-    st.caption("Clique ou toque em uma UF para abrir o perfil abaixo do mapa. Explore equipes, serviços e evolução dos leitos nas abas de detalhe. Cinza indica dado ausente.")
+    st.caption("Selecione uma UF no mapa para comparar a composição SUS e acompanhar os meses disponíveis. Os dados de equipes e serviços oferecem contexto adicional, com suas próprias competências.")
     map_tab, table_tab = st.tabs(["Mapa do Brasil", "Valores por UF"])
     with map_tab:
         event = st.altair_chart(style_chart(chart), width="stretch", theme=None, key="territory_map", on_select="rerun", selection_mode="uf")
@@ -1964,11 +1981,16 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
     state = st.selectbox("Estado selecionado · altere aqui ou clique no mapa", frame["name"].sort_values().tolist(), key="territory_state")
     row = frame.loc[frame["name"] == state].iloc[0]
     st.subheader(state)
-    for columns, fields in [(st.columns(3), ["records", "beds", "professionals"]), (st.columns(2), ["teams", "service_records"])]:
-        for column, field in zip(columns, fields):
-            column.metric(labels[field], "Não disponível" if pd.isna(row[field]) else format_integer(int(row[field])))
-    st.caption("Cada indicador mantém sua unidade. Registros de serviços não equivalem a serviços únicos; os totais não medem atendimento ou disponibilidade atual.")
-    detail_tabs = st.tabs(["Leitos e SUS", "Equipes", "Serviços", "Evolução mensal"])
+    first, second, third = st.columns(3)
+    first.metric("Leitos existentes", format_integer(int(row["beds"])))
+    second.metric("Destinados ao SUS", format_integer(int(row["sus_beds"])))
+    share = row["sus_beds"] / row["beds"] if row["beds"] else 0
+    third.metric("Participação do SUS", format_percent(share))
+    national_rate = frame[metric].sum() / frame["population"].sum() * 100_000
+    state_rate = row[metric] / row["population"] * 100_000
+    st.write(f"{state} registra {format_rate(state_rate)} {labels[metric].lower()} por 100 mil habitantes. A referência nacional é {format_rate(national_rate)}, calculada com o total de leitos e a população do país.")
+    st.caption("A comparação descreve capacidade cadastrada. Não informa demanda, ocupação, acesso ou suficiência da rede.")
+    detail_tabs = st.tabs(["Leitos e SUS", "Contexto · equipes", "Contexto · serviços", "Evolução mensal"])
     with detail_tabs[0]:
         st.subheader(f"Leitos cadastrados em {state}")
         bed_total, bed_sus = int(row["beds"]), int(row["sus_beds"])
@@ -2025,9 +2047,14 @@ def render_data_center(dashboard: dict, audit: dict) -> None:
         st.warning("Os arquivos estão sendo atualizados. Tente novamente em instantes.")
         return
 
-    downloads, sources, dictionary_tab, api_tab, usage = st.tabs(["Baixar dados", "Fontes oficiais", "Dicionário", "API", "Como usar"])
+    downloads, sqlite_tab, sources, dictionary_tab, api_tab, usage = st.tabs(["Baixar dados", "Usar SQLite", "Fontes oficiais", "Dicionário", "API", "Como usar"])
     tables = public_tables(dashboard, profile)
     names = {
+        "fonte_leitos": "Fonte normalizada · Leitos por UF e competência",
+        "fonte_equipes": "Fonte normalizada · Equipes por UF e tipo",
+        "fonte_servicos": "Fonte normalizada · Serviços por UF e classificação",
+        "fonte_profissionais": "Fonte normalizada · Profissionais por UF e SUS",
+        "fonte_populacao": "Fonte normalizada · População por UF e ano",
         "perfil_uf": "Resumo integrado por UF",
         "beds_by_state": "Leitos por UF",
         "bed_history_national": "Histórico de leitos · Brasil",
@@ -2047,14 +2074,23 @@ def render_data_center(dashboard: dict, audit: dict) -> None:
         st.subheader("Pacote completo")
         st.write("Todas as tabelas públicas em CSV, uma base SQLite para consultas SQL, o esquema de criação e os arquivos de fontes, dicionário e auditoria.")
         st.download_button("Baixar pacote completo · ZIP", data_package(dashboard, profile, audit), "cnes-dados-publicos.zip", "application/zip", type="primary")
+        with st.expander("Base completa em formatos separados"):
+            dictionary = data_dictionary(dashboard, profile)
+            sql, sqlite = relational_snapshot(tables, dictionary)
+            st.download_button("Baixar base relacional · SQLite", sqlite, "cnes.sqlite", "application/vnd.sqlite3")
+            st.download_button("Baixar estrutura das tabelas · SQL", sql, "schema.sql", "application/sql")
+            st.download_button("Baixar todas as tabelas e metadados · JSON", json.dumps(public_dataset(dashboard, profile, audit), ensure_ascii=False, indent=2), "dados.json", "application/json")
         st.subheader("Escolher uma tabela")
         from cnes_audit.contracts import TABLES
         names = {TABLES.get(key, (key,))[0]: value for key, value in names.items()}
-        selected = st.selectbox("Tabela", list(tables), format_func=lambda key: names.get(key, key))
+        layer = st.radio("Camada dos dados", ["Fontes normalizadas", "Visões analíticas"], horizontal=True)
+        available = [name for name in tables if name.startswith("fonte_") == (layer == "Fontes normalizadas")]
+        selected = st.selectbox("Tabela", available, format_func=lambda key: names.get(key, key))
         rows = tables[selected]
-        uf_field = "co_uf" if "co_uf" in rows[0] else None
+        local_catalog = table_catalog(public_dataset(dashboard, profile, audit))
+        uf_field = next(item["campo_uf"] for item in local_catalog if item["tabela"] == selected)
         if uf_field:
-            uf_names = {row["code"]: row["name"] for row in profile["rows"]}
+            uf_names = {(UF_ABBREVIATIONS[row["code"]] if uf_field == "uf" else row["code"]): row["name"] for row in profile["rows"]}
             uf = st.selectbox("Recorte territorial", ["Todas as UFs", *sorted(uf_names, key=uf_names.get)], format_func=lambda code: uf_names.get(code, code))
             if uf != "Todas as UFs":
                 rows = [row for row in rows if row[uf_field] == uf]
@@ -2062,6 +2098,10 @@ def render_data_center(dashboard: dict, audit: dict) -> None:
         st.dataframe(pd.DataFrame(rows).head(10), hide_index=True, width="stretch")
         st.caption("Prévia das primeiras 10 linhas. O download contém a tabela inteira.")
         st.download_button("Baixar tabela selecionada · CSV", profile_csv(rows).encode("utf-8-sig"), f"{selected}.csv", "text/csv")
+        st.download_button("Baixar tabela selecionada · JSON", json.dumps({"id_execucao": profile["run_id"], "atualizado_em": profile["generated_at"], "tabela": selected, "dados": rows}, ensure_ascii=False, indent=2), f"{selected}.json", "application/json")
+        fields = [field for field in data_dictionary(dashboard, profile) if field["tabela"] == selected]
+        st.download_button("Baixar tabela selecionada · Parquet", parquet_bytes(rows, fields), f"{selected}.parquet", "application/vnd.apache.parquet")
+        st.caption("CSV: intercâmbio com planilhas e R. JSON: consumo em aplicações. Parquet: tipos preservados e leitura eficiente em ferramentas analíticas. Os três downloads usam o mesmo recorte selecionado acima.")
         with st.expander("Resumo integrado em JSON"):
             st.write("Uma linha por UF, com competências, ano populacional e definição dos indicadores.")
             dataset = public_dataset(dashboard, profile, audit)
@@ -2070,25 +2110,71 @@ def render_data_center(dashboard: dict, audit: dict) -> None:
             st.download_button("Baixar resumo e metadados · JSON", json.dumps(summary, ensure_ascii=False, indent=2), "cnes-perfil-uf.json", "application/json")
     with dictionary_tab:
         st.subheader("Da fonte à coluna publicada")
-        st.write("Os nomes publicados seguem snake_case. Campos agregados e indicadores calculados têm a transformação descrita; um nome derivado não é apresentado como coluna original da fonte.")
+        st.write("As fontes normalizadas preservam os nomes das dimensões e medidas da origem. Contagens e taxas calculadas ficam nas visões analíticas. As distribuições são agregadas; não contêm microdados individuais.")
         dictionary = data_dictionary(dashboard, profile)
         chosen = st.selectbox("Dicionário da tabela", sorted(tables))
-        st.dataframe(pd.DataFrame([item for item in dictionary if item["tabela"] == chosen]), hide_index=True, width="stretch")
+        fields = [item for item in dictionary if item["tabela"] == chosen]
+        column = st.selectbox("Coluna", [item["coluna"] for item in fields])
+        field = next(item for item in fields if item["coluna"] == column)
+        st.write(field["definicao_transformacao"])
+        st.dataframe(pd.DataFrame([{"Propriedade": key.replace("_", " ").capitalize(), "Valor": str(value) if value is not None else "Não se aplica"} for key, value in field.items() if key not in ("tabela", "coluna", "nome_legado")]), hide_index=True, width="stretch")
+        with st.expander("Todas as colunas desta tabela"):
+            st.dataframe(pd.DataFrame(fields), hide_index=True, width="stretch")
         st.download_button("Baixar dicionário · CSV", profile_csv(dictionary).encode("utf-8-sig"), "dicionario.csv", "text/csv")
         st.download_button("Baixar dicionário · JSON", json.dumps(dictionary, ensure_ascii=False, indent=2), "dicionario.json", "application/json")
+    with sqlite_tab:
+        st.subheader("Uma base atualizada para consultar no seu ambiente")
+        st.write("O pipeline publica uma nova cópia quando atualiza os dados. Você pode baixar o SQLite separadamente ou usar o cliente Python para obter a versão publicada e conferir sua integridade. As consultas rodam localmente, sem credenciais ou permissão para alterar a base do projeto.")
+        sql, database = relational_snapshot(tables, data_dictionary(dashboard, profile))
+        st.download_button("Baixar base completa · SQLite", database, "cnes.sqlite", "application/vnd.sqlite3", key="sqlite_primary")
+        st.download_button("Baixar esquema · SQL", sql, "schema.sql", "application/sql", key="sql_primary")
+        st.link_button("Abrir manifesto da versão publicada", "https://lucastastrofe.github.io/cnes-em-evidencia/api/v1/sqlite.json")
+        st.link_button("Consultar cliente Python", "https://github.com/Lucastastrofe/cnes-em-evidencia/blob/main/src/cnes_audit/snapshot_client.py")
+        st.code('from pathlib import Path\nfrom cnes_audit.snapshot_client import obter_snapshot, conectar_somente_leitura\n\narquivo, versao = obter_snapshot(Path("cnes_cache"))\nconexao = conectar_somente_leitura(arquivo)\ntry:\n    print(versao["atualizado_em"])\n    consulta = "SELECT uf, leitos_existentes FROM fonte_leitos WHERE comp = (SELECT MAX(comp) FROM fonte_leitos)"\n    print(conexao.execute(consulta).fetchall())\nfinally:\n    conexao.close()', language="python")
+        st.caption("Instale o pacote Python do repositório ou reutilize o cliente disponível no link acima. O exemplo consulta apenas a competência mais recente, sem somar estoques de meses diferentes.")
+        st.write("Atualizada significa a última publicação do pipeline, não sincronização em tempo real. Execute obter_snapshot novamente para procurar uma versão nova; se o hash continuar igual, a cópia local é reutilizada. O SHA-256 confere integridade; a origem da transferência é protegida por HTTPS.")
+        st.caption("Cada arquivo é identificado pelo conteúdo e aberto em modo somente leitura. Não compartilhe um arquivo SQLite gravável por pasta de rede. Falhas de conexão devem ser tratadas no seu fluxo sem substituir uma cópia válida por um download incompleto.")
     with api_tab:
-        st.subheader("Consultar por URL")
+        st.subheader("Explorar a API publicada")
         base = "https://lucastastrofe.github.io/cnes-em-evidencia/api/v1"
         st.write("API pública de leitura, sem chave. As respostas são arquivos JSON preparados a cada atualização do pipeline. Nenhuma consulta executa código no Streamlit.")
         st.link_button("Abrir índice da API", f"{base}/index.json")
-        endpoint_table = st.selectbox("Tabela da API", sorted(tables))
+        try:
+            remote_catalog = load_api_catalog()
+        except (OSError, ValueError, KeyError) as error:
+            st.warning("Não foi possível consultar a API agora. Os downloads desta página continuam disponíveis. Tente novamente em instantes.")
+            with st.expander("Detalhe da conexão"):
+                st.write(str(error))
+            remote_catalog = None
+        if remote_catalog:
+            st.success(f"API conectada · {len(remote_catalog['tabelas'])} tabelas disponíveis")
+            remote_rows = remote_catalog["tabelas"]
+            st.dataframe(pd.DataFrame(remote_rows)[["tabela", "camada", "linhas", "colunas", "grao"]], hide_index=True, width="stretch")
+            st.caption(f"Execução informada pela API: {remote_catalog['metadados']['id_execucao']}. Catálogo consultado diretamente no endereço público; cache de 10 minutos.")
+            choices = [item["tabela"] for item in remote_rows]
+        else:
+            choices = sorted(tables)
+        endpoint_table = st.selectbox("Tabela da API", choices)
         endpoint = f"{base}/tabelas/{endpoint_table}.json"
-        if "co_uf" in tables[endpoint_table][0]:
-            code = st.selectbox("UF da API", ["Todas", *[row["code"] for row in profile["rows"]]])
+        code = "Todas"
+        uf_field = next((item.get("campo_uf") for item in remote_catalog["tabelas"] if item["tabela"] == endpoint_table), None) if remote_catalog else None
+        if uf_field:
+            uf_names = {(UF_ABBREVIATIONS[row["code"]] if uf_field == "uf" else row["code"]): row["name"] for row in profile["rows"]}
+            code = st.selectbox("UF da API", ["Todas", *sorted(uf_names, key=uf_names.get)], format_func=lambda value: uf_names.get(value, value))
             if code != "Todas":
                 endpoint = f"{base}/tabelas/{endpoint_table}/ufs/{code}.json"
         st.code(endpoint, language=None)
         st.link_button("Consultar JSON", endpoint)
+        if st.button("Carregar tabela diretamente da API", type="primary"):
+            try:
+                st.session_state["api_loaded_table"] = (endpoint_table, code, load_api_table(endpoint_table, None if code == "Todas" else code))
+            except (OSError, ValueError, KeyError) as error:
+                st.error(f"Falha na consulta da tabela: {error}")
+        loaded = st.session_state.get("api_loaded_table")
+        if loaded and loaded[0] == endpoint_table and loaded[1] == code:
+            response = loaded[2]
+            st.caption(f"{format_integer(response['total'])} linhas recebidas da API · execução {response['metadados']['id_execucao']}")
+            st.dataframe(pd.DataFrame(response["dados"]), hide_index=True, width="stretch", height=420)
         st.code(f'import requests\nresposta = requests.get("{endpoint}", timeout=30)\nresposta.raise_for_status()\ndados = resposta.json()["dados"]', language="python")
         st.caption("Use os caminhos acima; parâmetros como ?uf=35 não filtram arquivos estáticos. Guarde a resposta localmente e evite repetir downloads sem necessidade. Em falhas temporárias, use timeout e novas tentativas com espera progressiva.")
         st.write("O serviço gratuito tem limites de tráfego e pode responder 429 ou ficar indisponível. As respostas informam a execução e os períodos; a API não oferece garantia de disponibilidade ou dados em tempo real.")
@@ -2263,8 +2349,8 @@ def render() -> None:
     )
     navigation = st.navigation(
         {
-            "Explorar": [st.Page(lambda: render_integrated_panel(dashboard, audit), title="8 · Mapa e perfil territorial", default=True)],
-            "Dados abertos": [st.Page(data_page_content, title="Downloads e fontes", url_path="dados", icon=":material/download:")],
+            "Produto de dados": [st.Page(data_page_content, title="Downloads e fontes", url_path="dados", icon=":material/download:")],
+            "Estudo aplicado": [st.Page(lambda: render_integrated_panel(dashboard, audit), title="Leitos e participação do SUS", default=True)],
             "Análises da série": [
                 quality_page,
                 population_page,

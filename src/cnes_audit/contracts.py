@@ -3,6 +3,9 @@ from __future__ import annotations
 
 import copy
 import sqlite3
+import json
+
+PUBLIC_CONTRACT_VERSION = "2.1"
 
 TABLES = {
     "perfil_uf": ("perfil_uf", ["co_uf"], "UF"),
@@ -113,7 +116,7 @@ def canonical_tables(tables: dict) -> tuple[dict, list[dict]]:
             sample = next((row[field] for row in rows if row[field] is not None), None)
             kind = "integer" if isinstance(sample, int) else "number" if isinstance(sample, float) else "string"
             dictionary.append({"tabela": name, "coluna": published, "nome_na_fonte": original,
-                "nome_legado": field, "tipo": kind, "aceita_nulo": any(row[field] is None for row in rows),
+                "tipo": kind, "aceita_nulo": any(row[field] is None for row in rows),
                 "chave": published in keys, "grao": grain, "definicao_transformacao": definition,
                 "unidade": "identificador" if published in keys or published.startswith("codigo_") else "habitantes" if field == "population" else "por 100 mil habitantes" if field in RATES else "proporcao_0_a_1" if published.startswith("proporcao_") else "contagem" if kind == "integer" else "texto",
                 "papel": "indicador_calculado" if field in RATES or original is None else "campo_transformado_ou_agregado",
@@ -166,7 +169,7 @@ def encode_profile(profile: dict) -> dict:
     tables, dictionary = canonical_tables({"perfil_uf": profile["rows"]})
     result["rows"] = tables["perfil_uf"]
     result["dictionary"] = dictionary
-    result["schema_version"] = "2.0"
+    result["schema_version"] = "2.1"
     result["_colunas_legadas"] = {field_contract("perfil_uf", field)[0]: field for field in profile["rows"][0]}
     return result
 
@@ -202,6 +205,12 @@ def relational_snapshot(tables: dict, dictionary: list[dict]) -> tuple[str, byte
             connection.execute(statement)
             names = list(rows[0])
             connection.executemany(f'INSERT INTO "{table}" VALUES (' + ",".join("?" for _ in names) + ")", [tuple(row[name] for name in names) for row in rows])
+        metadata_statement = 'CREATE TABLE "__metadados" ("chave" TEXT PRIMARY KEY, "valor" TEXT NOT NULL);'
+        statements.append(metadata_statement)
+        connection.execute(metadata_statement)
+        reference = dictionary[0]
+        metadata = {"id_execucao": reference.get("id_execucao", "Consultar manifesto"), "atualizado_em": reference.get("atualizado_em", "Consultar manifesto"), "versao_contrato": reference.get("versao_contrato", "2.1"), "dicionario_json": json.dumps(dictionary, ensure_ascii=False)}
+        connection.executemany('INSERT INTO "__metadados" VALUES (?,?)', metadata.items())
         connection.commit()
         if connection.execute("PRAGMA integrity_check").fetchone()[0] != "ok":
             raise ValueError("Falha de integridade na base relacional")

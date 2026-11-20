@@ -1,4 +1,23 @@
-# Contrato publicado 2.0
+# Contrato publicado 2.1
+
+## Camadas e governança
+
+Cinco distribuições fonte_* preservam os nomes das dimensões e medidas originais
+normalizados. São consultas agregadas, não microdados: fonte_leitos soma por UF e mês;
+as consultas TabNet foram convertidas de tabelas cruzadas para linhas. O rótulo de
+classificação de serviços é recomposto de componentes extraídos e não é cópia literal.
+As demais 14 distribuições são visões analíticas com contagens e indicadores derivados.
+
+O dicionário é a fonte canônica das definições de coluna. Ele registra a camada, origem,
+transformação, grão, tipo, unidade, chave, nulabilidade observada, domínio/formato, regra
+de qualidade, referência temporal, execução, atualização, responsável pela publicação,
+canal de contato, classificação de acesso e condições de reutilização. Não se declara
+certificação formal. O catálogo JSON-LD usa termos do DCAT 3 para descrever distribuições:
+https://www.w3.org/TR/vocab-dcat-3/
+
+Formatos isolados: CSV, JSON e Parquet por tabela; SQLite e SQL para a base completa;
+dicionário e fontes separados. O Parquet incorpora o dicionário em seus metadados.
+O SQLite inclui __metadados para identificar a versão e as definições sem depender do ZIP.
 
 O código de ingestão preserva os nomes das colunas de entrada. A publicação preserva
 os nomes reconhecíveis da fonte em snake_case: LEITOS_EXISTENTES → leitos_existentes,

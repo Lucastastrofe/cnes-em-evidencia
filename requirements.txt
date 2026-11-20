@@ -2,3 +2,4 @@
 streamlit==1.65.0
 pandas>=2.2,<3
 altair>=5,<7
+pyarrow==23.0.0

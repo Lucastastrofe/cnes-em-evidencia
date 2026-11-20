@@ -2,7 +2,7 @@
 
 ## Dados, dicionário e API
 
-O contrato publicado 2.0 usa os nomes da fonte normalizados quando há correspondência
+O contrato publicado 2.1 usa os nomes da fonte normalizados quando há correspondência
 direta; agregações e indicadores calculados têm nomes e transformações explícitos.
 O mesmo contrato alimenta arquivos persistidos, CSVs, JSONs e uma cópia SQLite com
 chaves primárias e relacionamentos. O pacote inclui o esquema SQL e o dicionário completo.
@@ -23,7 +23,31 @@ Para gerar os contratos e arquivos HTTP a partir da última execução validada:
 python -m cnes_audit.publish
 ```
 
-## Parte 8 · Perfil territorial integrado
+## Produto de dados e estudo aplicado
+
+O produto final separa cinco distribuições de fontes normalizadas e agregadas das 14
+visões analíticas. As primeiras preservam nomes como comp, uf, leitos_existentes,
+unidade_da_federacao, quantidade e os campos D1C/D1N/D3C/V do SIDRA em minúsculas.
+As visões reúnem contagens, taxas e integrações derivadas. Nenhuma distribuição é
+apresentada como microdado bruto: o pipeline já agrega e reorganiza consultas.
+
+O mapa agora é o estudo aplicado **Leitos e participação do SUS**, sem numeração de etapa.
+Ele compara capacidade cadastrada, participação SUS e evolução mensal em relação à população.
+O produto pode ser reutilizado em outros estudos, independentemente da apresentação da série.
+
+Na central, cada tabela pode ser baixada em CSV, JSON ou Parquet, com o mesmo recorte.
+SQLite e esquema SQL são downloads separados. O SQLite inclui a tabela técnica __metadados;
+o Parquet incorpora o dicionário no metadata do arquivo. Esses formatos mantêm a informação
+de procedência mesmo quando usados fora do painel.
+
+O catálogo da API lista todas as distribuições e seus formatos. A central consulta esse
+catálogo por HTTP e permite carregar os dados públicos diretamente, sem apresentar cópias
+locais como se fossem respostas remotas.
+
+Para uso principal em pesquisa e análise SQL, recomendamos o snapshot SQLite: o cliente
+verifica SHA-256 e tamanho, mantém cópia local pelo hash e abre em modo somente leitura.
+Uma nova execução do cliente procura a versão publicada; não é um banco remoto em streaming.
+As últimas sete versões de conteúdo ficam hospedadas; estudos devem guardar sua própria cópia.
 
 Os downloads ficam na [central de dados](https://cnes-em-evidencia.streamlit.app/dados).
 A central separa arquivos, fontes oficiais e orientações de uso em três abas.
@@ -46,7 +70,7 @@ Os termos de reutilização devem ser verificados em cada catálogo oficial; MIT
 [Abrir o mapa interativo](https://cnes-em-evidencia.streamlit.app/)
 
 A página inicial reúne as dimensões estudadas nas sete etapas em uma consulta por UF.
-No menu, abra **8 · Mapa e perfil territorial**. O clique em um estado atualiza o perfil:
+No menu, abra **Leitos e participação do SUS**. O clique em um estado atualiza o perfil:
 composição dos leitos SUS, tipos de equipe, serviços e classificações com busca e download,
 e série mensal de leitos. A seleção pelo campo de UF oferece o mesmo detalhamento.
 Escolha estabelecimentos, leitos, parcela SUS, equipes, serviços ou profissionais e alterne

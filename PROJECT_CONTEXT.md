@@ -1,5 +1,15 @@
 # Contexto do projeto
 
+## Produto atual · revisão de 20/11/2026
+
+A série analítica de sete etapas sustenta um produto de dados independente da apresentação.
+A central /dados separa fontes normalizadas agregadas, visões analíticas, formatos de download,
+SQLite atualizado, dicionário e catálogo conectado à API. O mapa é um estudo aplicado focado
+em leitos e participação SUS, sem numeração de etapa. Contrato e fontes canônicas estão em
+docs/CONTRATO-DADOS.md e nos arquivos gerados; não replicar schemas neste documento.
+SQLite por snapshot verificado é a opção principal para análise SQL local. API JSON permanece
+alternativa de distribuição. O produto não inclui microdados pessoais nem banco remoto gravável.
+
 ## Propósito
 
 O CNES em Evidência permite inspecionar a cobertura cadastral e os problemas observáveis de qualidade na base aberta de estabelecimentos de saúde. O produto é dirigido a pessoas que usam dados públicos de saúde em análises e precisam avaliar a fonte antes de interpretar seus números.

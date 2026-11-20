@@ -1,4 +1,10 @@
-# Parte 8: consulta territorial
+# Produto de dados e estudo aplicado
+
+Revisão: o mapa deixou de ser identificado como etapa 8 e passou a estudar leitos e SUS.
+As fontes normalizadas e visões analíticas ficam separadas na central, com nomes originais
+normalizados nas distribuições de fonte e cálculos identificados nas visões. Os formatos
+são baixáveis isoladamente. O SQLite permite consulta local somente leitura de um snapshot
+verificado; a aba API consulta o catálogo público e carrega tabelas por HTTP.
 
 Organização de UX: consulta e detalhamento na página inicial; downloads, catálogo e
 orientações em /dados. Navegação agrupa Explorar, Dados abertos e Análises da série.

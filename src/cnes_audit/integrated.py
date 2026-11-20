@@ -9,6 +9,9 @@ from zipfile import ZIP_DEFLATED, ZipFile
 from typing import Any
 from cnes_audit.quality import UF_NAMES
 from cnes_audit.contracts import canonical_tables, relational_snapshot
+from cnes_audit.catalog import source_tables, governance_dictionary
+
+PUBLIC_CONTRACT_VERSION = "2.1"
 
 METRICS = {
     "records": ("Estabelecimentos", None),
@@ -85,15 +88,16 @@ def legacy_tables(dashboard: dict[str, Any], profile: dict[str, Any]) -> dict[st
 
 
 def public_tables(dashboard: dict[str, Any], profile: dict[str, Any]) -> dict[str, list[dict]]:
-    return canonical_tables(legacy_tables(dashboard, profile))[0]
+    return {**source_tables(dashboard)[0], **canonical_tables(legacy_tables(dashboard, profile))[0]}
 
 
 def data_dictionary(dashboard: dict[str, Any], profile: dict[str, Any]) -> list[dict]:
-    return canonical_tables(legacy_tables(dashboard, profile))[1]
+    fields = source_tables(dashboard)[1] + canonical_tables(legacy_tables(dashboard, profile))[1]
+    return governance_dictionary(fields, {"id_execucao": profile["run_id"], "atualizado_em": profile["generated_at"], "competencias": profile["periods"], "ano_populacao": profile["population_reference_year"]}, {})
 
 
 def public_dataset(dashboard: dict, profile: dict, audit: dict) -> dict:
-    return {"versao_contrato": "2.0", "id_execucao": profile["run_id"],
+    return {"versao_contrato": "2.1", "id_execucao": profile["run_id"],
             "atualizado_em": profile["generated_at"], "competencias": profile["periods"],
             "ano_populacao": profile["population_reference_year"],
             "tabelas": public_tables(dashboard, profile), "dicionario": data_dictionary(dashboard, profile),
@@ -122,7 +126,7 @@ def data_package(dashboard: dict[str, Any], profile: dict[str, Any], audit: dict
     output = io.BytesIO()
     tables = public_tables(dashboard, profile)
     with ZipFile(output, "w", compression=ZIP_DEFLATED) as archive:
-        manifest = {"run_id": profile["run_id"], "generated_at": profile["generated_at"], "schema_version": "2.0", "files": []}
+        manifest = {"run_id": profile["run_id"], "generated_at": profile["generated_at"], "schema_version": "2.1", "files": []}
         for name, rows in tables.items():
             content = profile_csv(rows).encode("utf-8-sig")
             filename = f"tabelas/{name}.csv"
@@ -135,7 +139,7 @@ def data_package(dashboard: dict[str, Any], profile: dict[str, Any], audit: dict
         ddl, database = relational_snapshot(tables, data_dictionary(dashboard, profile))
         archive.writestr("schema.sql", ddl)
         archive.writestr("cnes.sqlite", database)
-        archive.writestr("LEIA-ME.txt", "CNES em Evidência\nContrato de dados 2.0.\nCada CSV tem seu próprio grão; não some totais entre tabelas.\nCompetências e ano populacional: dados.json. Fontes, hashes e limites: auditoria.json e fontes.json.\nTipos, origem e transformação: dicionario.json e dicionario.csv.\nBase relacional: cnes.sqlite; esquema de criação: schema.sql.\nCódigos de UF são identificadores: preserve como texto.\nAusências são campos vazios, não zero.\nProfissionais, equipes, serviços e leitos têm unidades diferentes.\nNão contém estabelecimentos individuais nem detalhamento municipal.\nO cadastro não informa acesso, ocupação ou disponibilidade em tempo real.\nProjeto independente, sem endosso dos órgãos citados. MIT licencia o código; consulte as condições das fontes para os dados.\n")
+        archive.writestr("LEIA-ME.txt", "CNES em Evidência\nContrato de dados 2.1. Fontes normalizadas agregadas e visões analíticas em camadas separadas.\nCada CSV tem seu próprio grão; não some totais entre tabelas.\nCompetências e ano populacional: dados.json. Fontes, hashes e limites: auditoria.json e fontes.json.\nTipos, origem e transformação: dicionario.json e dicionario.csv.\nBase relacional: cnes.sqlite; esquema de criação: schema.sql.\nCódigos de UF são identificadores: preserve como texto.\nAusências são campos vazios, não zero.\nProfissionais, equipes, serviços e leitos têm unidades diferentes.\nNão contém estabelecimentos individuais nem detalhamento municipal.\nO cadastro não informa acesso, ocupação ou disponibilidade em tempo real.\nProjeto independente, sem endosso dos órgãos citados. MIT licencia o código; consulte as condições das fontes para os dados.\n")
         recorded = {entry["path"] for entry in manifest["files"]}
         for item in archive.infolist():
             if item.filename not in recorded:
