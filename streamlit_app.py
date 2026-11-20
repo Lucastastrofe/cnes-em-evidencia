@@ -105,7 +105,8 @@ def style_chart(chart):
             gridColor="#E3E9E5",
             gridOpacity=0.75,
             labelColor="#43534D",
-            labelFontSize=12,
+            labelFontSize=13,
+            labelLimit=220,
             tickColor="#BAC6C0",
             titleColor="#2B3934",
             titleFontSize=13,
@@ -118,6 +119,8 @@ def style_chart(chart):
             titleColor="#2B3934",
             titleFontSize=12,
             symbolStrokeWidth=3,
+            orient="bottom",
+            labelLimit=320,
         )
     )
 
@@ -507,8 +510,8 @@ def render_bed_panel(dashboard: dict, audit: dict) -> None:
 
     render_panel_question(
         "Quanto da capacidade cadastrada está destinada ao SUS?",
-        "Cada barra mantém o total de leitos da UF e destaca, dentro dele, a parcela informada "
-        "para atendimento pelo SUS.",
+        "As barras mostram o total. As linhas mostram a parcela SUS e os demais leitos, "
+        "calculados pela diferença entre total e SUS, na mesma unidade.",
         "#176B52",
     )
 
@@ -534,6 +537,8 @@ def render_bed_panel(dashboard: dict, audit: dict) -> None:
         "Uma taxa maior também não comprova acesso, suficiência ou qualidade."
     )
 
+    proportional = st.radio("Unidade do gráfico", ["Quantidade de leitos", "Por 100 mil habitantes"], horizontal=True, key="bed_chart_unit") == "Por 100 mil habitantes"
+    order_field = "Leitos por 100 mil habitantes" if proportional else "Leitos existentes"
     st.subheader("Compare as UFs")
     filter_states, filter_scope = st.columns([2, 1])
     with filter_states:
@@ -546,17 +551,18 @@ def render_bed_panel(dashboard: dict, audit: dict) -> None:
     with filter_scope:
         comparison_scope = st.selectbox(
             "Recorte da comparação",
-            ["Todas as UFs selecionadas", "10 maiores taxas", "10 menores taxas"],
+            ["Todas as UFs selecionadas", "10 maiores valores", "10 menores valores"],
             key="bed_scope_filter",
+            index=1,
         )
 
     if not selected_ufs:
         selected_ufs = states["UF"].tolist()
     comparison = states.loc[states["UF"].isin(selected_ufs)]
-    if comparison_scope == "10 maiores taxas":
-        comparison = comparison.nlargest(10, "Leitos por 100 mil habitantes")
-    elif comparison_scope == "10 menores taxas":
-        comparison = comparison.nsmallest(10, "Leitos por 100 mil habitantes")
+    if comparison_scope == "10 maiores valores":
+        comparison = comparison.nlargest(10, order_field)
+    elif comparison_scope == "10 menores valores":
+        comparison = comparison.nsmallest(10, order_field)
 
     selected_beds = int(comparison["Leitos existentes"].sum())
     selected_sus_beds = int(comparison["Leitos destinados ao SUS"].sum())
@@ -574,83 +580,16 @@ def render_bed_panel(dashboard: dict, audit: dict) -> None:
         "no total de leitos existentes e não devem ser somados a ele."
     )
 
-    chart_source = comparison.copy()
-    chart_source["Total"] = chart_source["Leitos por 100 mil habitantes"].round().astype(int)
-    chart_source["Leitos destinados ao SUS"] = (
-        chart_source["Leitos SUS por 100 mil habitantes"].round().astype(int)
-    )
-    chart_source["Demais leitos cadastrados"] = (
-        chart_source["Total"] - chart_source["Leitos destinados ao SUS"]
-    ).clip(lower=0)
-    chart_source["Percentual SUS"] = chart_source.apply(
-        lambda row: (
-            f'{row["Leitos destinados ao SUS"] / row["Total"]:.1%} SUS'.replace(".", ",")
-            if row["Total"]
-            else "0,0% SUS"
-        ),
-        axis=1,
-    )
-    chart_data = chart_source.melt(
-        id_vars=["UF", "Total", "Percentual SUS"],
-        value_vars=["Leitos destinados ao SUS", "Demais leitos cadastrados"],
-        var_name="Composição",
-        value_name="Taxa",
-    )
-    chart_data["Ordem"] = chart_data["Composição"].map(
-        {"Leitos destinados ao SUS": 0, "Demais leitos cadastrados": 1}
-    )
-    state_order = chart_source.sort_values("Total", ascending=False)["UF"].tolist()
-    bars = (
-        alt.Chart(chart_data)
-        .mark_bar()
-        .encode(
-            x=alt.X("Taxa:Q", stack="zero", title="Leitos por 100 mil habitantes"),
-            y=alt.Y(
-                "UF:N",
-                sort=state_order,
-                title=None,
-            ),
-            color=alt.Color(
-                "Composição:N",
-                scale=alt.Scale(
-                    domain=["Leitos destinados ao SUS", "Demais leitos cadastrados"],
-                    range=["#2B716F", "#D8E0DC"],
-                ),
-                legend=alt.Legend(
-                    labelLimit=0,
-                    orient="bottom",
-                    direction="vertical",
-                    columns=1,
-                    title="Composição do total",
-                ),
-            ),
-            order=alt.Order("Ordem:Q", sort="ascending"),
-            tooltip=[
-                alt.Tooltip("UF:N"),
-                alt.Tooltip("Total:Q", title="Total por 100 mil", format=".0f"),
-                alt.Tooltip("Composição:N"),
-                alt.Tooltip("Taxa:Q", title="Taxa por 100 mil", format=".0f"),
-                alt.Tooltip("Percentual SUS:N"),
-            ],
-        )
-    )
-    labels = alt.Chart(chart_source).mark_text(align="left", dx=7, color="#183A39").encode(
-        x=alt.X("Total:Q", stack=None),
-        y=alt.Y(
-            "UF:N",
-            sort=state_order,
-            title=None,
-        ),
-        text=alt.Text("Percentual SUS:N"),
-    )
-    capacity_chart = style_chart(
-        (bars + labels).properties(height=max(300, len(comparison) * 29))
-    )
+    from cnes_audit.visuals import bed_comparison
+    selected_codes = set(comparison["code"])
+    rows = [row for row in dashboard["beds"]["by_state"] if row["code"] in selected_codes]
+    chart_source, chart = bed_comparison(rows, proportional)
+    capacity_chart = style_chart(chart)
     chart_tab, table_tab = st.tabs(["Comparação visual", "Dados da seleção"])
     with chart_tab:
         st.caption(
-            "Cada barra representa o total da UF. Verde escuro: leitos destinados ao SUS. "
-            "Verde claro: demais leitos cadastrados. O percentual ao lado mostra a parcela SUS."
+            "Barras claras: total. Linha verde: SUS. Linha tracejada: total menos SUS. "
+            "UFs ordenadas pelo total exibido; as linhas conectam categorias, não representam evolução no tempo."
         )
         st.altair_chart(capacity_chart, width="stretch", theme=None)
     with table_tab:
@@ -1952,7 +1891,7 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
     frame = pd.DataFrame(profile["rows"])
     labels = {key: value[0] for key, value in METRICS.items()}
     view = st.radio("Visualização", ["Mapa", "Perfil da UF", "Como interpretar"], horizontal=True, key="territory_view")
-    left, right = st.columns([2, 1])
+    left, right = st.columns([1, 1])
     metric = left.selectbox("Leitos no mapa", ["beds", "sus_beds"], format_func=labels.get)
     proportional = right.toggle("Por 100 mil habitantes", value=True)
     section = METRICS[metric][1]
@@ -1977,19 +1916,23 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
         feature["code"] = code
         feature["name"] = lookup.loc[code, "name"]
         feature["Valor"] = None if pd.isna(lookup.loc[code, "Valor"]) else float(lookup.loc[code, "Valor"])
-    selection = alt.selection_point(fields=["code"], name="uf", on="click", clear="dblclick", toggle=False)
+    selection = alt.selection_point(fields=["code"], name="uf", on="click", clear="dblclick", toggle=False, empty=False)
     chart = alt.Chart(alt.Data(values=features)).mark_geoshape(stroke="#fbfaf6", strokeWidth=1).encode(
         color=alt.condition("isValid(datum.Valor)", alt.Color("Valor:Q", title=title, scale=alt.Scale(scheme="tealblues", zero=True), legend=alt.Legend(orient="bottom", format=",.0f", titleLimit=450)), alt.value("#dadeda")),
-        opacity=alt.condition(selection, alt.value(1), alt.value(0.45)),
+        stroke=alt.condition(selection, alt.value("#17231f"), alt.value("#fbfaf6")),
+        strokeWidth=alt.condition(selection, alt.value(2.5), alt.value(0.8)),
         tooltip=[alt.Tooltip("name:N", title="UF"), alt.Tooltip("Valor:Q", title=title, format=",.0f")],
     ).project(type="mercator").add_params(selection).properties(height=450)
     event = None
     if view == "Mapa":
         st.subheader(title)
         st.caption("Selecione uma UF no mapa. Para consultar a composição SUS e a evolução mensal, abra Perfil da UF.")
-        map_tab, table_tab = st.tabs(["Mapa do Brasil", "Valores por UF"])
+        map_tab, ranking_tab, table_tab = st.tabs(["Mapa do Brasil", "Comparar UFs", "Valores por UF"])
         with map_tab:
             event = st.altair_chart(style_chart(chart), width="stretch", theme=None, key="territory_map", on_select="rerun", selection_mode="uf")
+        with ranking_tab:
+            st.caption("Mesma seleção e unidade do mapa. A ordem compara cadastros; não classifica qualidade assistencial.")
+            st.altair_chart(style_chart(alt.Chart(values).mark_bar(color="#176b52").encode(x=alt.X("Valor:Q", title=title, scale=alt.Scale(zero=True)), y=alt.Y("name:N", sort="-x", title=None), tooltip=[alt.Tooltip("name:N", title="UF"), alt.Tooltip("Valor:Q", format=".0f")]).properties(height=650)), width="stretch", theme=None)
         with table_tab:
             st.dataframe(values[["name", metric, "population", "Valor"]].rename(columns={"name": "UF", metric: labels[metric], "population": "População", "Valor": title + " · comparação"}), hide_index=True, width="stretch", column_config={labels[metric]: st.column_config.NumberColumn(format="%.0f"), "População": st.column_config.NumberColumn(format="%.0f"), title + " · comparação": st.column_config.NumberColumn(format="%.0f")})
     picked = event.selection.get("uf", []) if event else []
@@ -2050,10 +1993,9 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
     with detail_tabs[3]:
         history = pd.DataFrame(dashboard["bed_history"]["by_state"])
         history = history.loc[history["code"] == row["code"]].copy()
-        history["Mês"] = pd.to_datetime(history["competence"], format="%Y%m")
-        history = history.melt(id_vars=["Mês"], value_vars=["beds", "sus_beds"], var_name="Série", value_name="Leitos")
-        history["Série"] = history["Série"].map({"beds": "Total", "sus_beds": "SUS"})
-        st.altair_chart(style_chart(alt.Chart(history).mark_line(point=True).encode(x=alt.X("Mês:T", axis=alt.Axis(format="%m/%Y")), y=alt.Y("Leitos:Q", scale=alt.Scale(zero=True), axis=alt.Axis(format="d")), color=alt.Color("Série:N", legend=alt.Legend(orient="bottom")), tooltip=[alt.Tooltip("Mês:T", format="%m/%Y"), "Série:N", alt.Tooltip("Leitos:Q", format=",.0f")]).properties(height=320)), width="stretch", theme=None)
+        from cnes_audit.visuals import bed_history_chart
+        st.altair_chart(style_chart(bed_history_chart(history.to_dict(orient="records"))), width="stretch", theme=None)
+        st.caption("Barras: total. Linha verde: SUS. Linha tracejada: total menos SUS. Uma única escala em todos os meses.")
         st.caption("As variações representam alterações no cadastro mensal, sem permitir concluir melhora ou piora da assistência.")
     st.caption("Método e limitações estão na opção Como interpretar.")
 
@@ -2104,13 +2046,13 @@ def render_data_center(dashboard: dict, audit: dict) -> None:
         "checks": "Controles de qualidade",
     }
     with downloads:
-        st.subheader("Pacote completo")
-        st.write("Todas as tabelas públicas em CSV, uma base SQLite para consultas SQL, o esquema de criação e os arquivos de fontes, dicionário e auditoria.")
-        st.download_button("Baixar pacote completo · ZIP", data_package(dashboard, profile, audit), "cnes-dados-publicos.zip", "application/zip", type="primary")
-        with st.expander("Base completa em formatos separados"):
-            dictionary = data_dictionary(dashboard, profile)
-            sql, sqlite = relational_snapshot(tables, dictionary)
-            st.download_button("Baixar base relacional · SQLite", sqlite, "cnes.sqlite", "application/vnd.sqlite3")
+        st.subheader("Base completa")
+        st.write("Para consultar todas as tabelas em SQL, baixe o SQLite. Para receber também CSVs e documentação, escolha o pacote ZIP.")
+        dictionary = data_dictionary(dashboard, profile)
+        sql, sqlite = relational_snapshot(tables, dictionary)
+        st.download_button("Baixar base completa · SQLite", sqlite, "cnes.sqlite", "application/vnd.sqlite3", type="primary")
+        st.download_button("Baixar dados e documentação · ZIP", data_package(dashboard, profile, audit), "cnes-dados-publicos.zip", "application/zip")
+        with st.expander("Outros formatos da base completa"):
             st.download_button("Baixar estrutura das tabelas · SQL", sql, "schema.sql", "application/sql")
             st.download_button("Baixar todas as tabelas e metadados · JSON", json.dumps(public_dataset(dashboard, profile, audit), ensure_ascii=False, indent=2), "dados.json", "application/json")
         st.subheader("Escolher uma tabela")
@@ -2129,11 +2071,16 @@ def render_data_center(dashboard: dict, audit: dict) -> None:
         st.caption(f"{format_integer(len(rows))} linhas · {len(rows[0])} colunas · CSV em UTF-8 · valores ausentes permanecem em branco.")
         st.dataframe(pd.DataFrame(rows).head(10), hide_index=True, width="stretch")
         st.caption("Prévia das primeiras 10 linhas. O download contém a tabela inteira.")
-        st.download_button("Baixar tabela selecionada · CSV", profile_csv(rows).encode("utf-8-sig"), f"{selected}.csv", "text/csv")
-        st.download_button("Baixar tabela selecionada · JSON", json.dumps({"id_execucao": profile["run_id"], "atualizado_em": profile["generated_at"], "tabela": selected, "dados": rows}, ensure_ascii=False, indent=2), f"{selected}.json", "application/json")
+        download_format = st.radio("Formato do arquivo", ["CSV", "Parquet", "JSON"], horizontal=True)
         fields = [field for field in data_dictionary(dashboard, profile) if field["tabela"] == selected]
-        st.download_button("Baixar tabela selecionada · Parquet", parquet_bytes(rows, fields), f"{selected}.parquet", "application/vnd.apache.parquet")
-        st.caption("CSV: intercâmbio com planilhas e R. JSON: consumo em aplicações. Parquet: tipos preservados e leitura eficiente em ferramentas analíticas. Os três downloads usam o mesmo recorte selecionado acima.")
+        if download_format == "CSV":
+            content, mime = profile_csv(rows).encode("utf-8-sig"), "text/csv"
+        elif download_format == "Parquet":
+            content, mime = parquet_bytes(rows, fields), "application/vnd.apache.parquet"
+        else:
+            content, mime = json.dumps({"id_execucao": profile["run_id"], "tabela": selected, "dados": rows}, ensure_ascii=False, indent=2), "application/json"
+        st.download_button(f"Baixar esta tabela · {download_format}", content, f"{selected}.{download_format.lower()}", mime)
+        st.caption("CSV para planilhas e R; Parquet para preservar tipos; JSON para aplicações. O arquivo respeita o recorte escolhido.")
         with st.expander("Resumo integrado em JSON"):
             st.write("Uma linha por UF, com competências, ano populacional e definição dos indicadores.")
             dataset = public_dataset(dashboard, profile, audit)
@@ -2240,7 +2187,7 @@ def render_governance_panel(dashboard: dict, audit: dict) -> None:
     st.markdown('<p class="eyebrow">Qualidade e governança</p>', unsafe_allow_html=True)
     st.title("Como os dados são verificados")
     st.write("Acompanhe a última carga, os achados da base e as verificações do código. Cada resultado vale para uma execução identificada; não é uma garantia de qualidade para qualquer uso.")
-    overview, controls, software, responsibility = st.tabs(["Situação da base", "Controles e totais", "Testes do projeto", "Responsabilidades"])
+    overview, controls, software, responsibility = st.tabs(["Painel de qualidade", "Regras e totais", "Testes e operação", "Responsabilidades"])
     checks = dashboard["checks"]
     approved = [check for check in checks if check["failures"] == 0]
     findings = [check for check in checks if check["failures"] > 0]
@@ -2251,7 +2198,19 @@ def render_governance_panel(dashboard: dict, audit: dict) -> None:
         three.metric("Registros processados", format_integer(dashboard["summary"]["total_records"]))
         st.write(f"**Última verificação:** {format_timestamp(audit['generated_at'])}")
         st.write(f"**Resultado da carga:** {audit['status']}")
-        st.code(audit["run_id"], language=None)
+        reconciliation = audit["reconciliation"]
+        if reconciliation["rows_read"] == reconciliation["rows_aggregated"]:
+            st.success("Reconciliação de registros: linhas lidas e agregadas conferem.")
+        else:
+            st.error("Reconciliação de registros: há diferença entre leitura e agregação.")
+        quality_states = pd.DataFrame(dashboard["by_state"])
+        quality_states["Ocorrências por 100 cadastros"] = quality_states["issues"] / quality_states["records"] * 100
+        quality_states = quality_states.nlargest(10, "Ocorrências por 100 cadastros")
+        st.subheader("Onde os controles encontram mais ocorrências")
+        st.altair_chart(style_chart(alt.Chart(quality_states).mark_bar(color="#a35c25").encode(x=alt.X("Ocorrências por 100 cadastros:Q", title="Ocorrências por 100 cadastros", scale=alt.Scale(zero=True)), y=alt.Y("name:N", title=None, sort="-x"), tooltip=[alt.Tooltip("name:N", title="UF"), alt.Tooltip("issues:Q", title="Ocorrências", format=".0f"), alt.Tooltip("records:Q", title="Cadastros", format=".0f"), alt.Tooltip("Ocorrências por 100 cadastros:Q", format=".1f")]).properties(height=300)), width="stretch", theme=None)
+        st.caption("Dez UFs com maior relação entre ocorrências e cadastros. Uma ocorrência é um achado de controle; não significa automaticamente um problema assistencial ou uma pessoa identificada.")
+        with st.expander("Identificação da execução"):
+            st.code(audit["run_id"], language=None)
         for finding in findings:
             st.subheader(finding["label"])
             st.write(f"{format_integer(finding['failures'])} ocorrências em {format_integer(finding['evaluated'])} avaliações ({format_percent(finding['failure_rate'])}).")

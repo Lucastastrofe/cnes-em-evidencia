@@ -138,15 +138,13 @@ class DashboardContractTest(unittest.TestCase):
         self.assertNotIn("O gráfico é regenerado em cada execução automática.", self.source)
 
     def test_capacity_chart_keeps_legend_labels_visible(self):
-        self.assertIn('title="Composição do total"', self.source)
-        self.assertIn('orient="top"', self.source)
+        visual_source = (self.root / "src/cnes_audit/visuals.py").read_text(encoding="utf-8")
+        self.assertIn('orient="bottom"', visual_source)
+        self.assertIn('domain=["SUS", "Demais"]', visual_source)
 
     def test_capacity_chart_shows_sus_as_part_of_the_total(self):
-        self.assertIn(
-            'value_vars=["Leitos destinados ao SUS", "Demais leitos cadastrados"]',
-            self.source,
-        )
-        self.assertIn('text=alt.Text("Percentual SUS:N")', self.source)
+        self.assertIn('Linha verde: SUS', self.source)
+        self.assertIn('total menos SUS', self.source)
         self.assertNotIn('yOffset="Indicador:N"', self.source)
 
     def test_bed_source_facts_have_clear_labels(self):
@@ -243,14 +241,15 @@ class DashboardContractTest(unittest.TestCase):
     def test_primary_charts_match_the_analytical_relationship(self):
         self.assertIn("Impacto geográfico por UF", self.source)
         self.assertIn('mark_circle(size=150', self.source)
-        self.assertIn('stack="zero"', self.source)
+        self.assertIn('bed_comparison(rows, proportional)', self.source)
         self.assertIn('Demais {len(type_totals) - 10} tipos', self.source)
         self.assertIn("A linha tracejada marca a taxa nacional", self.source)
         self.assertIn("A escala vertical acompanha a faixa observada", self.source)
 
     def test_bed_counts_and_rates_are_displayed_without_fractional_units(self):
         self.assertIn('.round().astype(int)', self.source)
-        self.assertIn('title="Taxa por 100 mil", format=".0f"', self.source)
+        visual_source = (self.root / "src/cnes_audit/visuals.py").read_text(encoding="utf-8")
+        self.assertIn('format=".0f"', visual_source)
         self.assertNotIn('title="Taxa", format=".1f"', self.source)
         self.assertNotIn('NumberColumn(format="%.1f")', self.source)
 
