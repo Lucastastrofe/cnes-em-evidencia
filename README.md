@@ -2,6 +2,11 @@
 
 ## Parte 8 · Perfil territorial integrado
 
+Os downloads ficam na [central de dados](https://cnes-em-evidencia.streamlit.app/dados).
+A central separa arquivos, fontes oficiais e orientações de uso em três abas.
+É possível escolher uma tabela, filtrar por UF quando aplicável, conferir uma prévia e
+baixar o recorte. O pacote completo permanece disponível sem filtros.
+
 O resumo integrado tem 27 linhas, uma por UF. Ele não substitui as tabelas detalhadas.
 Na seção de downloads, o pacote ZIP reúne os CSVs de todos os agregados públicos,
 incluindo equipes por tipo e UF, serviços por classificação e UF e leitos por mês e UF.

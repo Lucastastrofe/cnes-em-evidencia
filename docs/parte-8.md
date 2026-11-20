@@ -1,5 +1,9 @@
 # Parte 8: consulta territorial
 
+Organização de UX: consulta e detalhamento na página inicial; downloads, catálogo e
+orientações em /dados. Navegação agrupa Explorar, Dados abertos e Análises da série.
+Títulos e espaçamentos reduzidos; central revisada visualmente em 1280px e 390px.
+
 Objetivo: permitir comparar a presença cadastral por UF e reutilizar os agregados com origem e período identificados.
 
 Revisão de interação: o clique no mapa deve atualizar a UF do perfil. As abas mostram
