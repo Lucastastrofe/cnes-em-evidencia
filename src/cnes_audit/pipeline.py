@@ -17,6 +17,7 @@ from cnes_audit.beds import (
     latest_bed_capacity,
 )
 from cnes_audit.population import enrich_states_with_population, read_population_estimates
+from cnes_audit.integrated import build_profile, profile_csv
 from cnes_audit.professionals import (
     enrich_professionals_with_population,
     parse_professional_snapshot,
@@ -404,6 +405,12 @@ def build_public_artifacts(
             ),
         ],
     }
+    profile = build_profile(dashboard)
+    _write_json(output_directory / "uf-profile.json", profile)
+    csv_path = output_directory / "uf-profile.csv"
+    csv_temporary = csv_path.with_suffix(".csv.tmp")
+    csv_temporary.write_text(profile_csv(profile["rows"]), encoding="utf-8-sig")
+    os.replace(csv_temporary, csv_path)
     _write_json(output_directory / "dashboard.json", dashboard)
     _write_json(output_directory / "audit-report.json", audit)
     return dashboard, audit

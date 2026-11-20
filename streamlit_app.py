@@ -6,6 +6,7 @@ from pathlib import Path
 import altair as alt
 import pandas as pd
 import streamlit as st
+from cnes_audit.integrated import METRICS, profile_csv
 
 from cnes_audit.presentation import (
     describe_controls,
@@ -1898,6 +1899,76 @@ def render_quality_panel(dashboard: dict, audit: dict) -> None:
     )
 
 
+def render_integrated_panel(dashboard: dict, audit: dict) -> None:
+    st.markdown('<p class="eyebrow">Parte 8 · Consulta territorial</p>', unsafe_allow_html=True)
+    st.title("A estrutura cadastrada no território")
+    st.write("Compare os estados e consulte o perfil de cada UF. Os indicadores reúnem estabelecimentos, leitos, equipes, serviços e profissionais, preservando os períodos de cada fonte.")
+    profile = json.loads((DATA_DIRECTORY / "uf-profile.json").read_text(encoding="utf-8"))
+    if profile["run_id"] != dashboard["metadata"]["run_id"]:
+        st.error("A base integrada pertence a outra atualização. Aguarde a conclusão do pipeline.")
+        return
+    frame = pd.DataFrame(profile["rows"])
+    labels = {key: value[0] for key, value in METRICS.items()}
+    left, right = st.columns([2, 1])
+    metric = left.selectbox("Indicador", list(labels), format_func=labels.get)
+    proportional = right.toggle("Por 100 mil habitantes", value=True)
+    section = METRICS[metric][1]
+    competence = profile["periods"].get(section)
+    period = f"{competence[4:]}/{competence[:4]}" if competence else "Fotografia do arquivo de estabelecimentos"
+    render_source_facts([("Fonte", "CNES · " + (section or "estabelecimentos")), ("Referência", period), ("População IBGE", str(profile["population_reference_year"])), ("Atualização", format_timestamp(profile["generated_at"]))])
+    values = frame.copy()
+    values["Valor"] = values[metric] / values["population"] * 100_000 if proportional else values[metric]
+    title = labels[metric] + (" por 100 mil habitantes" if proportional else " cadastrados")
+    boundaries = json.loads((DATA_DIRECTORY / "uf-boundaries.geojson").read_text(encoding="utf-8"))
+    lookup = values.set_index("code")
+    features = boundaries["features"]
+    for feature in features:
+        # IBGE follows RFC 7946; D3's spherical projection expects opposite winding.
+        geometry = feature["geometry"]
+        polygons = geometry["coordinates"] if geometry["type"] == "MultiPolygon" else [geometry["coordinates"]]
+        for polygon in polygons:
+            for ring in polygon:
+                ring.reverse()
+        code = str(feature["properties"]["codarea"])
+        feature["code"] = code
+        feature["name"] = lookup.loc[code, "name"]
+        feature["Valor"] = None if pd.isna(lookup.loc[code, "Valor"]) else float(lookup.loc[code, "Valor"])
+    selection = alt.selection_point(fields=["code"], name="uf", on="click", clear="dblclick")
+    chart = alt.Chart(alt.Data(values=features)).mark_geoshape(stroke="#fbfaf6", strokeWidth=1).encode(
+        color=alt.condition("isValid(datum.Valor)", alt.Color("Valor:Q", title=title, scale=alt.Scale(scheme="tealblues", zero=True), legend=alt.Legend(orient="bottom", format=",.0f", titleLimit=450)), alt.value("#dadeda")),
+        opacity=alt.condition(selection, alt.value(1), alt.value(0.45)),
+        tooltip=[alt.Tooltip("name:N", title="UF"), alt.Tooltip("Valor:Q", title=title, format=",.0f")],
+    ).project(type="mercator").add_params(selection).properties(height=450)
+    st.subheader(title)
+    st.caption("Toque ou clique em uma UF para destacar. Um duplo clique limpa o destaque. Cinza indica dado ausente. Consulte os valores exatos na tabela.")
+    map_tab, table_tab = st.tabs(["Mapa do Brasil", "Valores por UF"])
+    with map_tab:
+        st.altair_chart(style_chart(chart), width="stretch", theme=None)
+    with table_tab:
+        st.dataframe(values[["name", metric, "population", "Valor"]].rename(columns={"name": "UF", metric: labels[metric], "population": "População", "Valor": title + " · comparação"}), hide_index=True, width="stretch", column_config={labels[metric]: st.column_config.NumberColumn(format="%.0f"), "População": st.column_config.NumberColumn(format="%.0f"), title + " · comparação": st.column_config.NumberColumn(format="%.0f")})
+    state = st.selectbox("Estado", frame["name"].sort_values().tolist())
+    row = frame.loc[frame["name"] == state].iloc[0]
+    st.subheader(state)
+    for columns, fields in [(st.columns(3), ["records", "beds", "professionals"]), (st.columns(2), ["teams", "service_records"])]:
+        for column, field in zip(columns, fields):
+            column.metric(labels[field], "Não disponível" if pd.isna(row[field]) else format_integer(int(row[field])))
+    st.caption("Cada indicador mantém sua unidade. Registros de serviços não equivalem a serviços únicos; os totais não medem atendimento ou disponibilidade atual.")
+    st.subheader("O que a governança muda nesta leitura")
+    st.write("A comparação reúne as fontes pela mesma chave de UF e usa a população como denominador comum. Campos ausentes permanecem ausentes: não são convertidos em zero. As competências precisam ser conferidas antes de interpretar os indicadores em conjunto.")
+    with st.expander("Períodos e definições das fontes"):
+        st.dataframe(pd.DataFrame([{"Fonte": {"beds": "Leitos", "teams": "Equipes", "services": "Serviços", "professionals": "Profissionais"}[key], "Competência": f"{value[4:]}/{value[:4]}"} for key, value in profile["periods"].items()]), hide_index=True, width="stretch")
+        st.write("A fotografia dos estabelecimentos é a do arquivo verificado nesta execução. As outras fontes são mensais e a população é anual. A integração por UF não torna esses períodos iguais.")
+    with st.expander("Coordenadas e uso responsável do mapa"):
+        st.write(f"Nesta UF, {format_integer(int(row['issues']))} registros têm ocorrências nos controles cadastrais. O detalhamento de cada regra está na etapa 1. O mapa usa limites estaduais do IBGE e agrega pela chave de UF; ele não posiciona estabelecimentos por latitude e longitude. Para um mapa de pontos, a completude das coordenadas precisaria ser tratada antes da publicação.")
+        st.link_button("Consultar qualidade cadastral", "https://cnes-em-evidencia.streamlit.app/quality_page_content")
+    st.subheader("Reutilizar os dados")
+    st.download_button("Baixar base integrada · CSV", profile_csv(profile["rows"]).encode("utf-8-sig"), "cnes-perfil-uf.csv", "text/csv")
+    st.download_button("Baixar base e metadados · JSON", json.dumps(profile, ensure_ascii=False, indent=2), "cnes-perfil-uf.json", "application/json")
+    st.caption("Malha simplificada: IBGE, API de Malhas v3. As taxas são arredondadas apenas para exibição; os downloads preservam os valores de origem.")
+    st.caption("Dados agregados por UF. Consulte os períodos de cada fonte; este perfil não classifica a suficiência da rede nem permite concluir sobre acesso à assistência.")
+    render_traceability(audit, include_population=True, include_beds=True, include_teams=True, include_services=True, include_professionals=True)
+
+
 def render() -> None:
     st.set_page_config(
         page_title="CNES em Evidência",
@@ -2004,7 +2075,6 @@ def render() -> None:
         quality_page_content,
         title="1 · Qualidade cadastral",
         icon=":material/fact_check:",
-        default=True,
     )
     population_page = st.Page(
         population_page_content,
@@ -2038,6 +2108,7 @@ def render() -> None:
     )
     navigation = st.navigation(
         {
+            "Visão integrada": [st.Page(lambda: render_integrated_panel(dashboard, audit), title="Perfil por UF", url_path="integrated_profile", default=True)],
             "CNES em Evidência": [
                 quality_page,
                 population_page,

@@ -1,5 +1,34 @@
 # CNES em Evidência
 
+## Parte 8 · Perfil territorial integrado
+
+[Abrir o mapa interativo](https://cnes-em-evidencia.streamlit.app/)
+
+A página inicial reúne as dimensões estudadas nas sete etapas em uma consulta por UF.
+Escolha estabelecimentos, leitos, parcela SUS, equipes, serviços ou profissionais e alterne
+entre contagens e taxas por 100 mil habitantes. A tabela oferece os valores do mapa sem
+depender de cores ou de passar o mouse. O perfil estadual permite consultar outras dimensões.
+
+O pipeline persiste `data/published/uf-profile.json` e `uf-profile.csv` em cada execução.
+O JSON inclui versão do contrato, execução, atualização, competências por fonte e dicionário.
+O mapa lê esse produto publicado, sem consultar as fontes durante a navegação. O fluxo diário
+existente versiona os arquivos no GitHub e a aplicação usa a atualização seguinte.
+
+São 27 UFs agregadas: arquivos versionados atendem ao consumo atual. DuckDB passa a ser uma
+opção quando o produto incorporar histórico amplo ou granularidade municipal. O JSON público
+é um arquivo para consumo automatizado, sem serviço de API dedicado ou garantia de disponibilidade.
+
+A integração rejeita chaves duplicadas, contagens fracionárias e códigos de UF inválidos.
+Ausências permanecem nulas. Os testes reconciliam cada indicador com os agregados de origem.
+Competências diferentes continuam explícitas e a estimativa populacional mantém seu ano.
+O mapa não informa acesso, ocupação, disponibilidade ou suficiência assistencial.
+
+**Cartografia:** malha simplificada oficial do IBGE, API de Malhas v3, obtida em 19/11/2026:
+<https://servicodados.ibge.gov.br/api/v3/malhas/paises/BR?formato=application/vnd.geo+json&qualidade=minima&intrarregiao=UF>.
+A malha é versionada com o projeto; sua atualização é independente da atualização cadastral.
+O desenho usa os códigos de UF, não coordenadas dos estabelecimentos. Cinza significa ausência
+de indicador, sem substituir por zero. Contagens aparecem inteiras; taxas têm arredondamento de exibição.
+
 Aplicação Streamlit e pipeline de dados abertos do CNES. A navegação separa qualidade cadastral, presença por população, capacidade hospitalar, equipes, serviços cadastrados, evolução mensal de leitos e profissionais cadastrados. A explicação completa do projeto fica no portfólio.
 
 ## Resultado atual
@@ -25,7 +54,7 @@ Esses resultados descrevem o arquivo processado. Eles não medem qualidade assis
 - processamento de um CSV de 231 MB diretamente do ZIP, sem carregar a base inteira na memória;
 - controles reproduzíveis de completude, unicidade e validade;
 - reconciliação entre registros lidos e agregados;
-- sete painéis interativos em uma única aplicação Streamlit;
+- oito páginas interativas em uma única aplicação Streamlit;
 - verificação diária da fonte e regeneração dos agregados pelo GitHub Actions;
 - ETL integrado entre CNES e estimativas populacionais do IBGE;
 - comparação por UF usando população como denominador explícito;
