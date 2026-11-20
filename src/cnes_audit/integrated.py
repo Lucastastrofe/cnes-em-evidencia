@@ -122,13 +122,12 @@ def data_package(dashboard: dict[str, Any], profile: dict[str, Any], audit: dict
     output = io.BytesIO()
     tables = public_tables(dashboard, profile)
     with ZipFile(output, "w", compression=ZIP_DEFLATED) as archive:
-        manifest = {"run_id": profile["run_id"], "generated_at": profile["generated_at"], "schema_version": profile["schema_version"], "files": []}
+        manifest = {"run_id": profile["run_id"], "generated_at": profile["generated_at"], "schema_version": "2.0", "files": []}
         for name, rows in tables.items():
             content = profile_csv(rows).encode("utf-8-sig")
             filename = f"tabelas/{name}.csv"
             archive.writestr(filename, content)
             manifest["files"].append({"path": filename, "rows": len(rows), "columns": list(rows[0]), "encoding": "UTF-8 BOM", "delimiter": ",", "null": "empty field", "sha256": hashlib.sha256(content).hexdigest()})
-        archive.writestr("manifesto.json", json.dumps(manifest, ensure_ascii=False, indent=2))
         archive.writestr("fontes.json", json.dumps(source_catalog(audit), ensure_ascii=False, indent=2))
         for name, value in (("dados.json", public_dataset(dashboard, profile, audit)), ("dicionario.json", data_dictionary(dashboard, profile)), ("auditoria.json", audit)):
             archive.writestr(name, json.dumps(value, ensure_ascii=False, indent=2))
@@ -136,5 +135,11 @@ def data_package(dashboard: dict[str, Any], profile: dict[str, Any], audit: dict
         ddl, database = relational_snapshot(tables, data_dictionary(dashboard, profile))
         archive.writestr("schema.sql", ddl)
         archive.writestr("cnes.sqlite", database)
-        archive.writestr("LEIA-ME.txt", "CNES em Evidência\nDados agregados já publicados pelo projeto.\nCada CSV tem seu próprio grão; não some totais entre tabelas.\nCompetências e ano populacional: perfil.json. Fontes, hashes e limites: auditoria.json.\nCódigos de UF são identificadores: preserve como texto.\nAusências são campos vazios, não zero.\nProfissionais, equipes, serviços e leitos têm unidades diferentes.\nNão contém estabelecimentos individuais nem detalhamento municipal.\nO cadastro não informa acesso, ocupação ou disponibilidade em tempo real.\n")
+        archive.writestr("LEIA-ME.txt", "CNES em Evidência\nContrato de dados 2.0.\nCada CSV tem seu próprio grão; não some totais entre tabelas.\nCompetências e ano populacional: dados.json. Fontes, hashes e limites: auditoria.json e fontes.json.\nTipos, origem e transformação: dicionario.json e dicionario.csv.\nBase relacional: cnes.sqlite; esquema de criação: schema.sql.\nCódigos de UF são identificadores: preserve como texto.\nAusências são campos vazios, não zero.\nProfissionais, equipes, serviços e leitos têm unidades diferentes.\nNão contém estabelecimentos individuais nem detalhamento municipal.\nO cadastro não informa acesso, ocupação ou disponibilidade em tempo real.\nProjeto independente, sem endosso dos órgãos citados. MIT licencia o código; consulte as condições das fontes para os dados.\n")
+        recorded = {entry["path"] for entry in manifest["files"]}
+        for item in archive.infolist():
+            if item.filename not in recorded:
+                content = archive.read(item.filename)
+                manifest["files"].append({"path": item.filename, "bytes": len(content), "sha256": hashlib.sha256(content).hexdigest()})
+        archive.writestr("manifesto.json", json.dumps(manifest, ensure_ascii=False, indent=2))
     return output.getvalue()

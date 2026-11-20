@@ -79,7 +79,7 @@ def download_source(url: str, destination: Path, attempts: int = 3) -> dict[str,
     raise RuntimeError(f"não foi possível obter a fonte após {attempts} tentativas") from last_error
 
 
-def _write_json(path: Path, payload: dict[str, Any]) -> None:
+def _write_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
     temporary.write_text(
@@ -408,7 +408,7 @@ def build_public_artifacts(
     }
     profile = build_profile(dashboard)
     _write_json(output_directory / "dados.json", public_dataset(dashboard, profile, audit))
-    _write_json(output_directory / "dicionario.json", {"versao_contrato": "2.0", "colunas": data_dictionary(dashboard, profile)})
+    _write_json(output_directory / "dicionario.json", data_dictionary(dashboard, profile))
     canonical_profile = encode_profile(profile)
     _write_json(output_directory / "uf-profile.json", canonical_profile)
     csv_path = output_directory / "uf-profile.csv"

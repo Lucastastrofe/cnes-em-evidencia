@@ -9,43 +9,162 @@
     "services": "202610",
     "professionals": "202610"
   },
-  "dictionary": {
-    "records": {
-      "label": "Estabelecimentos",
-      "unit": "cadastros",
-      "source": "estabelecimentos"
+  "dictionary": [
+    {
+      "tabela": "perfil_uf",
+      "coluna": "co_uf",
+      "nome_na_fonte": "CO_UF",
+      "nome_legado": "code",
+      "tipo": "string",
+      "aceita_nulo": false,
+      "chave": true,
+      "grao": "UF",
+      "definicao_transformacao": "Chave de UF do cadastro usada para integrar as demais fontes",
+      "unidade": "identificador",
+      "papel": "campo_transformado_ou_agregado",
+      "origem": "CNES Estabelecimentos / dimensão oficial de UFs"
     },
-    "beds": {
-      "label": "Leitos",
-      "unit": "cadastros",
-      "source": "beds"
+    {
+      "tabela": "perfil_uf",
+      "coluna": "nome_uf",
+      "nome_na_fonte": null,
+      "nome_legado": "name",
+      "tipo": "string",
+      "aceita_nulo": false,
+      "chave": false,
+      "grao": "UF",
+      "definicao_transformacao": "Nome obtido da dimensão oficial de UFs; não é contagem nem identificador de estabelecimento",
+      "unidade": "texto",
+      "papel": "indicador_calculado",
+      "origem": "CNES Estabelecimentos / dimensão oficial de UFs"
     },
-    "sus_beds": {
-      "label": "Leitos SUS",
-      "unit": "cadastros",
-      "source": "beds"
+    {
+      "tabela": "perfil_uf",
+      "coluna": "populacao_estimada",
+      "nome_na_fonte": "V",
+      "nome_legado": "population",
+      "tipo": "integer",
+      "aceita_nulo": false,
+      "chave": false,
+      "grao": "UF",
+      "definicao_transformacao": "Valor da estimativa populacional IBGE, convertido para inteiro",
+      "unidade": "habitantes",
+      "papel": "campo_transformado_ou_agregado",
+      "origem": "IBGE/SIDRA"
     },
-    "teams": {
-      "label": "Equipes",
-      "unit": "cadastros",
-      "source": "teams"
+    {
+      "tabela": "perfil_uf",
+      "coluna": "quantidade_ocorrencias",
+      "nome_na_fonte": null,
+      "nome_legado": "issues",
+      "tipo": "integer",
+      "aceita_nulo": false,
+      "chave": false,
+      "grao": "UF",
+      "definicao_transformacao": "Ocorrências dos controles no agrupamento",
+      "unidade": "contagem",
+      "papel": "indicador_calculado",
+      "origem": "Indicador calculado pelo projeto; consultar transformação e tabela de origem"
     },
-    "service_records": {
-      "label": "Registros de serviços",
-      "unit": "cadastros",
-      "source": "services"
+    {
+      "tabela": "perfil_uf",
+      "coluna": "quantidade_estabelecimentos",
+      "nome_na_fonte": "CO_CNES",
+      "nome_legado": "records",
+      "tipo": "integer",
+      "aceita_nulo": false,
+      "chave": false,
+      "grao": "UF",
+      "definicao_transformacao": "Contagem de cadastros no agrupamento; não é coluna original",
+      "unidade": "contagem",
+      "papel": "campo_transformado_ou_agregado",
+      "origem": "CNES Estabelecimentos / dimensão oficial de UFs"
     },
-    "professionals": {
-      "label": "Profissionais",
-      "unit": "cadastros",
-      "source": "professionals"
+    {
+      "tabela": "perfil_uf",
+      "coluna": "leitos_existentes",
+      "nome_na_fonte": "LEITOS_EXISTENTES",
+      "nome_legado": "beds",
+      "tipo": "integer",
+      "aceita_nulo": false,
+      "chave": false,
+      "grao": "UF",
+      "definicao_transformacao": "Soma dos leitos existentes no agrupamento",
+      "unidade": "contagem",
+      "papel": "campo_transformado_ou_agregado",
+      "origem": "CNES Hospitais e Leitos"
     },
-    "sus_professionals": {
-      "label": "Profissionais associados ao SUS",
-      "unit": "cadastros",
-      "source": "professionals"
+    {
+      "tabela": "perfil_uf",
+      "coluna": "leitos_sus",
+      "nome_na_fonte": "LEITOS_SUS",
+      "nome_legado": "sus_beds",
+      "tipo": "integer",
+      "aceita_nulo": false,
+      "chave": false,
+      "grao": "UF",
+      "definicao_transformacao": "Soma dos leitos destinados ao SUS no agrupamento",
+      "unidade": "contagem",
+      "papel": "campo_transformado_ou_agregado",
+      "origem": "CNES Hospitais e Leitos"
+    },
+    {
+      "tabela": "perfil_uf",
+      "coluna": "quantidade_equipes",
+      "nome_na_fonte": "Quantidade / Total",
+      "nome_legado": "teams",
+      "tipo": "integer",
+      "aceita_nulo": false,
+      "chave": false,
+      "grao": "UF",
+      "definicao_transformacao": "Quantidade da consulta TabNet de equipes no agrupamento",
+      "unidade": "contagem",
+      "papel": "campo_transformado_ou_agregado",
+      "origem": "CNES TabNet"
+    },
+    {
+      "tabela": "perfil_uf",
+      "coluna": "quantidade_registros_servicos",
+      "nome_na_fonte": "Quantidade / Total",
+      "nome_legado": "service_records",
+      "tipo": "integer",
+      "aceita_nulo": false,
+      "chave": false,
+      "grao": "UF",
+      "definicao_transformacao": "Registros por serviço e classificação; não são estabelecimentos únicos",
+      "unidade": "contagem",
+      "papel": "campo_transformado_ou_agregado",
+      "origem": "CNES TabNet"
+    },
+    {
+      "tabela": "perfil_uf",
+      "coluna": "quantidade_profissionais",
+      "nome_na_fonte": "Total",
+      "nome_legado": "professionals",
+      "tipo": "integer",
+      "aceita_nulo": false,
+      "chave": false,
+      "grao": "UF",
+      "definicao_transformacao": "Total da consulta TabNet de profissionais por UF",
+      "unidade": "contagem",
+      "papel": "campo_transformado_ou_agregado",
+      "origem": "CNES TabNet"
+    },
+    {
+      "tabela": "perfil_uf",
+      "coluna": "quantidade_profissionais_sus",
+      "nome_na_fonte": "Atende no SUS: Sim",
+      "nome_legado": "sus_professionals",
+      "tipo": "integer",
+      "aceita_nulo": false,
+      "chave": false,
+      "grao": "UF",
+      "definicao_transformacao": "Quantidade associada ao atendimento SUS na consulta",
+      "unidade": "contagem",
+      "papel": "campo_transformado_ou_agregado",
+      "origem": "CNES TabNet"
     }
-  },
+  ],
   "rows": [
     {
       "co_uf": "11",

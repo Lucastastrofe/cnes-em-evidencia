@@ -163,7 +163,9 @@ def decode_dashboard(dashboard: dict) -> dict:
 
 def encode_profile(profile: dict) -> dict:
     result = copy.deepcopy(profile)
-    result["rows"] = canonical_tables({"perfil_uf": profile["rows"]})[0]["perfil_uf"]
+    tables, dictionary = canonical_tables({"perfil_uf": profile["rows"]})
+    result["rows"] = tables["perfil_uf"]
+    result["dictionary"] = dictionary
     result["schema_version"] = "2.0"
     result["_colunas_legadas"] = {field_contract("perfil_uf", field)[0]: field for field in profile["rows"][0]}
     return result
