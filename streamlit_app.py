@@ -154,11 +154,12 @@ def render_panel_question(title: str, description: str, accent: str) -> None:
             f'<section class="analysis-intro" style="--panel-accent: {accent}">'
             '<span>Pergunta da análise</span>'
             f'<h2>{title}</h2>'
-            f'<p>{description}</p>'
             "</section>"
         ),
         unsafe_allow_html=True,
     )
+    with st.expander("Como ler esta análise"):
+        st.write(description)
 
 
 def render_scope_note(description: str) -> None:
@@ -1883,6 +1884,14 @@ def render_quality_panel(dashboard: dict, audit: dict) -> None:
     )
 
 
+def sync_territory_selection(names: dict[str, str]) -> None:
+    event = st.session_state.get("territory_map", {})
+    picked = event.get("selection", {}).get("uf", [])
+    code = picked[-1].get("code") if picked else None
+    if code in names:
+        st.session_state["territory_state"] = names[code]
+
+
 def render_integrated_panel(dashboard: dict, audit: dict) -> None:
     st.markdown('<p class="eyebrow">Estudo aplicado · CNES e população</p>', unsafe_allow_html=True)
     st.title("Leitos e participação do SUS no território")
@@ -1894,9 +1903,17 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
     frame = pd.DataFrame(profile["rows"])
     labels = {key: value[0] for key, value in METRICS.items()}
     view = st.radio("Visualização", ["Mapa", "Perfil da UF", "Como interpretar"], horizontal=True, key="territory_view")
-    left, right = st.columns([1, 1])
-    metric = left.selectbox("Leitos no mapa", ["beds", "sus_beds"], format_func=labels.get)
-    proportional = right.toggle("Por 100 mil habitantes", value=True)
+    state = st.selectbox("Estado para explorar", frame["name"].sort_values().tolist(), key="territory_state")
+    row = frame.loc[frame["name"] == state].iloc[0]
+    if view == "Como interpretar":
+        render_territorial_method(profile, row)
+        return
+    metric, proportional = "beds", True
+    if view == "Mapa":
+        left, right = st.columns([1, 1])
+        metric = left.selectbox("O que comparar", ["beds", "sus_beds"], format_func=labels.get)
+        proportional = right.radio("Forma de comparação", ["Por 100 mil habitantes", "Quantidade de leitos"], key="territory_unit") == "Por 100 mil habitantes"
+        st.caption("Por população: compara estados de tamanhos diferentes. Quantidade: mostra o volume cadastrado. As taxas são arredondadas na exibição; os cálculos preservam a precisão.")
     section = METRICS[metric][1]
     competence = profile["periods"].get(section)
     period = f"{competence[4:]}/{competence[:4]}" if competence else "Fotografia do arquivo de estabelecimentos"
@@ -1922,34 +1939,21 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
     selection = alt.selection_point(fields=["code"], name="uf", on="click", clear="dblclick", toggle=False, empty=False)
     chart = alt.Chart(alt.Data(values=features)).mark_geoshape(stroke="#fbfaf6", strokeWidth=1).encode(
         color=alt.condition("isValid(datum.Valor)", alt.Color("Valor:Q", title=title, scale=alt.Scale(scheme="tealblues", zero=True), legend=alt.Legend(orient="bottom", format=",.0f", titleLimit=450)), alt.value("#dadeda")),
-        stroke=alt.condition(selection, alt.value("#17231f"), alt.value("#fbfaf6")),
-        strokeWidth=alt.condition(selection, alt.value(2.5), alt.value(0.8)),
+        stroke=alt.condition(alt.datum.code == row["code"], alt.value("#17231f"), alt.value("#fbfaf6")),
+        strokeWidth=alt.condition(alt.datum.code == row["code"], alt.value(2.5), alt.value(0.8)),
         tooltip=[alt.Tooltip("name:N", title="UF"), alt.Tooltip("Valor:Q", title=title, format=",.0f")],
     ).project(type="mercator").add_params(selection).properties(height=450)
-    event = None
     if view == "Mapa":
         st.subheader(title)
-        st.caption("Selecione uma UF no mapa. Para consultar a composição SUS e a evolução mensal, abra Perfil da UF.")
+        st.caption(f"Estado selecionado: {state}. Clique em outro estado no mapa ou use a seleção acima. O resumo aparece logo abaixo do gráfico.")
         map_tab, ranking_tab, table_tab = st.tabs(["Mapa do Brasil", "Comparar UFs", "Valores por UF"])
         with map_tab:
-            event = st.altair_chart(style_chart(chart), width="stretch", theme=None, key="territory_map", on_select="rerun", selection_mode="uf")
+            st.altair_chart(style_chart(chart), width="stretch", theme=None, key="territory_map", on_select=lambda: sync_territory_selection(dict(zip(frame["code"], frame["name"]))), selection_mode="uf")
         with ranking_tab:
             st.caption("Mesma seleção e unidade do mapa. A ordem compara cadastros; não classifica qualidade assistencial.")
             st.altair_chart(style_chart(alt.Chart(values).mark_bar(color="#176b52").encode(x=alt.X("Valor:Q", title=title, scale=alt.Scale(zero=True)), y=alt.Y("name:N", sort="-x", title=None), tooltip=[alt.Tooltip("name:N", title="UF"), alt.Tooltip("Valor:Q", format=",.0f")]).properties(height=650)), width="stretch", theme=None)
         with table_tab:
             st.dataframe(values[["name", metric, "population", "Valor"]].rename(columns={"name": "UF", metric: labels[metric], "population": "População", "Valor": title + " · comparação"}), hide_index=True, width="stretch", column_config={labels[metric]: st.column_config.NumberColumn(format="%.0f"), "População": st.column_config.NumberColumn(format="%.0f"), title + " · comparação": st.column_config.NumberColumn(format="%.0f")})
-    picked = event.selection.get("uf", []) if event else []
-    picked_code = picked[-1].get("code") if picked else None
-    if picked_code and picked_code != st.session_state.get("last_map_uf"):
-        selected = frame.loc[frame["code"] == picked_code, "name"]
-        if not selected.empty:
-            st.session_state["territory_state"] = selected.iloc[0]
-            st.session_state["last_map_uf"] = picked_code
-    state = st.selectbox("Estado selecionado · altere aqui ou clique no mapa", frame["name"].sort_values().tolist(), key="territory_state")
-    row = frame.loc[frame["name"] == state].iloc[0]
-    if view == "Como interpretar":
-        render_territorial_method(profile, row)
-        return
     st.subheader(state)
     first, second, third = st.columns(3)
     first.metric("Leitos existentes", format_integer(int(row["beds"])))
@@ -1989,13 +1993,13 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
             if search:
                 detail = detail.loc[detail["Descrição"].str.contains(search, case=False, regex=False, na=False)]
             detail = detail.sort_values(quantity, ascending=False)
-            st.caption(f"{len(detail)} categorias encontradas em {state}. O gráfico exibe até 10; a tabela e o download preservam o resultado completo da busca.")
+            st.caption(f"{len(detail)} categorias encontradas em {state}. O gráfico exibe até 10; a tabela mostra o resultado completo da busca.")
             if detail.empty:
                 st.info("Nenhuma categoria corresponde à busca nesta UF.")
             else:
                 st.altair_chart(style_chart(alt.Chart(detail.head(10)).mark_bar(color="#2F6F83").encode(x=alt.X(f"{quantity}:Q", title="Registros", axis=alt.Axis(format=",.0f")), y=alt.Y("Descrição:N", sort="-x", title=None, axis=alt.Axis(labelLimit=210)), tooltip=["Descrição:N", alt.Tooltip(f"{quantity}:Q", title="Registros", format=",.0f")]).properties(height=340)), width="stretch", theme=None)
                 st.dataframe(detail[["Descrição", quantity]].rename(columns={quantity: "Registros"}), hide_index=True, width="stretch", column_config={"Registros": st.column_config.NumberColumn(format="%.0f")})
-                st.caption("Para exportar este recorte, abra Downloads e fontes no menu e filtre a tabela pela UF.")
+                st.page_link("https://cnes-em-evidencia.streamlit.app/dados", label="Baixar dados desta análise", icon=":material/download:")
     with detail_tabs[3]:
         history = pd.DataFrame(dashboard["bed_history"]["by_state"])
         history = history.loc[history["code"] == row["code"]].copy()
@@ -2052,18 +2056,18 @@ def render_data_center(dashboard: dict, audit: dict) -> None:
         "checks": "Controles de qualidade",
     }
     with downloads:
-        st.subheader("Base completa")
-        st.write("Para consultar todas as tabelas em SQL, baixe o SQLite. Para receber também CSVs e documentação, escolha o pacote ZIP.")
-        dictionary = data_dictionary(dashboard, profile)
-        sql, sqlite = relational_snapshot(tables, dictionary)
-        st.download_button("Baixar base completa · SQLite", sqlite, "cnes.sqlite", "application/vnd.sqlite3", type="primary")
-        st.download_button("Baixar dados e documentação · ZIP", data_package(dashboard, profile, audit), "cnes-dados-publicos.zip", "application/zip")
-        with st.expander("Outros formatos da base completa"):
+        with st.expander("Precisa de todas as tabelas? Baixar a base completa"):
+            st.write("SQLite reúne todas as tabelas para consultas SQL. O ZIP inclui os CSVs e a documentação.")
+            dictionary = data_dictionary(dashboard, profile)
+            sql, sqlite = relational_snapshot(tables, dictionary)
+            st.download_button("Baixar base completa · SQLite", sqlite, "cnes.sqlite", "application/vnd.sqlite3", type="primary")
+            st.download_button("Baixar dados e documentação · ZIP", data_package(dashboard, profile, audit), "cnes-dados-publicos.zip", "application/zip")
             st.download_button("Baixar estrutura das tabelas · SQL", sql, "schema.sql", "application/sql")
             st.download_button("Baixar todas as tabelas e metadados · JSON", json.dumps(public_dataset(dashboard, profile, audit), ensure_ascii=False, indent=2), "dados.json", "application/json")
-        st.subheader("Escolher uma tabela")
+        st.subheader("Baixar uma tabela")
         names = {TABLES.get(key, (key,))[0]: value for key, value in names.items()}
-        layer = st.radio("Camada dos dados", ["Fontes normalizadas", "Visões analíticas"], horizontal=True)
+        layer = st.radio("Camada dos dados", ["Fontes normalizadas", "Visões analíticas"], horizontal=True, help="Fontes normalizadas: campos da origem organizados por UF. Visões analíticas: resumos, contagens e taxas calculadas para análise.")
+        st.caption("Fontes normalizadas preservam os campos da origem. Visões analíticas incluem os indicadores calculados usados no painel.")
         available = [name for name in tables if name.startswith("fonte_") == (layer == "Fontes normalizadas")]
         selected = st.selectbox("Tabela", available, format_func=lambda key: names.get(key, key))
         rows = tables[selected]
@@ -2075,8 +2079,9 @@ def render_data_center(dashboard: dict, audit: dict) -> None:
             if uf != "Todas as UFs":
                 rows = [row for row in rows if row[uf_field] == uf]
         st.caption(f"{format_integer(len(rows))} linhas · {len(rows[0])} colunas · CSV em UTF-8 · valores ausentes permanecem em branco.")
-        st.dataframe(pd.DataFrame(rows).head(10), hide_index=True, width="stretch")
-        st.caption("Prévia das primeiras 10 linhas. O download contém a tabela inteira.")
+        with st.expander("Conferir as primeiras 10 linhas"):
+            st.dataframe(pd.DataFrame(rows).head(10), hide_index=True, width="stretch")
+            st.caption("A prévia mostra até 10 linhas. O download inclui todas as linhas do recorte escolhido.")
         download_format = st.radio("Formato do arquivo", ["CSV", "Parquet", "JSON"], horizontal=True)
         fields = [field for field in data_dictionary(dashboard, profile) if field["tabela"] == selected]
         if download_format == "CSV":
@@ -2275,7 +2280,17 @@ def render_study_panel(dashboard: dict, audit: dict, initial_topic: str = "Mapa 
         "Evolução mensal": render_bed_history_panel,
         "Qualidade cadastral": render_quality_panel,
     }
-    topic = st.selectbox("Tema da análise", list(topics), index=list(topics).index(initial_topic), key=f"study_topic_{initial_topic}")
+    questions = {
+        "Mapa e perfis": "Como os leitos se distribuem pelo território?",
+        "Estabelecimentos e população": "Como os cadastros se relacionam com a população?",
+        "Leitos e UTI": "Quanto dos leitos cadastrados está destinado ao SUS?",
+        "Equipes": "Quais tipos de equipe estão cadastrados?",
+        "Serviços": "Quais serviços e classificações existem em cada UF?",
+        "Profissionais": "Qual é a presença de profissionais e a participação no SUS?",
+        "Evolução mensal": "O que mudou no cadastro de leitos ao longo dos meses?",
+        "Qualidade cadastral": "Quais problemas cadastrais afetam o uso dos dados?",
+    }
+    topic = st.selectbox("O que você quer investigar?", list(topics), format_func=questions.get, index=list(topics).index(initial_topic), key=f"study_topic_{initial_topic}")
     topics[topic](dashboard, audit)
 
 
@@ -2310,11 +2325,10 @@ def render() -> None:
         [data-testid="stTabs"] [role="tablist"] {overflow-x: auto;}
         .eyebrow {color: var(--green); font-size: 0.72rem; font-weight: 750; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.65rem;}
         .deck {color: var(--muted); font-size: 1.12rem; line-height: 1.55; max-width: 780px; margin: 0 0 1.25rem;}
-        .analysis-intro {border-top: 2px solid var(--panel-accent); border-bottom: 1px solid var(--line); padding: 1.2rem 0 1.35rem; margin: 2.2rem 0 1rem; display: grid; grid-template-columns: minmax(150px,.34fr) minmax(0,1fr); column-gap: 2rem;}
+        .analysis-intro {border-top: 2px solid var(--panel-accent); padding: .85rem 0 .35rem; margin: 1.1rem 0 .3rem;}
         .analysis-intro span {color: var(--panel-accent); display: block; font-size: 0.68rem; font-weight: 750; letter-spacing: 0.12em; text-transform: uppercase; padding-top: .3rem;}
-        .analysis-intro h2 {font-size: 1.55rem; line-height: 1.22; margin: 0;}
-        .analysis-intro p {color: var(--muted); line-height: 1.55; margin: 0.6rem 0 0; max-width: 860px; grid-column: 2;}
-        .source-grid {display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 1.4rem 0 2.4rem;}
+        .analysis-intro h2 {font-size: 1.4rem; line-height: 1.25; margin: .35rem 0 0;}
+        .source-grid {display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: .9rem 0 1.2rem;}
         .source-fact {padding: 0.9rem 1rem 0.9rem 0; min-height: 72px;}
         .source-fact + .source-fact {border-left: 1px solid var(--line); padding-left: 1rem;}
         .source-fact span {display: block; color: var(--muted); font-size: 0.72rem; letter-spacing: 0.04em; margin-bottom: 0.3rem;}
@@ -2347,8 +2361,6 @@ def render() -> None:
             .block-container {padding-top: 3.25rem;}
             .source-grid, .definition-grid {grid-template-columns: 1fr;}
             .source-fact + .source-fact {border-left: 0; border-top: 1px solid var(--line); padding-left: 0;}
-            .analysis-intro {grid-template-columns: 1fr; gap: .45rem;}
-            .analysis-intro p {grid-column: 1;}
             .finding-grid {grid-template-columns: 1fr; gap: 0.65rem;}
         }
         </style>
@@ -2435,6 +2447,7 @@ def render() -> None:
     st.sidebar.page_link(study_page, label="Estudo aplicado", icon=":material/map:")
     st.sidebar.page_link(data_page, label="Dados e documentação", icon=":material/database:")
     st.sidebar.page_link(governance_page, label="Qualidade e governança", icon=":material/fact_check:")
+    st.sidebar.caption("Estudo aplicado: explore e compare. Dados: baixe tabelas e consulte as fontes. Qualidade: acompanhe controles e atualizações.")
     navigation.run()
 
 
