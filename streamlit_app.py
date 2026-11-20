@@ -11,8 +11,11 @@ import streamlit as st
 import cnes_audit.catalog as catalog
 import cnes_audit.contracts as contracts
 import cnes_audit.integrated as integrated
+import cnes_audit.visuals as visuals
 
 # Streamlit may retain pure contract modules from the prior release.
+if getattr(visuals, "VISUAL_VERSION", None) != "pt-BR-1":
+    importlib.reload(visuals)
 if getattr(catalog, "PUBLIC_CONTRACT_VERSION", None) != "3.0":
     importlib.reload(catalog)
 if getattr(contracts, "PUBLIC_CONTRACT_VERSION", None) != "3.0":
@@ -99,7 +102,7 @@ def format_rate(value: float) -> str:
 
 def style_chart(chart):
     return (
-        chart.configure_view(stroke=None)
+        chart.configure(locale={"number": {"decimal": ",", "thousands": ".", "grouping": [3], "currency": ["R$ ", ""]}}).configure_view(stroke=None)
         .configure_axis(
             domain=False,
             gridColor="#E3E9E5",
@@ -411,7 +414,7 @@ def render_population_panel(dashboard: dict, audit: dict) -> None:
                 alt.Tooltip("UF:N"),
                 alt.Tooltip("Registros:Q", format=",.0f"),
                 alt.Tooltip("População estimada:Q", format=",.0f"),
-                alt.Tooltip("Cadastros por 100 mil habitantes:Q", format=".0f"),
+                alt.Tooltip("Cadastros por 100 mil habitantes:Q", format=",.0f"),
             ],
         )
     )
@@ -822,7 +825,7 @@ def render_bed_history_panel(dashboard: dict, audit: dict) -> None:
             y=alt.Y(
                 "Valor exibido:Q",
                 title=value_column,
-                axis=alt.Axis(format=".0f"),
+                axis=alt.Axis(format=",.0f"),
                 scale=alt.Scale(zero=False, padding=18),
             ),
             color=color,
@@ -1019,7 +1022,7 @@ def render_team_panel(dashboard: dict, audit: dict) -> None:
                 alt.Tooltip("UF:N"),
                 alt.Tooltip("Equipes cadastradas:Q", format=",.0f"),
                 alt.Tooltip("População estimada:Q", format=",.0f"),
-                alt.Tooltip("Equipes por 100 mil habitantes:Q", format=".0f"),
+                alt.Tooltip("Equipes por 100 mil habitantes:Q", format=",.0f"),
             ],
         )
     )
@@ -1329,7 +1332,7 @@ def render_service_panel(dashboard: dict, audit: dict) -> None:
                 alt.Tooltip("UF:N"),
                 alt.Tooltip("Registros da classificação:Q", format=",.0f"),
                 alt.Tooltip("População estimada:Q", format=",.0f"),
-                alt.Tooltip("Registros por 100 mil habitantes:Q", format=".0f"),
+                alt.Tooltip("Registros por 100 mil habitantes:Q", format=",.0f"),
             ],
         )
     )
@@ -1543,7 +1546,7 @@ def render_professional_panel(dashboard: dict, audit: dict) -> None:
                 "Profissionais por 100 mil habitantes:Q",
                 title="Profissionais por 100 mil habitantes",
                 scale=alt.Scale(zero=False),
-                axis=alt.Axis(format=".0f"),
+                axis=alt.Axis(format=",.0f"),
             ),
             y=alt.Y(
                 "Participação associada ao SUS:Q",
@@ -1555,7 +1558,7 @@ def render_professional_panel(dashboard: dict, audit: dict) -> None:
                 alt.Tooltip("UF:N"),
                 alt.Tooltip("Profissionais cadastrados:Q", format=",.0f"),
                 alt.Tooltip("Associados ao atendimento SUS:Q", format=",.0f"),
-                alt.Tooltip("Profissionais por 100 mil habitantes:Q", format=".0f"),
+                alt.Tooltip("Profissionais por 100 mil habitantes:Q", format=",.0f"),
                 alt.Tooltip("Participação associada ao SUS:Q", format=".1%"),
             ],
         )
@@ -1932,7 +1935,7 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
             event = st.altair_chart(style_chart(chart), width="stretch", theme=None, key="territory_map", on_select="rerun", selection_mode="uf")
         with ranking_tab:
             st.caption("Mesma seleção e unidade do mapa. A ordem compara cadastros; não classifica qualidade assistencial.")
-            st.altair_chart(style_chart(alt.Chart(values).mark_bar(color="#176b52").encode(x=alt.X("Valor:Q", title=title, scale=alt.Scale(zero=True)), y=alt.Y("name:N", sort="-x", title=None), tooltip=[alt.Tooltip("name:N", title="UF"), alt.Tooltip("Valor:Q", format=".0f")]).properties(height=650)), width="stretch", theme=None)
+            st.altair_chart(style_chart(alt.Chart(values).mark_bar(color="#176b52").encode(x=alt.X("Valor:Q", title=title, scale=alt.Scale(zero=True)), y=alt.Y("name:N", sort="-x", title=None), tooltip=[alt.Tooltip("name:N", title="UF"), alt.Tooltip("Valor:Q", format=",.0f")]).properties(height=650)), width="stretch", theme=None)
         with table_tab:
             st.dataframe(values[["name", metric, "population", "Valor"]].rename(columns={"name": "UF", metric: labels[metric], "population": "População", "Valor": title + " · comparação"}), hide_index=True, width="stretch", column_config={labels[metric]: st.column_config.NumberColumn(format="%.0f"), "População": st.column_config.NumberColumn(format="%.0f"), title + " · comparação": st.column_config.NumberColumn(format="%.0f")})
     picked = event.selection.get("uf", []) if event else []
@@ -1990,7 +1993,7 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
             if detail.empty:
                 st.info("Nenhuma categoria corresponde à busca nesta UF.")
             else:
-                st.altair_chart(style_chart(alt.Chart(detail.head(10)).mark_bar(color="#2F6F83").encode(x=alt.X(f"{quantity}:Q", title="Registros", axis=alt.Axis(format="d")), y=alt.Y("Descrição:N", sort="-x", title=None, axis=alt.Axis(labelLimit=210)), tooltip=["Descrição:N", alt.Tooltip(f"{quantity}:Q", title="Registros", format=",.0f")]).properties(height=340)), width="stretch", theme=None)
+                st.altair_chart(style_chart(alt.Chart(detail.head(10)).mark_bar(color="#2F6F83").encode(x=alt.X(f"{quantity}:Q", title="Registros", axis=alt.Axis(format=",.0f")), y=alt.Y("Descrição:N", sort="-x", title=None, axis=alt.Axis(labelLimit=210)), tooltip=["Descrição:N", alt.Tooltip(f"{quantity}:Q", title="Registros", format=",.0f")]).properties(height=340)), width="stretch", theme=None)
                 st.dataframe(detail[["Descrição", quantity]].rename(columns={quantity: "Registros"}), hide_index=True, width="stretch", column_config={"Registros": st.column_config.NumberColumn(format="%.0f")})
                 st.caption("Para exportar este recorte, abra Downloads e fontes no menu e filtre a tabela pela UF.")
     with detail_tabs[3]:
@@ -2210,7 +2213,7 @@ def render_governance_panel(dashboard: dict, audit: dict) -> None:
         quality_states["Ocorrências por 100 cadastros"] = quality_states["issues"] / quality_states["records"] * 100
         quality_states = quality_states.nlargest(10, "Ocorrências por 100 cadastros")
         st.subheader("Onde os controles encontram mais ocorrências")
-        st.altair_chart(style_chart(alt.Chart(quality_states).mark_bar(color="#a35c25").encode(x=alt.X("Ocorrências por 100 cadastros:Q", title="Ocorrências por 100 cadastros", scale=alt.Scale(zero=True)), y=alt.Y("name:N", title=None, sort="-x"), tooltip=[alt.Tooltip("name:N", title="UF"), alt.Tooltip("issues:Q", title="Ocorrências", format=".0f"), alt.Tooltip("records:Q", title="Cadastros", format=".0f"), alt.Tooltip("Ocorrências por 100 cadastros:Q", format=".1f")]).properties(height=300)), width="stretch", theme=None)
+        st.altair_chart(style_chart(alt.Chart(quality_states).mark_bar(color="#a35c25").encode(x=alt.X("Ocorrências por 100 cadastros:Q", title="Ocorrências por 100 cadastros", scale=alt.Scale(zero=True)), y=alt.Y("name:N", title=None, sort="-x"), tooltip=[alt.Tooltip("name:N", title="UF"), alt.Tooltip("issues:Q", title="Ocorrências", format=",.0f"), alt.Tooltip("records:Q", title="Cadastros", format=",.0f"), alt.Tooltip("Ocorrências por 100 cadastros:Q", format=",.1f")]).properties(height=300)), width="stretch", theme=None)
         st.caption("Dez UFs com maior relação entre ocorrências e cadastros. Uma ocorrência é um achado de controle; não significa automaticamente um problema assistencial ou uma pessoa identificada.")
         with st.expander("Identificação da execução"):
             st.code(audit["run_id"], language=None)

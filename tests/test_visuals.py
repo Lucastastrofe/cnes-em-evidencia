@@ -3,6 +3,14 @@ from cnes_audit.visuals import bed_comparison, bed_composition
 
 
 class BedVisualTest(unittest.TestCase):
+    def test_chart_numbers_use_brazilian_grouping(self):
+        from streamlit_app import style_chart
+        _, chart = bed_composition(110713, 62439)
+        spec = style_chart(chart).to_dict()
+        self.assertEqual(spec["config"]["locale"]["number"]["thousands"], ".")
+        self.assertEqual(spec["config"]["locale"]["number"]["decimal"], ",")
+        self.assertEqual(spec["encoding"]["x"]["axis"]["format"], ",.0f")
+
     def test_single_state_bar_has_visible_row_and_exact_intervals(self):
         frame, chart = bed_composition(110713, 62439)
         self.assertEqual(list(frame["Inicio"]), [0, 62439])

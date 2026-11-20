@@ -219,7 +219,7 @@ class DashboardContractTest(unittest.TestCase):
 
     def test_population_rates_are_calculated_with_precision_but_displayed_as_whole_numbers(self):
         self.assertIn("def format_rate", self.source)
-        self.assertIn('format=".0f"', self.source)
+        self.assertIn('format=",.0f"', self.source)
         self.assertIn('format="%.0f"', self.source)
 
     def test_population_panel_explains_its_purpose_and_metrics(self):
@@ -249,7 +249,7 @@ class DashboardContractTest(unittest.TestCase):
     def test_bed_counts_and_rates_are_displayed_without_fractional_units(self):
         self.assertIn('.round().astype(int)', self.source)
         visual_source = (self.root / "src/cnes_audit/visuals.py").read_text(encoding="utf-8")
-        self.assertIn('format=".0f"', visual_source)
+        self.assertIn('format=",.0f"', visual_source)
         self.assertNotIn('title="Taxa", format=".1f"', self.source)
         self.assertNotIn('NumberColumn(format="%.1f")', self.source)
 
