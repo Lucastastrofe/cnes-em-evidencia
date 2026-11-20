@@ -100,6 +100,35 @@ def format_rate(value: float) -> str:
     return f"{value:,.0f}".replace(",", ".")
 
 
+def render_bed_composition(total: int, sus: int) -> None:
+    if not 0 <= sus <= total:
+        raise ValueError("Composição de leitos inválida")
+    if not total:
+        st.info("Não há leitos cadastrados neste recorte para calcular a participação do SUS.")
+        return
+    other = total - sus
+    share = sus / total
+    summary = (
+        f"Total cadastrado: {format_integer(total)} leitos. "
+        f"Destinados ao SUS: {format_integer(sus)} ({format_percent(share)}). "
+        f"Demais leitos: {format_integer(other)} ({format_percent(1 - share)})."
+    )
+    st.markdown(
+        f'<figure class="bed-composition" aria-label="{summary}">'
+        f'<figcaption>Total cadastrado <strong>{format_integer(total)} leitos</strong></figcaption>'
+        '<div class="bed-track" aria-hidden="true">'
+        f'<span class="bed-sus" style="width:{share * 100:.8f}%"></span>'
+        f'<span class="bed-other" style="width:{(1 - share) * 100:.8f}%"></span></div>'
+        '<div class="bed-labels">'
+        '<div><span class="bed-key"><i class="bed-sus"></i>Destinados ao SUS</span>'
+        f'<strong>{format_integer(sus)}</strong><span>{format_percent(share)} do total</span></div>'
+        '<div><span class="bed-key"><i class="bed-other"></i>Demais leitos</span>'
+        f'<strong>{format_integer(other)}</strong><span>{format_percent(1 - share)} do total</span></div>'
+        '</div></figure>',
+        unsafe_allow_html=True,
+    )
+
+
 def style_chart(chart):
     return (
         chart.configure(locale={"number": {"decimal": ",", "thousands": ".", "grouping": [3], "currency": ["R$ ", ""]}}).configure_view(stroke=None)
@@ -1973,13 +2002,8 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
     with detail_tabs[0]:
         st.subheader(f"Leitos cadastrados em {state}")
         bed_total, bed_sus = int(row["beds"]), int(row["sus_beds"])
-        import cnes_audit.visuals as visuals
-        if not hasattr(visuals, "bed_composition"):
-            importlib.reload(visuals)
-        _, composition_chart = visuals.bed_composition(bed_total, bed_sus)
-        st.altair_chart(style_chart(composition_chart), width="stretch", theme=None)
-        st.write(f"{format_integer(bed_sus)} dos {format_integer(bed_total)} leitos estão destinados ao SUS ({format_percent(bed_sus / bed_total) if bed_total else 'sem total para calcular'}).")
-        st.caption("Capacidade cadastrada; não informa ocupação ou disponibilidade em tempo real.")
+        render_bed_composition(bed_total, bed_sus)
+        st.caption("Demais leitos = total cadastrado menos os destinados ao SUS. O cadastro não informa ocupação ou disponibilidade em tempo real.")
     for tab, section, label, quantity in [(detail_tabs[1], "teams", "team_name", "teams"), (detail_tabs[2], "services", "classification_name", "service_records")]:
         with tab:
             source_key = "by_state_type" if section == "teams" else "by_state_classification"
@@ -2007,7 +2031,6 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
         st.altair_chart(style_chart(bed_history_chart(history.to_dict(orient="records"))), width="stretch", theme=None)
         st.caption("Barras: total. Linha verde: SUS. Linha tracejada: total menos SUS. Uma única escala em todos os meses.")
         st.caption("As variações representam alterações no cadastro mensal, sem permitir concluir melhora ou piora da assistência.")
-    st.caption("Método e limitações estão na opção Como interpretar.")
 
 
 def render_territorial_method(profile: dict, row) -> None:
@@ -2320,8 +2343,6 @@ def render() -> None:
         h1, h2, h3 {color: var(--ink); letter-spacing: -0.025em;}
         h1 {font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1; margin-bottom: 0.85rem; max-width: 930px;}
         h2, h3 {margin-top: 1.8rem;}
-        [data-testid="stSidebarNav"] a span {white-space: normal; text-overflow: clip;}
-        [data-testid="stSidebarNav"] a {height: auto; padding-block: .5rem;}
         [data-testid="stTabs"] [role="tablist"] {overflow-x: auto;}
         .eyebrow {color: var(--green); font-size: 0.72rem; font-weight: 750; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.65rem;}
         .deck {color: var(--muted); font-size: 1.12rem; line-height: 1.55; max-width: 780px; margin: 0 0 1.25rem;}
@@ -2344,8 +2365,22 @@ def render() -> None:
         [data-testid="stMetricLabel"] {color: var(--muted);}
         [data-testid="stMetricValue"] {color: var(--ink); font-size: clamp(1.75rem, 3vw, 2.2rem); letter-spacing: -0.035em;}
         [data-testid="stSidebar"] {background: #f3f6f4; border-right: 1px solid var(--line);}
-        [data-testid="stSidebarNav"] a {border-radius: 0.35rem; margin: 0.25rem 0; min-height: 44px;}
-        [data-testid="stSidebarNav"] a:hover {background: #e4eee8;}
+        [data-testid="stSidebar"] [data-testid="stPageLink"] a {border-radius: .35rem; min-height: 48px; padding: .7rem .8rem; margin: .15rem 0; height: auto;}
+        [data-testid="stSidebar"] [data-testid="stPageLink"] a:hover {background: #e4eee8;}
+        [data-testid="stSidebar"] [data-testid="stPageLink"] a p {white-space: normal; overflow: visible; text-overflow: clip; line-height: 1.4;}
+        [data-testid="stSidebar"] [data-testid="stPageLink"] a:focus-visible {outline: 2px solid var(--green); outline-offset: 2px;}
+        .bed-composition {margin: .6rem 0 1.2rem; padding: 1.1rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);}
+        .bed-composition figcaption {display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 1rem; color: var(--muted); margin-bottom: .9rem;}
+        .bed-composition figcaption strong {color: var(--ink); font-size: 1.1rem; font-variant-numeric: tabular-nums;}
+        .bed-track {display: flex; width: 100%; height: 24px; overflow: hidden; background: #d9e1dd;}
+        .bed-sus {background: #176b52;}
+        .bed-other {background: #a9bbb2;}
+        .bed-labels {display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-top: 1rem;}
+        .bed-labels > div {display: flex; flex-direction: column; gap: .25rem;}
+        .bed-labels > div > strong {color: var(--ink); font-size: 1.6rem; line-height: 1.2; font-variant-numeric: tabular-nums;}
+        .bed-labels > div > span {color: var(--muted); font-size: .9rem;}
+        .bed-key {display: flex; align-items: center; gap: .5rem;}
+        .bed-key i {display: inline-block; flex: 0 0 12px; height: 12px;}
         [data-testid="stTabs"] button {min-height: 44px; font-weight: 650;}
         [data-testid="stExpander"] {border: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; margin: 1rem 0 1.2rem;}
         [data-testid="stDataFrame"] {border: 1px solid var(--line); border-radius: 0.35rem; overflow: hidden;}
@@ -2443,11 +2478,10 @@ def render() -> None:
     # Keep old post URLs registered, without exposing the weekly sequence in the menu.
     navigation = st.navigation([study_page, data_page, governance_page, quality_page, population_page, bed_page, team_page, service_page, bed_history_page, professional_page], position="hidden")
     st.sidebar.markdown("**CNES em Evidência**")
-    st.sidebar.caption("Análise e reutilização de dados públicos")
-    st.sidebar.page_link(study_page, label="Estudo aplicado", icon=":material/map:")
-    st.sidebar.page_link(data_page, label="Dados e documentação", icon=":material/database:")
-    st.sidebar.page_link(governance_page, label="Qualidade e governança", icon=":material/fact_check:")
-    st.sidebar.caption("Estudo aplicado: explore e compare. Dados: baixe tabelas e consulte as fontes. Qualidade: acompanhe controles e atualizações.")
+    st.sidebar.caption("Dados públicos de saúde")
+    st.sidebar.page_link(study_page, label="Análises", icon=":material/map:")
+    st.sidebar.page_link(data_page, label="Dados e fontes", icon=":material/database:")
+    st.sidebar.page_link(governance_page, label="Qualidade", icon=":material/fact_check:")
     navigation.run()
 
 

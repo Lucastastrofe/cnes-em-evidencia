@@ -5,25 +5,6 @@ import pandas as pd
 VISUAL_VERSION = "pt-BR-1"
 
 
-def bed_composition(total: int, sus: int):
-    if not 0 <= sus <= total:
-        raise ValueError("Composição de leitos inválida")
-    frame = pd.DataFrame({
-        "Linha": ["Leitos", "Leitos"],
-        "Parcela": ["Destinados ao SUS", "Demais leitos"],
-        "Inicio": [0, sus], "Fim": [sus, total],
-        "Leitos": [sus, total - sus],
-    })
-    chart = alt.Chart(frame).mark_bar(size=40, orient="horizontal").encode(
-        x=alt.X("Inicio:Q", title="Leitos cadastrados", scale=alt.Scale(domain=[0, max(total, 1)]), axis=alt.Axis(format=",.0f")),
-        x2="Fim:Q",
-        y=alt.Y("Linha:N", axis=None, title=None),
-        color=alt.Color("Parcela:N", scale=alt.Scale(domain=["Destinados ao SUS", "Demais leitos"], range=["#176b52", "#c6d4cf"]), legend=alt.Legend(orient="bottom", title=None)),
-        tooltip=["Parcela:N", alt.Tooltip("Leitos:Q", format=",.0f")],
-    ).properties(height=80)
-    return frame, chart
-
-
 def bed_comparison(rows: list[dict], proportional: bool = False) -> tuple[pd.DataFrame, alt.LayerChart]:
     frame = pd.DataFrame(rows).copy()
     if (frame["sus_beds"] > frame["beds"]).any() or (frame[["beds", "sus_beds"]] < 0).any().any():

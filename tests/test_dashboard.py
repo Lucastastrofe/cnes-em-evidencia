@@ -169,9 +169,9 @@ class DashboardContractTest(unittest.TestCase):
     def test_study_navigation_keeps_legacy_routes_without_weekly_menu(self):
         self.assertIn("st.navigation", self.source)
         self.assertIn('position="hidden"', self.source)
-        self.assertIn('label="Estudo aplicado"', self.source)
-        self.assertIn('label="Dados e documentação"', self.source)
-        self.assertIn('label="Qualidade e governança"', self.source)
+        self.assertIn('label="Análises"', self.source)
+        self.assertIn('label="Dados e fontes"', self.source)
+        self.assertIn('label="Qualidade"', self.source)
         for route in ("quality_page_content", "population_page_content", "bed_page_content", "team_page_content", "service_page_content", "bed_history_page_content", "professional_page_content"):
             self.assertIn(route, self.source)
 
