@@ -2,6 +2,19 @@
 
 ## Parte 8 · Perfil territorial integrado
 
+O resumo integrado tem 27 linhas, uma por UF. Ele não substitui as tabelas detalhadas.
+Na seção de downloads, o pacote ZIP reúne os CSVs de todos os agregados públicos,
+incluindo equipes por tipo e UF, serviços por classificação e UF e leitos por mês e UF.
+Inclui também o JSON completo do painel, metadados do perfil, auditoria e orientações de uso.
+Os arquivos são gerados a partir da execução publicada e acompanham sua atualização.
+O pacote não acrescenta microdados nem municípios: mantém os recortes processados pelo projeto.
+
+O catálogo de fontes informa instituição, links oficiais, recorte publicado, referência,
+data de obtenção, hash e limitações. `fontes.json` acompanha o pacote para consumo automatizado.
+`manifesto.json` identifica a execução e relaciona cada CSV com linhas, colunas, codificação,
+separador, representação de ausências e SHA-256 dos bytes exportados. Preserve os códigos como texto.
+Os termos de reutilização devem ser verificados em cada catálogo oficial; MIT licencia o código.
+
 [Abrir o mapa interativo](https://cnes-em-evidencia.streamlit.app/)
 
 A página inicial reúne as dimensões estudadas nas sete etapas em uma consulta por UF.

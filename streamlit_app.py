@@ -6,7 +6,7 @@ from pathlib import Path
 import altair as alt
 import pandas as pd
 import streamlit as st
-from cnes_audit.integrated import METRICS, profile_csv
+from cnes_audit.integrated import METRICS, data_package, profile_csv, public_tables, source_catalog
 
 from cnes_audit.presentation import (
     describe_controls,
@@ -1901,8 +1901,8 @@ def render_quality_panel(dashboard: dict, audit: dict) -> None:
 
 def render_integrated_panel(dashboard: dict, audit: dict) -> None:
     st.markdown('<p class="eyebrow">Parte 8 · Consulta territorial</p>', unsafe_allow_html=True)
-    st.title("A estrutura cadastrada no território")
-    st.write("Compare os estados e consulte o perfil de cada UF. Os indicadores reúnem estabelecimentos, leitos, equipes, serviços e profissionais, preservando os períodos de cada fonte.")
+    st.title("O que o CNES mostra em cada estado")
+    st.write("Escolha um estado para conhecer seus estabelecimentos, leitos, equipes, serviços e profissionais cadastrados. Compare os números, consulte os detalhes e acompanhe a evolução dos leitos. O período de cada fonte aparece junto à consulta.")
     profile = json.loads((DATA_DIRECTORY / "uf-profile.json").read_text(encoding="utf-8"))
     if profile["run_id"] != dashboard["metadata"]["run_id"]:
         st.error("A base integrada pertence a outra atualização. Aguarde a conclusão do pipeline.")
@@ -1996,15 +1996,34 @@ def render_integrated_panel(dashboard: dict, audit: dict) -> None:
         history["Série"] = history["Série"].map({"beds": "Total", "sus_beds": "SUS"})
         st.altair_chart(style_chart(alt.Chart(history).mark_line(point=True).encode(x=alt.X("Mês:T", axis=alt.Axis(format="%m/%Y")), y=alt.Y("Leitos:Q", scale=alt.Scale(zero=True), axis=alt.Axis(format="d")), color=alt.Color("Série:N", legend=alt.Legend(orient="bottom")), tooltip=[alt.Tooltip("Mês:T", format="%m/%Y"), "Série:N", alt.Tooltip("Leitos:Q", format=",.0f")]).properties(height=320)), width="stretch", theme=None)
         st.caption("As variações representam alterações no cadastro mensal, sem permitir concluir melhora ou piora da assistência.")
-    st.subheader("O que a governança muda nesta leitura")
-    st.write("A comparação reúne as fontes pela mesma chave de UF e usa a população como denominador comum. Campos ausentes permanecem ausentes: não são convertidos em zero. As competências precisam ser conferidas antes de interpretar os indicadores em conjunto.")
+    st.subheader("Antes de comparar os números")
+    st.write("As fontes são ligadas pelo código da UF, e as taxas usam a mesma referência de população. Quando falta um valor, ele continua em branco. Confira também as competências: duas informações sobre o mesmo estado podem se referir a meses diferentes.")
     with st.expander("Períodos e definições das fontes"):
         st.dataframe(pd.DataFrame([{"Fonte": {"beds": "Leitos", "teams": "Equipes", "services": "Serviços", "professionals": "Profissionais"}[key], "Competência": f"{value[4:]}/{value[:4]}"} for key, value in profile["periods"].items()]), hide_index=True, width="stretch")
-        st.write("A fotografia dos estabelecimentos é a do arquivo verificado nesta execução. As outras fontes são mensais e a população é anual. A integração por UF não torna esses períodos iguais.")
+        st.write("Os estabelecimentos vêm do arquivo verificado nesta atualização. As demais fontes têm competências mensais, enquanto a população é anual. Reunir essas informações por estado não significa que elas retratem o mesmo momento.")
     with st.expander("Coordenadas e uso responsável do mapa"):
         st.write(f"Nesta UF, {format_integer(int(row['issues']))} registros têm ocorrências nos controles cadastrais. O detalhamento de cada regra está na etapa 1. O mapa usa limites estaduais do IBGE e agrega pela chave de UF; ele não posiciona estabelecimentos por latitude e longitude. Para um mapa de pontos, a completude das coordenadas precisaria ser tratada antes da publicação.")
         st.link_button("Consultar qualidade cadastral", "https://cnes-em-evidencia.streamlit.app/quality_page_content")
-    st.subheader("Reutilizar os dados")
+    st.subheader("Leve os dados para sua análise")
+    st.write("O resumo reúne os principais indicadores em uma linha por UF. Para trabalhar com os detalhes, baixe o pacote completo: ele inclui tipos de equipe, classificações de serviços, histórico de leitos e os registros de auditoria.")
+    tables = public_tables(dashboard, profile)
+    st.dataframe(pd.DataFrame([{"Tabela": name, "Linhas": len(rows)} for name, rows in tables.items()]), hide_index=True, width="stretch", column_config={"Linhas": st.column_config.NumberColumn(format="%.0f")})
+    st.download_button("Baixar todas as tabelas e fontes · ZIP", data_package(dashboard, profile, audit), "cnes-dados-publicos.zip", "application/zip")
+    st.subheader("Fontes e condições de uso")
+    st.write("As tabelas disponíveis aqui foram tratadas e agregadas pelo projeto. Os links abaixo levam às fontes oficiais. Cada uma tem seu período de referência e seus próprios limites de interpretação.")
+    for source in source_catalog(audit):
+        with st.expander(f"{source['name']} · {source['publisher']}"):
+            reference = str(source["reference"])
+            if len(reference) == 6 and reference.isdigit():
+                reference = f"{reference[4:]}/{reference[:4]}"
+            st.write(f"**Referência:** {reference}")
+            st.write(f"**Recorte publicado:** {source['published_grain']}")
+            st.write(source["limitation"])
+            st.link_button("Abrir catálogo oficial", source["catalog_url"], key=f"catalog_{source['id']}")
+            st.link_button("Abrir recurso ou consulta de origem", source["resource_url"], key=f"resource_{source['id']}")
+            st.caption(f"Obtido em {format_timestamp(source['obtained_at'])}. {source['license']}")
+            st.code(source["sha256"], language=None)
+    st.caption("O ZIP inclui fontes.json e manifesto.json, com execução, quantidade de linhas, colunas e SHA-256 de cada CSV. A licença MIT do repositório se aplica ao código; consulte os termos de cada fonte para reutilizar os dados.")
     st.download_button("Baixar base integrada · CSV", profile_csv(profile["rows"]).encode("utf-8-sig"), "cnes-perfil-uf.csv", "text/csv")
     st.download_button("Baixar base e metadados · JSON", json.dumps(profile, ensure_ascii=False, indent=2), "cnes-perfil-uf.json", "application/json")
     st.caption("Malha simplificada: IBGE, API de Malhas v3. As taxas são arredondadas apenas para exibição; os downloads preservam os valores de origem.")
