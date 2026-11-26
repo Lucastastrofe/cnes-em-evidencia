@@ -1,9 +1,9 @@
 ﻿id_controle,descricao_controle,dimensao,severidade,situacao,quantidade_avaliada,quantidade_falhas,proporcao_falhas
-cnes_missing,Chave CNES não preenchida,completude,alerta,aprovado,643594,0,0.0
-cnes_duplicate,Chave CNES repetida,unicidade,alerta,aprovado,643594,0,0.0
-uf_invalid,Código de UF fora do domínio,validade,alerta,aprovado,643594,0,0.0
-municipality_code_invalid,Código de município ausente ou fora do formato esperado,validade,alerta,aprovado,643594,0,0.0
-coordinates_missing,Par de coordenadas não preenchido,completude,observação,observação,643594,59119,0.091858
-coordinates_out_of_range,Par de coordenadas fora das faixas geográficas,validade,alerta,aprovado,643594,0,0.0
-unit_type_missing,Tipo de unidade não preenchido,completude,alerta,aprovado,643594,0,0.0
-management_missing,Tipo de gestão não preenchido,completude,observação,aprovado,643594,0,0.0
+cnes_missing,Chave CNES não preenchida,completude,alerta,aprovado,643596,0,0.0
+cnes_duplicate,Chave CNES repetida,unicidade,alerta,aprovado,643596,0,0.0
+uf_invalid,Código de UF fora do domínio,validade,alerta,aprovado,643596,0,0.0
+municipality_code_invalid,Código de município ausente ou fora do formato esperado,validade,alerta,aprovado,643596,0,0.0
+coordinates_missing,Par de coordenadas não preenchido,completude,observação,observação,643596,59119,0.091857
+coordinates_out_of_range,Par de coordenadas fora das faixas geográficas,validade,alerta,aprovado,643596,0,0.0
+unit_type_missing,Tipo de unidade não preenchido,completude,alerta,aprovado,643596,0,0.0
+management_missing,Tipo de gestão não preenchido,completude,observação,aprovado,643596,0,0.0
