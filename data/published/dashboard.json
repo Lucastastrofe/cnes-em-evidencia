@@ -1,9 +1,9 @@
 {
   "summary": {
-    "total_records": 643596,
+    "total_records": 643841,
     "states_with_records": 27,
     "checks_run": 8,
-    "checks_with_findings": 1,
+    "checks_with_findings": 2,
     "population_reference_year": 2026,
     "total_population": 214211951
   },
@@ -14,7 +14,7 @@
       "dimensao": "completude",
       "severidade": "alerta",
       "situacao": "aprovado",
-      "quantidade_avaliada": 643596,
+      "quantidade_avaliada": 643841,
       "quantidade_falhas": 0,
       "proporcao_falhas": 0.0
     },
@@ -24,7 +24,7 @@
       "dimensao": "unicidade",
       "severidade": "alerta",
       "situacao": "aprovado",
-      "quantidade_avaliada": 643596,
+      "quantidade_avaliada": 643841,
       "quantidade_falhas": 0,
       "proporcao_falhas": 0.0
     },
@@ -34,7 +34,7 @@
       "dimensao": "validade",
       "severidade": "alerta",
       "situacao": "aprovado",
-      "quantidade_avaliada": 643596,
+      "quantidade_avaliada": 643841,
       "quantidade_falhas": 0,
       "proporcao_falhas": 0.0
     },
@@ -44,7 +44,7 @@
       "dimensao": "validade",
       "severidade": "alerta",
       "situacao": "aprovado",
-      "quantidade_avaliada": 643596,
+      "quantidade_avaliada": 643841,
       "quantidade_falhas": 0,
       "proporcao_falhas": 0.0
     },
@@ -54,9 +54,9 @@
       "dimensao": "completude",
       "severidade": "observação",
       "situacao": "observação",
-      "quantidade_avaliada": 643596,
-      "quantidade_falhas": 59119,
-      "proporcao_falhas": 0.091857
+      "quantidade_avaliada": 643841,
+      "quantidade_falhas": 59118,
+      "proporcao_falhas": 0.091821
     },
     {
       "id_controle": "coordinates_out_of_range",
@@ -64,7 +64,7 @@
       "dimensao": "validade",
       "severidade": "alerta",
       "situacao": "aprovado",
-      "quantidade_avaliada": 643596,
+      "quantidade_avaliada": 643841,
       "quantidade_falhas": 0,
       "proporcao_falhas": 0.0
     },
@@ -74,7 +74,7 @@
       "dimensao": "completude",
       "severidade": "alerta",
       "situacao": "aprovado",
-      "quantidade_avaliada": 643596,
+      "quantidade_avaliada": 643841,
       "quantidade_falhas": 0,
       "proporcao_falhas": 0.0
     },
@@ -83,116 +83,116 @@
       "descricao_controle": "Tipo de gestão não preenchido",
       "dimensao": "completude",
       "severidade": "observação",
-      "situacao": "aprovado",
-      "quantidade_avaliada": 643596,
-      "quantidade_falhas": 0,
-      "proporcao_falhas": 0.0
+      "situacao": "observação",
+      "quantidade_avaliada": 643841,
+      "quantidade_falhas": 9,
+      "proporcao_falhas": 1.4e-05
     }
   ],
   "by_state": [
     {
       "co_uf": "35",
       "nome_uf": "São Paulo",
-      "quantidade_estabelecimentos": 155307,
-      "quantidade_ocorrencias": 18496,
+      "quantidade_estabelecimentos": 155367,
+      "quantidade_ocorrencias": 18498,
       "populacao_estimada": 46179008,
-      "estabelecimentos_por_100_mil_habitantes": 336.32
+      "estabelecimentos_por_100_mil_habitantes": 336.45
     },
     {
       "co_uf": "31",
       "nome_uf": "Minas Gerais",
-      "quantidade_estabelecimentos": 79490,
+      "quantidade_estabelecimentos": 79564,
       "quantidade_ocorrencias": 5097,
       "populacao_estimada": 21460311,
-      "estabelecimentos_por_100_mil_habitantes": 370.4
+      "estabelecimentos_por_100_mil_habitantes": 370.75
     },
     {
       "co_uf": "33",
       "nome_uf": "Rio de Janeiro",
-      "quantidade_estabelecimentos": 58966,
+      "quantidade_estabelecimentos": 58975,
       "quantidade_ocorrencias": 8272,
       "populacao_estimada": 17225410,
-      "estabelecimentos_por_100_mil_habitantes": 342.32
+      "estabelecimentos_por_100_mil_habitantes": 342.37
     },
     {
       "co_uf": "43",
       "nome_uf": "Rio Grande do Sul",
-      "quantidade_estabelecimentos": 51344,
+      "quantidade_estabelecimentos": 51350,
       "quantidade_ocorrencias": 2587,
       "populacao_estimada": 11233317,
-      "estabelecimentos_por_100_mil_habitantes": 457.07
+      "estabelecimentos_por_100_mil_habitantes": 457.12
     },
     {
       "co_uf": "41",
       "nome_uf": "Paraná",
-      "quantidade_estabelecimentos": 44267,
+      "quantidade_estabelecimentos": 44285,
       "quantidade_ocorrencias": 3051,
       "populacao_estimada": 11952456,
-      "estabelecimentos_por_100_mil_habitantes": 370.36
+      "estabelecimentos_por_100_mil_habitantes": 370.51
     },
     {
       "co_uf": "42",
       "nome_uf": "Santa Catarina",
-      "quantidade_estabelecimentos": 36643,
+      "quantidade_estabelecimentos": 36666,
       "quantidade_ocorrencias": 2054,
       "populacao_estimada": 8312759,
-      "estabelecimentos_por_100_mil_habitantes": 440.8
+      "estabelecimentos_por_100_mil_habitantes": 441.08
     },
     {
       "co_uf": "29",
       "nome_uf": "Bahia",
-      "quantidade_estabelecimentos": 30313,
+      "quantidade_estabelecimentos": 30319,
       "quantidade_ocorrencias": 2582,
       "populacao_estimada": 14889472,
-      "estabelecimentos_por_100_mil_habitantes": 203.59
+      "estabelecimentos_por_100_mil_habitantes": 203.63
     },
     {
       "co_uf": "23",
       "nome_uf": "Ceará",
-      "quantidade_estabelecimentos": 19456,
+      "quantidade_estabelecimentos": 19460,
       "quantidade_ocorrencias": 915,
       "populacao_estimada": 9302211,
-      "estabelecimentos_por_100_mil_habitantes": 209.15
+      "estabelecimentos_por_100_mil_habitantes": 209.2
     },
     {
       "co_uf": "52",
       "nome_uf": "Goiás",
-      "quantidade_estabelecimentos": 18850,
-      "quantidade_ocorrencias": 717,
+      "quantidade_estabelecimentos": 18856,
+      "quantidade_ocorrencias": 716,
       "populacao_estimada": 7495033,
-      "estabelecimentos_por_100_mil_habitantes": 251.5
+      "estabelecimentos_por_100_mil_habitantes": 251.58
     },
     {
       "co_uf": "26",
       "nome_uf": "Pernambuco",
-      "quantidade_estabelecimentos": 18395,
+      "quantidade_estabelecimentos": 18402,
       "quantidade_ocorrencias": 2232,
       "populacao_estimada": 9583176,
-      "estabelecimentos_por_100_mil_habitantes": 191.95
+      "estabelecimentos_por_100_mil_habitantes": 192.02
     },
     {
       "co_uf": "51",
       "nome_uf": "Mato Grosso",
-      "quantidade_estabelecimentos": 14149,
+      "quantidade_estabelecimentos": 14150,
       "quantidade_ocorrencias": 674,
       "populacao_estimada": 3950330,
-      "estabelecimentos_por_100_mil_habitantes": 358.17
+      "estabelecimentos_por_100_mil_habitantes": 358.2
     },
     {
       "co_uf": "32",
       "nome_uf": "Espírito Santo",
-      "quantidade_estabelecimentos": 13364,
+      "quantidade_estabelecimentos": 13368,
       "quantidade_ocorrencias": 1508,
       "populacao_estimada": 4150692,
-      "estabelecimentos_por_100_mil_habitantes": 321.97
+      "estabelecimentos_por_100_mil_habitantes": 322.07
     },
     {
       "co_uf": "15",
       "nome_uf": "Pará",
-      "quantidade_estabelecimentos": 12872,
+      "quantidade_estabelecimentos": 12873,
       "quantidade_ocorrencias": 1574,
       "populacao_estimada": 8756324,
-      "estabelecimentos_por_100_mil_habitantes": 147.0
+      "estabelecimentos_por_100_mil_habitantes": 147.01
     },
     {
       "co_uf": "53",
@@ -205,34 +205,34 @@
     {
       "co_uf": "25",
       "nome_uf": "Paraíba",
-      "quantidade_estabelecimentos": 10833,
+      "quantidade_estabelecimentos": 10834,
       "quantidade_ocorrencias": 633,
       "populacao_estimada": 4182828,
-      "estabelecimentos_por_100_mil_habitantes": 258.99
+      "estabelecimentos_por_100_mil_habitantes": 259.01
     },
     {
       "co_uf": "50",
       "nome_uf": "Mato Grosso do Sul",
-      "quantidade_estabelecimentos": 9694,
+      "quantidade_estabelecimentos": 9696,
       "quantidade_ocorrencias": 575,
       "populacao_estimada": 2946317,
-      "estabelecimentos_por_100_mil_habitantes": 329.02
+      "estabelecimentos_por_100_mil_habitantes": 329.09
     },
     {
       "co_uf": "21",
       "nome_uf": "Maranhão",
-      "quantidade_estabelecimentos": 9584,
-      "quantidade_ocorrencias": 515,
+      "quantidade_estabelecimentos": 9595,
+      "quantidade_ocorrencias": 522,
       "populacao_estimada": 7024557,
-      "estabelecimentos_por_100_mil_habitantes": 136.44
+      "estabelecimentos_por_100_mil_habitantes": 136.59
     },
     {
       "co_uf": "24",
       "nome_uf": "Rio Grande do Norte",
-      "quantidade_estabelecimentos": 7931,
+      "quantidade_estabelecimentos": 7933,
       "quantidade_ocorrencias": 511,
       "populacao_estimada": 3463737,
-      "estabelecimentos_por_100_mil_habitantes": 228.97
+      "estabelecimentos_por_100_mil_habitantes": 229.03
     },
     {
       "co_uf": "11",
@@ -245,10 +245,10 @@
     {
       "co_uf": "22",
       "nome_uf": "Piauí",
-      "quantidade_estabelecimentos": 6520,
+      "quantidade_estabelecimentos": 6522,
       "quantidade_ocorrencias": 823,
       "populacao_estimada": 3392617,
-      "estabelecimentos_por_100_mil_habitantes": 192.18
+      "estabelecimentos_por_100_mil_habitantes": 192.24
     },
     {
       "co_uf": "28",
@@ -261,10 +261,10 @@
     {
       "co_uf": "27",
       "nome_uf": "Alagoas",
-      "quantidade_estabelecimentos": 5617,
+      "quantidade_estabelecimentos": 5618,
       "quantidade_ocorrencias": 390,
       "populacao_estimada": 3221128,
-      "estabelecimentos_por_100_mil_habitantes": 174.38
+      "estabelecimentos_por_100_mil_habitantes": 174.41
     },
     {
       "co_uf": "13",
@@ -277,18 +277,18 @@
     {
       "co_uf": "17",
       "nome_uf": "Tocantins",
-      "quantidade_estabelecimentos": 3667,
+      "quantidade_estabelecimentos": 3669,
       "quantidade_ocorrencias": 98,
       "populacao_estimada": 1595994,
-      "estabelecimentos_por_100_mil_habitantes": 229.76
+      "estabelecimentos_por_100_mil_habitantes": 229.89
     },
     {
       "co_uf": "12",
       "nome_uf": "Acre",
-      "quantidade_estabelecimentos": 2110,
+      "quantidade_estabelecimentos": 2115,
       "quantidade_ocorrencias": 193,
       "populacao_estimada": 887794,
-      "estabelecimentos_por_100_mil_habitantes": 237.67
+      "estabelecimentos_por_100_mil_habitantes": 238.23
     },
     {
       "co_uf": "14",
@@ -311,32 +311,32 @@
     {
       "tp_unidade": "22",
       "descricao": "Tipo 22",
-      "quantidade_estabelecimentos": 312443
+      "quantidade_estabelecimentos": 312568
     },
     {
       "tp_unidade": "36",
       "descricao": "Tipo 36",
-      "quantidade_estabelecimentos": 117991
+      "quantidade_estabelecimentos": 118053
     },
     {
       "tp_unidade": "2",
       "descricao": "Tipo 2",
-      "quantidade_estabelecimentos": 48052
+      "quantidade_estabelecimentos": 48056
     },
     {
       "tp_unidade": "39",
       "descricao": "Tipo 39",
-      "quantidade_estabelecimentos": 43177
+      "quantidade_estabelecimentos": 43187
     },
     {
       "tp_unidade": "43",
       "descricao": "Tipo 43",
-      "quantidade_estabelecimentos": 33312
+      "quantidade_estabelecimentos": 33332
     },
     {
       "tp_unidade": "4",
       "descricao": "Tipo 4",
-      "quantidade_estabelecimentos": 16205
+      "quantidade_estabelecimentos": 16210
     },
     {
       "tp_unidade": "1",
@@ -346,12 +346,12 @@
     {
       "tp_unidade": "42",
       "descricao": "Tipo 42",
-      "quantidade_estabelecimentos": 7240
+      "quantidade_estabelecimentos": 7243
     },
     {
       "tp_unidade": "5",
       "descricao": "Tipo 5",
-      "quantidade_estabelecimentos": 6941
+      "quantidade_estabelecimentos": 6942
     },
     {
       "tp_unidade": "68",
@@ -361,7 +361,7 @@
     {
       "tp_unidade": "50",
       "descricao": "Tipo 50",
-      "quantidade_estabelecimentos": 4583
+      "quantidade_estabelecimentos": 4586
     },
     {
       "tp_unidade": "74",
@@ -376,7 +376,7 @@
     {
       "tp_unidade": "40",
       "descricao": "Tipo 40",
-      "quantidade_estabelecimentos": 3847
+      "quantidade_estabelecimentos": 3851
     },
     {
       "tp_unidade": "77",
@@ -386,17 +386,17 @@
     {
       "tp_unidade": "84",
       "descricao": "Tipo 84",
-      "quantidade_estabelecimentos": 2583
+      "quantidade_estabelecimentos": 2584
     },
     {
       "tp_unidade": "73",
       "descricao": "Tipo 73",
-      "quantidade_estabelecimentos": 2076
+      "quantidade_estabelecimentos": 2077
     },
     {
       "tp_unidade": "60",
       "descricao": "Tipo 60",
-      "quantidade_estabelecimentos": 2043
+      "quantidade_estabelecimentos": 2044
     },
     {
       "tp_unidade": "81",
@@ -416,7 +416,7 @@
     {
       "tp_unidade": "71",
       "descricao": "Tipo 71",
-      "quantidade_estabelecimentos": 1399
+      "quantidade_estabelecimentos": 1400
     },
     {
       "tp_unidade": "85",
@@ -431,12 +431,12 @@
     {
       "tp_unidade": "83",
       "descricao": "Tipo 83",
-      "quantidade_estabelecimentos": 1264
+      "quantidade_estabelecimentos": 1265
     },
     {
       "tp_unidade": "80",
       "descricao": "Tipo 80",
-      "quantidade_estabelecimentos": 1109
+      "quantidade_estabelecimentos": 1110
     },
     {
       "tp_unidade": "69",
@@ -451,7 +451,7 @@
     {
       "tp_unidade": "75",
       "descricao": "Tipo 75",
-      "quantidade_estabelecimentos": 574
+      "quantidade_estabelecimentos": 576
     },
     {
       "tp_unidade": "20",
@@ -513,12 +513,12 @@
     {
       "tp_gestao": "M",
       "descricao": "Municipal",
-      "quantidade_estabelecimentos": 617245
+      "quantidade_estabelecimentos": 617481
     },
     {
       "tp_gestao": "E",
       "descricao": "Estadual",
-      "quantidade_estabelecimentos": 22904
+      "quantidade_estabelecimentos": 22906
     },
     {
       "tp_gestao": "D",
@@ -528,12 +528,7 @@
     {
       "tp_gestao": "S",
       "descricao": "Sem informação",
-      "quantidade_estabelecimentos": 102
-    },
-    {
-      "tp_gestao": "Z",
-      "descricao": "Código Z",
-      "quantidade_estabelecimentos": 2
+      "quantidade_estabelecimentos": 111
     }
   ],
   "beds": {
@@ -81282,10 +81277,10 @@
     ]
   },
   "metadata": {
-    "run_id": "20261126T190716Z-8b014941ecad",
-    "generated_at": "2026-11-26T19:07:16Z",
-    "source_last_modified": "Thu, 26 Nov 2026 06:10:25 GMT",
-    "source_sha256": "8b014941ecadead5f48d223c677c51a75c60cc285fc04b5770e55ef95f8204e5",
+    "run_id": "20261127T190325Z-a5785e169302",
+    "generated_at": "2026-11-27T19:03:25Z",
+    "source_last_modified": "Fri, 27 Nov 2026 06:06:49 GMT",
+    "source_sha256": "a5785e1693029f3dbaa95d3ad2292bd119c66a9b7dde35fa7cec3a4530cb677c",
     "population_source_sha256": "17389fa5c36be0efa240441fe4011080d9a27b338befb3c8049c4a81da8be946",
     "teams_source_sha256": "e340ead232d7a1f4ec767fbc25f8bd784516e2980e859b2a49538300731fc4c2",
     "services_source_sha256": "a3512596aeb6540afa361b7ae18b4f75ebcc3c9f63477c350726973d95e4ab69",
